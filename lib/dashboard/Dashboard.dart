@@ -1,0 +1,90 @@
+import 'package:flutter/material.dart';
+
+class Dashboard extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(
+          title: Text("Finance Controlinator"),
+        ),
+        body: Column(
+          children: [Carousel()],
+        ));
+  }
+}
+
+class Carousel extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 120,
+      child: ListView(
+        scrollDirection: Axis.horizontal,
+        children: [
+          Card(Icons.money_off, "Expenses", () => {}),
+          Card(Icons.account_balance_wallet, "Account", () => {}),
+          Card(Icons.list_alt, "Invoices", () => {}),
+          Card(Icons.payment, "Payment", () => {}),
+          Card(Icons.save, "Piggy Banks", () => {}),
+        ],
+      ),
+    );
+  }
+}
+
+class Card extends StatelessWidget {
+
+  IconData icon;
+  String title;
+  Function onTap;
+
+  Card(this.icon, this.title, this.onTap);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.all(8),
+      child: Container(
+        height: 150,
+        width: 150,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.5),
+              spreadRadius: 3,
+              blurRadius: 7,
+              offset: Offset(1, 0), // changes position of shadow
+            )
+          ],
+        ),
+        child: Material(
+          borderRadius: BorderRadius.circular(10),
+          color: Theme.of(context).colorScheme.primary,
+          child: InkWell(
+            onTap: () => {},
+            child: Padding(
+              padding: EdgeInsets.all(8),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Icon(
+                    this.icon,
+                    color: Colors.white,
+                    size: 24.0,
+                  ),
+                  Text(
+                    this.title,
+                    style: TextStyle(color: Colors.white, fontSize: 16.0),
+                  )
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
