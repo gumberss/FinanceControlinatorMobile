@@ -8,7 +8,8 @@ class Dashboard extends StatelessWidget {
           title: Text("Finance Controlinator"),
         ),
         body: Column(
-          children: [Carousel()],
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [Colls(), Carousel()],
         ));
   }
 }
@@ -21,8 +22,8 @@ class Carousel extends StatelessWidget {
       child: ListView(
         scrollDirection: Axis.horizontal,
         children: [
-          Card(Icons.money_off, "Expenses", () => {}),
           Card(Icons.account_balance_wallet, "Account", () => {}),
+          Card(Icons.money_off, "Expenses", () => {}),
           Card(Icons.list_alt, "Invoices", () => {}),
           Card(Icons.payment, "Payment", () => {}),
           Card(Icons.save, "Piggy Banks", () => {}),
@@ -32,8 +33,33 @@ class Carousel extends StatelessWidget {
   }
 }
 
-class Card extends StatelessWidget {
+class Colls extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Column(
+          children: [
+            Card(Icons.account_balance_wallet, "Account", () => {}),
+            Card(Icons.money_off, "Expenses", () => {}),
+            Card(Icons.list_alt, "Invoices", () => {}),
+          ],
+        ),
+        Column(
+          children: [
+            Card(Icons.payment, "Payment", () => {}),
+            Card(Icons.save, "Piggy Banks", () => {}),
+          ],
+        ),
+      ],
+    ));
+  }
+}
 
+class Card extends StatelessWidget {
   IconData icon;
   String title;
   Function onTap;
@@ -45,8 +71,8 @@ class Card extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.all(8),
       child: Container(
-        height: 150,
         width: 150,
+        height: 100,
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(10),
