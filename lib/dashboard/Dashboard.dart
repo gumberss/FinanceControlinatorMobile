@@ -1,3 +1,4 @@
+import 'package:finance_controlinator_mobile/expenses/screens/Expenses.dart';
 import 'package:flutter/material.dart';
 
 class Dashboard extends StatelessWidget {
@@ -44,7 +45,12 @@ class Colls extends StatelessWidget {
         Column(
           children: [
             Card(Icons.account_balance_wallet, "Account", () => {}),
-            Card(Icons.money_off, "Expenses", () => {}),
+            Card(Icons.money_off, "Expenses", () {
+              debugPrint("go");
+
+              Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (c) => ExpensesScreen()));
+            }),
             Card(Icons.list_alt, "Invoices", () => {}),
           ],
         ),
@@ -89,7 +95,7 @@ class Card extends StatelessWidget {
           borderRadius: BorderRadius.circular(10),
           color: Theme.of(context).colorScheme.primary,
           child: InkWell(
-            onTap: () => {},
+            onTap: () => onTap(),
             child: Padding(
               padding: EdgeInsets.all(8),
               child: Column(
