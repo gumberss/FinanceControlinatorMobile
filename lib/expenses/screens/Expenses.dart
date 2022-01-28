@@ -1,4 +1,5 @@
 import 'package:finance_controlinator_mobile/components/DefaultInput.dart';
+import 'package:finance_controlinator_mobile/expenses/components/ExpenseTypeDropDown.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -47,6 +48,10 @@ class ExpensesScreen extends StatelessWidget {
                 DefaultInput(
                     "Purchase Day", TextInputType.text, _purchaseDayController),
                 DefaultInput("Type", TextInputType.text, _typeController),
+                SizedBox(
+                  width: double.maxFinite,
+                  child: ExpenseTypeDropDown(),
+                ),
                 //DefaultInput("Observation", TextInputType.text, _observationController),
                 Padding(
                   padding: EdgeInsets.only(left: 8, right: 8, top: 4),
