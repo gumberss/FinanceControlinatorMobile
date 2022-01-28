@@ -31,10 +31,19 @@ class ExpensesScreen extends StatelessWidget {
                     "Description", TextInputType.text, _descriptionController),
                 DefaultInput(
                     "Location", TextInputType.text, _locationController),
-                DefaultInput(
-                    "Total Cost", TextInputType.number, _totalCostController),
-                DefaultInput("Installment Count", TextInputType.number,
-                    _installmentCountController),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      flex: 5,
+                      child: DefaultInput("Total Cost", TextInputType.number,
+                        _totalCostController),),
+                    Expanded(
+                      flex: 5,
+                      child: DefaultInput("Installment Count", TextInputType.number,
+                        _installmentCountController),),
+                  ],
+                ),
                 DefaultInput(
                     "Purchase Day", TextInputType.text, _purchaseDayController),
                 DefaultInput("Type", TextInputType.text, _typeController),
