@@ -1,8 +1,25 @@
 import 'package:finance_controlinator_mobile/components/DefaultInput.dart';
+import 'package:finance_controlinator_mobile/expenses/components/DefaultToast.dart';
+import 'package:finance_controlinator_mobile/expenses/domain/ExpenseItem.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
-class ExpenseItemsScreen extends StatelessWidget {
+class ExpenseItemsScreen extends StatefulWidget {
+
+  @override
+  State<ExpenseItemsScreen> createState() => _ExpenseItemsScreenState();
+}
+
+class _ExpenseItemsScreenState extends State<ExpenseItemsScreen> {
+  List<ExpenseItem> items = List.empty(growable: true);
+
+  void addedItem(ExpenseItem item) {
+    setState(() {
+      items.add(item);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -13,20 +30,20 @@ class ExpenseItemsScreen extends StatelessWidget {
           children: [
             Padding(
               padding: EdgeInsets.only(bottom: 16),
-              child: ExpenseItemsForm(),
+              child: ExpenseItemsForm(addedItem),
             ),
-            ExpenseItemsList(),
+            ExpenseItemsList(items),
             Column(
               mainAxisAlignment: MainAxisAlignment.end,
               mainAxisSize: MainAxisSize.max,
               children: [
                 Padding(
                   padding:
-                  EdgeInsets.only(left: 8, right: 8, top: 4, bottom: 8),
+                      EdgeInsets.only(left: 8, right: 8, top: 4, bottom: 8),
                   child: SizedBox(
                     width: double.maxFinite,
-                    child:
-                    ElevatedButton(onPressed: () {}, child: Text("Save and back")),
+                    child: ElevatedButton(
+                        onPressed: () {}, child: Text("Save and back")),
                   ),
                 )
               ],
@@ -37,90 +54,107 @@ class ExpenseItemsScreen extends StatelessWidget {
 }
 
 class ExpenseItemsForm extends StatelessWidget {
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _descriptionController = TextEditingController();
+  final TextEditingController _costController = TextEditingController();
+  final TextEditingController _amountCostController = TextEditingController();
+
+  FToast toast;
+  Function(ExpenseItem) addedItem;
+
+  ExpenseItemsForm(this.addedItem):
+        toast = FToast();
+
   @override
   Widget build(BuildContext context) {
-    TextEditingController _nameController = TextEditingController();
-    TextEditingController _descriptionController = TextEditingController();
-    TextEditingController _costController = TextEditingController();
-    TextEditingController _amountCostController = TextEditingController();
+    toast.init(context);
 
     return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        Column(
+        DefaultInput("Name", TextInputType.text, _nameController),
+        DefaultInput("Description", TextInputType.text, _descriptionController),
+        Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            DefaultInput("Name", TextInputType.text, _nameController),
-            DefaultInput(
-                "Description", TextInputType.text, _descriptionController),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Expanded(
-                  flex: 5,
-                  child: DefaultInput(
-                      "Cost", TextInputType.number, _costController),
-                ),
-                Expanded(
-                  flex: 5,
-                  child: DefaultInput(
-                      "Amount", TextInputType.number, _amountCostController),
-                ),
-              ],
+            Expanded(
+              flex: 5,
+              child:
+                  DefaultInput("Cost", TextInputType.number, _costController),
+            ),
+            Expanded(
+              flex: 5,
+              child: DefaultInput(
+                  "Amount", TextInputType.number, _amountCostController),
             ),
           ],
         ),
+        Padding(
+          padding: EdgeInsets.only(left: 8, right: 8, top: 8),
+          child: SizedBox(
+            width: double.maxFinite,
+            child: OutlinedButton(
+                style: OutlinedButton.styleFrom(
+                    primary: Colors.green[900],
+                    backgroundColor: Colors.green[100]),
+                onPressed: () {
+                  var name = _nameController.text;
+                  var description = _descriptionController.text;
+                  var cost = double.tryParse(_costController.text);
+                  var amount = int.tryParse(_amountCostController.text);
 
-        //DefaultInput("Items", TextInputType.text, _descriptionController),
+                  if (ExpenseItem.isValidProperties(
+                      name, description, cost, amount)) {
+                    addedItem(ExpenseItem(name, description, cost!, amount!));
+                    toast.showToast(
+                      child: DefaultToast.Success("Item Added"),
+                      gravity: ToastGravity.BOTTOM,
+                      toastDuration: Duration(seconds: 2),
+                    );
+                  } else {
+                    toast.showToast(
+                      child: DefaultToast.Error(
+                          "Ops! All fields are correct filled?"),
+                      gravity: ToastGravity.BOTTOM,
+                      toastDuration: Duration(seconds: 2),
+                    );
+                  }
+                },
+                child: Text("Add")),
+          ),
+        ),
       ],
     );
+    //DefaultInput("Items", TextInputType.text, _descriptionController),
   }
 }
 
 class ExpenseItemsList extends StatelessWidget {
-  final ScrollController _controller = ScrollController();
+  List<ExpenseItem> items;
+
+  ExpenseItemsList(this.items);
 
   @override
   Widget build(BuildContext context) {
+
     return Expanded(
         flex: 10,
-        child: FutureBuilder(
-            initialData: List<String>.empty(growable: true),
-            future: Future(() => List<String>.filled(50, "Ola")),
-            builder:
-                (BuildContext context, AsyncSnapshot<List<String>> snapshot) {
-              switch (snapshot.connectionState) {
-                case ConnectionState.none:
-                  //nothing was done
-                  break;
-                case ConnectionState.waiting:
-                  //return Progress();
-                  break;
-                case ConnectionState.active:
-                  //stream
-                  break;
-                case ConnectionState.done:
-                  if (snapshot.hasData) {
-                    final List<String> contacts = snapshot.data!;
-                    return ListView.builder(
-                      itemBuilder: (context, index) {
-                        final contact = contacts[index];
-                        return Card(
-                          child: ListTile(
-                            leading: Icon(Icons.arrow_forward),
-                            title: Text(contact),
-                            subtitle: Text("Subtitle"),
-
-                          ),
-                        );
-                      },
-                      itemCount: contacts.length,
-                    );
-                  }
-                  break;
-              }
-
-              return Text("Treta");
-            }));
+        child: Builder(
+          builder: (BuildContext context) {
+            return ListView.builder(
+              itemBuilder: (context, index) {
+                final item = items[index];
+                return Card(
+                  child: ListTile(
+                    leading: Icon(Icons.arrow_forward),
+                    title: Text(item.name),
+                    subtitle: Text("Cost: ${item.cost}     Qnt: ${item.amount}     Total: ${item.totalCost()}"),
+                  ),
+                );
+              },
+              itemCount: items.length,
+            );
+          },
+        ));
   }
 }

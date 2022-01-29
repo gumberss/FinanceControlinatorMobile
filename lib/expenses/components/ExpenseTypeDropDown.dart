@@ -10,7 +10,7 @@ class ExpenseTypeDropDown extends StatefulWidget {
 }
 
 class _DropDown extends State<ExpenseTypeDropDown> {
-  String dropdownValue = ExpenseType.Types.first.value.toString();
+  String dropdownValue = ExpenseType.types.first.value.toString();
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +31,7 @@ class _DropDown extends State<ExpenseTypeDropDown> {
           dropdownValue = newValue!;
         });
       },
-      items: ExpenseType.Types
+      items: ExpenseType.types
           .map<DropdownMenuItem<String>>((ExpenseType expenseType) {
         return DropdownMenuItem<String>(
           value: expenseType.value.toString(),
