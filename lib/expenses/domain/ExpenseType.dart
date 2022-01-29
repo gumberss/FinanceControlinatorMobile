@@ -1,5 +1,3 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 
 class ExpenseType {
   String text;
@@ -7,7 +5,7 @@ class ExpenseType {
 
   ExpenseType(this.text, this.value);
 
-  static List<ExpenseType> Types = [
+  static List<ExpenseType> types = [
     ExpenseType("Market", 0),
     ExpenseType("Bill", 10),
     ExpenseType("Leisure", 20),
