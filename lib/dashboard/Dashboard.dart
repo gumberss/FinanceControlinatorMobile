@@ -46,8 +46,6 @@ class Colls extends StatelessWidget {
           children: [
             Card(Icons.account_balance_wallet, "Account", () => {}),
             Card(Icons.money_off, "Expenses", () {
-              debugPrint("go");
-
               Navigator.of(context)
                   .push(MaterialPageRoute(builder: (c) => ExpensesScreen()));
             }),

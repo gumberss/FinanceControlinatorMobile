@@ -1,5 +1,6 @@
 import 'package:finance_controlinator_mobile/components/DefaultInput.dart';
 import 'package:finance_controlinator_mobile/expenses/components/ExpenseTypeDropDown.dart';
+import 'package:finance_controlinator_mobile/expenses/screens/ExpenseItems.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -61,7 +62,10 @@ class ExpensesScreen extends StatelessWidget {
                         style: OutlinedButton.styleFrom(
                             primary: Colors.green[900],
                             backgroundColor: Colors.green[100]),
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.of(context)
+                              .push(MaterialPageRoute(builder: (c) => ExpenseItemsScreen()));
+                        },
                         child: Text("Items")),
                   ),
                 ),
