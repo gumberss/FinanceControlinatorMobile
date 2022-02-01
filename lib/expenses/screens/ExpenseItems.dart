@@ -4,19 +4,23 @@ import 'package:finance_controlinator_mobile/expenses/domain/ExpenseItem.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:uuid/uuid.dart';
 
 class ExpenseItemsScreen extends StatefulWidget {
+
+  List<ExpenseItem> items;
+
+  ExpenseItemsScreen(this.items);
 
   @override
   State<ExpenseItemsScreen> createState() => _ExpenseItemsScreenState();
 }
 
 class _ExpenseItemsScreenState extends State<ExpenseItemsScreen> {
-  List<ExpenseItem> items = List.empty(growable: true);
 
   void addedItem(ExpenseItem item) {
     setState(() {
-      items.add(item);
+      widget.items.add(item);
     });
   }
 
@@ -32,7 +36,7 @@ class _ExpenseItemsScreenState extends State<ExpenseItemsScreen> {
               padding: EdgeInsets.only(bottom: 16),
               child: ExpenseItemsForm(addedItem),
             ),
-            ExpenseItemsList(items),
+            ExpenseItemsList(widget.items),
             Column(
               mainAxisAlignment: MainAxisAlignment.end,
               mainAxisSize: MainAxisSize.max,
@@ -43,7 +47,10 @@ class _ExpenseItemsScreenState extends State<ExpenseItemsScreen> {
                   child: SizedBox(
                     width: double.maxFinite,
                     child: ElevatedButton(
-                        onPressed: () {}, child: Text("Save and back")),
+                        onPressed: () {
+                          Navigator.pop(context, widget.items);
+                        },
+                        child: Text("Save and back")),
                   ),
                 )
               ],
@@ -62,8 +69,7 @@ class ExpenseItemsForm extends StatelessWidget {
   FToast toast;
   Function(ExpenseItem) addedItem;
 
-  ExpenseItemsForm(this.addedItem):
-        toast = FToast();
+  ExpenseItemsForm(this.addedItem) : toast = FToast();
 
   @override
   Widget build(BuildContext context) {
@@ -105,7 +111,7 @@ class ExpenseItemsForm extends StatelessWidget {
 
                   if (ExpenseItem.isValidProperties(
                       name, description, cost, amount)) {
-                    addedItem(ExpenseItem(name, description, cost!, amount!));
+                    addedItem(ExpenseItem(Uuid().v4(),name, description, cost!, amount!));
                     toast.showToast(
                       child: DefaultToast.Success("Item Added"),
                       gravity: ToastGravity.BOTTOM,
@@ -114,7 +120,7 @@ class ExpenseItemsForm extends StatelessWidget {
                   } else {
                     toast.showToast(
                       child: DefaultToast.Error(
-                          "Ops! All fields are correct filled?"),
+                          "Ops! Are all fields correct filled?"),
                       gravity: ToastGravity.BOTTOM,
                       toastDuration: Duration(seconds: 2),
                     );
@@ -136,7 +142,6 @@ class ExpenseItemsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return Expanded(
         flex: 10,
         child: Builder(
@@ -148,7 +153,8 @@ class ExpenseItemsList extends StatelessWidget {
                   child: ListTile(
                     leading: Icon(Icons.arrow_forward),
                     title: Text(item.name),
-                    subtitle: Text("Cost: ${item.cost}     Qnt: ${item.amount}     Total: ${item.totalCost()}"),
+                    subtitle: Text(
+                        "Cost: ${item.cost}     Qnt: ${item.amount}     Total: ${item.totalCost()}"),
                   ),
                 );
               },

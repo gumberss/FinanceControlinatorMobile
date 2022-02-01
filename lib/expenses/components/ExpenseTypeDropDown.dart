@@ -3,6 +3,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class ExpenseTypeDropDown extends StatefulWidget {
+  String dropdownValue = ExpenseType.types.first.value.toString();
+
   @override
   State<StatefulWidget> createState() {
     return _DropDown();
@@ -10,17 +12,17 @@ class ExpenseTypeDropDown extends StatefulWidget {
 }
 
 class _DropDown extends State<ExpenseTypeDropDown> {
-  String dropdownValue = ExpenseType.types.first.value.toString();
 
   @override
   Widget build(BuildContext context) {
     return Padding(padding: EdgeInsets.all(8),
     child: DropdownButton<String>(
-      value: dropdownValue,
+      value: widget.dropdownValue,
       icon: const Icon(Icons.arrow_downward),
       isExpanded:true,
       alignment:  Alignment.center,
       elevation: 16,
+      hint: Text("Select a type"),
       style: const TextStyle(color: Colors.deepPurple,),
       underline: Container(
         height: 2,
@@ -28,7 +30,7 @@ class _DropDown extends State<ExpenseTypeDropDown> {
       ),
       onChanged: (String? newValue) {
         setState(() {
-          dropdownValue = newValue!;
+          widget.dropdownValue = newValue!;
         });
       },
       items: ExpenseType.types
