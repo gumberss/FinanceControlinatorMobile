@@ -119,7 +119,7 @@ class ExpenseItemsForm extends StatelessWidget {
                   } else {
                     toast.showToast(
                       child: DefaultToast.Error(
-                          "Ops! All fields are correct filled?"),
+                          "Ops! Are all fields correct filled?"),
                       gravity: ToastGravity.BOTTOM,
                       toastDuration: Duration(seconds: 2),
                     );
