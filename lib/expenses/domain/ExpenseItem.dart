@@ -3,9 +3,9 @@ class ExpenseItem {
   String description;
   double cost;
   int amount;
-  String? id;
+  String id;
 
-  ExpenseItem(this.name, this.description, this.cost, this.amount);
+  ExpenseItem(this.id, this.name, this.description, this.cost, this.amount);
 
   double totalCost() => cost * amount;
 

@@ -5,10 +5,12 @@ import 'package:finance_controlinator_mobile/expenses/domain/Expense.dart';
 import 'package:finance_controlinator_mobile/expenses/domain/ExpenseItem.dart';
 import 'package:finance_controlinator_mobile/expenses/domain/ExpenseType.dart';
 import 'package:finance_controlinator_mobile/expenses/screens/ExpenseItems.dart';
+import 'package:finance_controlinator_mobile/expenses/webclients/ExpenseWebClient.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:uuid/uuid.dart';
 
 class ExpensesScreen extends StatefulWidget {
   @override
@@ -146,6 +148,9 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
                                 installmentCount,
                                 "",
                                 items)) {
+
+                              var expense = Expense(Uuid().v4(), title, description, location, purchaseDay, type, totalCost!, installmentCount!, "", items);
+                              ExpenseWebClient().save(expense);
                               toast.showToast(
                                 child:
                                     DefaultToast.Success("Expense Created :)"),

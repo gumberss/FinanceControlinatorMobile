@@ -4,6 +4,7 @@ import 'package:finance_controlinator_mobile/expenses/domain/ExpenseItem.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:uuid/uuid.dart';
 
 class ExpenseItemsScreen extends StatefulWidget {
 
@@ -110,7 +111,7 @@ class ExpenseItemsForm extends StatelessWidget {
 
                   if (ExpenseItem.isValidProperties(
                       name, description, cost, amount)) {
-                    addedItem(ExpenseItem(name, description, cost!, amount!));
+                    addedItem(ExpenseItem(Uuid().v4(),name, description, cost!, amount!));
                     toast.showToast(
                       child: DefaultToast.Success("Item Added"),
                       gravity: ToastGravity.BOTTOM,

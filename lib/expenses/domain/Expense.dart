@@ -18,6 +18,7 @@ class Expense {
   List<ExpenseItem> items;
 
   Expense(
+      this.id,
       this.title,
       this.description,
       this.location,
@@ -45,12 +46,12 @@ class Expense {
         'title': title,
         'description': description,
         'location': location,
-        'purchaseDay': purchaseDay,
-        'type': type,
+        'purchaseDay': purchaseDay.toString(),
+        'type': type.value,
         'totalCost': totalCost,
         'installmentCount': installmentCount,
         'observation': observation,
-        'items': items.map((e) => e.toJson()),
+        'items': items.map((e) => e.toJson()).toList(),
       };
 
   static bool areValidProperties(
