@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:finance_controlinator_mobile/components/DefaultInput.dart';
 import 'package:finance_controlinator_mobile/expenses/components/DefaultToast.dart';
 import 'package:finance_controlinator_mobile/expenses/components/ExpenseTypeDropDown.dart';
@@ -41,6 +43,8 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
   _ExpensesScreenState() : toast = FToast();
 
   var typeDropDown = ExpenseTypeDropDown();
+
+  var expenseId = Uuid().v4();
 
   @override
   Widget build(BuildContext context) {
@@ -123,13 +127,13 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
                     child: SizedBox(
                       width: double.maxFinite,
                       child: ElevatedButton(
-                          onPressed: () {
+                          onPressed: () async {
                             var title = _titleController.text;
                             var description = _descriptionController.text;
                             var location = _locationController.text;
                             var totalCost =
                                 double.tryParse(_totalCostController.text);
-                            var installmentCount =
+                            var installmentsCount =
                                 int.tryParse(_installmentCountController.text);
                             var purchaseDay =
                                 DateTime.now(); // todo: fix it later
@@ -145,18 +149,28 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
                                 purchaseDay,
                                 type,
                                 totalCost,
-                                installmentCount,
+                                installmentsCount,
                                 "",
                                 items)) {
 
-                              var expense = Expense(Uuid().v4(), title, description, location, purchaseDay, type, totalCost!, installmentCount!, "", items);
-                              ExpenseWebClient().save(expense);
-                              toast.showToast(
-                                child:
-                                    DefaultToast.Success("Expense Created :)"),
-                                gravity: ToastGravity.BOTTOM,
-                                toastDuration: Duration(seconds: 2),
-                              );
+                              var expense = Expense(expenseId, title, description, location, purchaseDay, type, totalCost!, installmentsCount!, "", items);
+                              try{
+                                await ExpenseWebClient().save(expense);
+                                toast.showToast(
+                                  child:
+                                  DefaultToast.Success("Expense Created :)"),
+                                  gravity: ToastGravity.BOTTOM,
+                                  toastDuration: Duration(seconds: 2),
+                                );
+                                Navigator.pop(context);
+                              }on HttpException catch(e){
+                                toast.showToast(
+                                  child: DefaultToast.Error(
+                                      e.message),
+                                  gravity: ToastGravity.BOTTOM,
+                                  toastDuration: Duration(seconds: 2),
+                                );
+                              }
                             } else {
                               toast.showToast(
                                 child: DefaultToast.Error(

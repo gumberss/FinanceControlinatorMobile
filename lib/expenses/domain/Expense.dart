@@ -11,7 +11,7 @@ class Expense {
   ExpenseType type;
 
   double totalCost;
-  int installmentCount;
+  int installmentsCount;
 
   String observation;
 
@@ -25,7 +25,7 @@ class Expense {
       this.purchaseDay,
       this.type,
       this.totalCost,
-      this.installmentCount,
+      this.installmentsCount,
       this.observation,
       this.items);
 
@@ -37,7 +37,7 @@ class Expense {
         purchaseDay = json['purchaseDay'],
         type = json['type'],
         totalCost = json['totalCost'],
-        installmentCount = json['installmentCount'],
+        installmentsCount = json['installmentsCount'],
         observation = json['observation'],
         items = json['items'];
 
@@ -49,7 +49,7 @@ class Expense {
         'purchaseDay': purchaseDay.toString(),
         'type': type.value,
         'totalCost': totalCost,
-        'installmentCount': installmentCount,
+        'installmentsCount': installmentsCount,
         'observation': observation,
         'items': items.map((e) => e.toJson()).toList(),
       };

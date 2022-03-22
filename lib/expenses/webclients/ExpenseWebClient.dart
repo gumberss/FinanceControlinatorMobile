@@ -1,8 +1,8 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:finance_controlinator_mobile/components/HttpClient/http_client.dart';
 import 'package:finance_controlinator_mobile/expenses/domain/Expense.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class ExpenseWebClient {
@@ -15,6 +15,10 @@ class ExpenseWebClient {
       'Content-Type': 'application/json; charset=UTF-8',
     },
     body: jsonEncode(expense.toJson()));
+
+    if(response.statusCode == 500)
+      throw new HttpException("It was not possible to \ncreate the expense :(");
+
     return expense;
   }
 }
