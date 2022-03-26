@@ -24,15 +24,17 @@ class ExpenseListHeader extends StatelessWidget {
     // TODO: implement build
     return Container(
       color: Color.fromARGB(130, 122, 184, 241),
-      height: 100,
+      height: 200,
+      alignment: Alignment.topCenter,
       child: Padding(
         padding: EdgeInsets.only(top: 16, bottom: 8, right: 8, left: 8),
         child: ListView(
+          shrinkWrap: true,
           scrollDirection: Axis.horizontal,
           children: [
-            OverviewCardWithMargin(),
-            OverviewCardWithMargin(),
-            OverviewCardWithMargin(),
+            OverviewCardWithMargin("You spent R\$ 8432,98 this month"),
+            OverviewCardWithMargin("The large part of your money was spent with bills"),
+            OverviewCardWithMargin("The place you spent more money was Mercado Confiança (R\$ 1432,32)"),
           ],
         ),
       ),
@@ -50,20 +52,31 @@ class ExpenseListBody extends StatelessWidget {
 }
 
 class OverviewCardWithMargin extends StatelessWidget {
+
+  String text;
+
+  OverviewCardWithMargin(this.text);
+
   @override
   Widget build(BuildContext context) {
     return Container(
+      alignment: Alignment.topCenter,
       margin: EdgeInsets.only(right: 8, bottom: 4),
-      child: OverviewCard(),
+      child: OverviewCard(text),
     );
   }
 }
 
 class OverviewCard extends StatelessWidget {
+
+  String text;
+
+  OverviewCard(this.text);
+
   @override
   Widget build(BuildContext context) {
     return Container(
-        height: 70,
+        height: 100,
         width: 160,
         decoration: BoxDecoration(
             color: Theme.of(context).colorScheme.primary,
@@ -78,7 +91,7 @@ class OverviewCard extends StatelessWidget {
             ]),
         child: Padding(
           padding: EdgeInsets.only(left: 8, right: 8, bottom: 16, top: 16),
-          child: Text("data"),
+          child: Text(this.text, textAlign: TextAlign.justify,),
         ),
     );
   }
