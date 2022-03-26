@@ -1,3 +1,4 @@
+import 'package:finance_controlinator_mobile/expenses/screens/ExpenseList.dart';
 import 'package:finance_controlinator_mobile/expenses/screens/Expenses.dart';
 import 'package:flutter/material.dart';
 
@@ -10,7 +11,9 @@ class Dashboard extends StatelessWidget {
         ),
         body: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [Colls(), Carousel()],
+          children: [Colls(),
+          //  Carousel()
+          ],
         ));
   }
 }
@@ -47,7 +50,7 @@ class Colls extends StatelessWidget {
             Card(Icons.account_balance_wallet, "Account", () => {}),
             Card(Icons.money_off, "Expenses", () {
               Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (c) => ExpensesScreen()));
+                  .push(MaterialPageRoute(builder: (c) => ExpenseList()));
             }),
             Card(Icons.list_alt, "Invoices", () => {}),
           ],
