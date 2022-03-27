@@ -32,8 +32,6 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
 
   TextEditingController _purchaseDayController = TextEditingController();
 
-  TextEditingController _typeController = TextEditingController();
-
   TextEditingController _observationController = TextEditingController();
 
   List<ExpenseItem> items = List.empty(growable: true);
