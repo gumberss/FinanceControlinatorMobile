@@ -35,7 +35,6 @@ class ExpenseOverviewWebClient {
     if (response.statusCode == 500)
       throw new HttpException("It was not possible to \nfind the overview :(");
 
-    debugPrint(response.body);
     Iterable lst = jsonDecode(response.body);
 
     var expenseOverview =
