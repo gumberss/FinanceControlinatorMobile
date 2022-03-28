@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:finance_controlinator_mobile/components/HttpClient/http_client.dart';
 import 'package:finance_controlinator_mobile/expenses/domain/Expense.dart';
 import 'package:finance_controlinator_mobile/expenses/domain/overviews/ExpenseOverview.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class ExpenseWebClient {
@@ -29,17 +28,13 @@ class ExpenseOverviewWebClient {
   Uri baseUri = Uri.http(dotenv.env['FINANCE_CONTROLINATOR_API_URL'].toString(),
       "/api/expenses/overview");
 
-  Future<List<ExpenseOverview>> GetOverview() async {
+  Future<ExpenseOverview> GetOverview() async {
     final response = await client.get(baseUri);
 
     if (response.statusCode == 500)
       throw new HttpException("It was not possible to \nfind the overview :(");
 
-    Iterable lst = jsonDecode(response.body);
-
-    var expenseOverview =
-        List<ExpenseOverview>.from(lst.map((e) => ExpenseOverview.fromJson(e)));
-
+    var expenseOverview = ExpenseOverview.fromJson(jsonDecode(response.body));
 
     return expenseOverview;
   }

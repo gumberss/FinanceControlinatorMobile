@@ -1,3 +1,4 @@
+import 'package:finance_controlinator_mobile/expenses/domain/overviews/ExpenseBrief.dart';
 import 'package:finance_controlinator_mobile/expenses/domain/overviews/ExpenseOverview.dart';
 import 'package:finance_controlinator_mobile/expenses/webclients/ExpenseWebClient.dart';
 import 'package:flutter/cupertino.dart';
@@ -30,7 +31,7 @@ class ExpenseListHeader extends StatelessWidget {
         child: Column(
           children: [
             Expanded(
-              child: ExpenseListHeaderCards(),
+              child: ExpenseListHeaderCards(ExpenseOverviewWebClient().GetOverview()),
             ),
             ExpenseListHeaderBar()
           ],
@@ -162,22 +163,27 @@ class ExpenseListHeaderBar extends StatelessWidget {
 }
 
 class ExpenseListHeaderCards extends StatelessWidget {
+
+  Future<ExpenseOverview> expenseOverviewFuture;
+
+  ExpenseListHeaderCards(this.expenseOverviewFuture);
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: ExpenseOverviewWebClient().GetOverview(),
-      builder: (context, AsyncSnapshot<List<ExpenseOverview>> snapshot) {
+      future: expenseOverviewFuture,
+      builder: (context, AsyncSnapshot<ExpenseOverview> snapshot) {
         if (!snapshot.hasData) {
           return Center(
             child: CircularProgressIndicator(),
           );
         }
         return ListView.builder(
-          itemCount: snapshot.data!.length,
+          itemCount: snapshot.data!.briefs.length,
           scrollDirection: Axis.horizontal,
           shrinkWrap: true,
           itemBuilder: (BuildContext cxt, int index) {
-            return OverviewCardWithMargin(snapshot.data![index].text);
+            return OverviewCardWithMargin(snapshot.data!.briefs[index].text);
           },
         );
       },
