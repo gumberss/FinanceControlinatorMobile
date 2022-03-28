@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:finance_controlinator_mobile/components/HttpClient/http_client.dart';
 import 'package:finance_controlinator_mobile/expenses/domain/Expense.dart';
 import 'package:finance_controlinator_mobile/expenses/domain/overviews/ExpenseOverview.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class ExpenseWebClient {
