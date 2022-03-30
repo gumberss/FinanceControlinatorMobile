@@ -1,5 +1,6 @@
 import 'package:finance_controlinator_mobile/expenses/domain/overviews/ExpenseBrief.dart';
 import 'package:finance_controlinator_mobile/expenses/domain/overviews/ExpenseOverview.dart';
+import 'package:finance_controlinator_mobile/expenses/domain/overviews/ExpensePartition.dart';
 import 'package:finance_controlinator_mobile/expenses/webclients/ExpenseWebClient.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -24,169 +25,139 @@ class ExpenseListHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       color: Color.fromARGB(130, 122, 184, 241),
-      height: 200,
+      height: 230,
       alignment: Alignment.topCenter,
-      child: Padding(
-        padding: EdgeInsets.only(top: 16, bottom: 8, right: 8, left: 8),
-        child: Column(
-          children: [
-            Expanded(
-              child: ExpenseListHeaderCards(ExpenseOverviewWebClient().GetOverview()),
-            ),
-            ExpenseListHeaderBar()
-          ],
-        ),
+      child: FutureBuilder(
+        future: ExpenseOverviewWebClient().GetOverview(),
+        builder: (context, AsyncSnapshot<ExpenseOverview> snapshot) {
+          if (!snapshot.hasData) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+          return Column(
+            children: [
+              Padding(
+                padding: EdgeInsets.only(top: 16),
+                child: ExpenseListHeaderCards(snapshot.data!.briefs),
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 16),
+                child: ExpenseListHeaderBar(snapshot.data!.partitions),
+              ),
+            ],
+          );
+        },
       ),
     );
   }
 }
 
 class ExpenseListHeaderBar extends StatelessWidget {
+  List<ExpensePartition> _partitions;
+
+  ExpenseListHeaderBar(this._partitions);
+
   @override
   Widget build(BuildContext context) {
+    _partitions.sort((x,y) => x.type.compareTo(y.type));
+    var partitionsWithSpend =
+    _partitions.where((element) => element.percent > 0).toList();
+
+    List<Color> colors = [
+      Colors.redAccent,
+      Colors.greenAccent,
+      Colors.blueAccent,
+      Colors.orangeAccent,
+      Colors.blueGrey,
+      Colors.purpleAccent,
+    ];
+    var descriptions = _partitions
+        .asMap()
+        .map((key, value) => MapEntry(
+            key,
+            Row(
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(left: 4, right: 4),
+                  child: Text(value.type + ":"),
+                ),
+                Container(
+                    height: 20,
+                    width: 20,
+                    decoration: BoxDecoration(
+                        color: colors[key],
+                        borderRadius: BorderRadius.all(Radius.circular(100))))
+              ],
+            )))
+        .values
+        .toList();
+
     return Column(
       children: [
         Row(
-          children: [
-            Expanded(
-                flex: 40,
-                child: Container(
-                  height: 20,
-                  decoration: BoxDecoration(
-                      color: Colors.orangeAccent,
-                      borderRadius: BorderRadius.only(
+            children: partitionsWithSpend
+                .asMap()
+                .map((key, value) {
+                  var border = key == 0
+                      ? BorderRadius.only(
                           topLeft: Radius.circular(6),
-                          bottomLeft: Radius.circular(6))),
-                )),
-            Expanded(
-                flex: 25,
-                child: Container(
-                  height: 20,
-                  decoration: BoxDecoration(
-                    color: Colors.redAccent,
-                  ),
-                )),
-            Expanded(
-                flex: 30,
-                child: Container(
-                  height: 20,
-                  decoration: BoxDecoration(
-                    color: Colors.greenAccent,
-                  ),
-                )),
-            Expanded(
-                flex: 5,
-                child: Container(
-                  height: 20,
-                  decoration: BoxDecoration(
-                      color: Colors.blueAccent,
-                      borderRadius: BorderRadius.only(
-                          topRight: Radius.circular(6),
-                          bottomRight: Radius.circular(6))),
-                ))
-          ],
-        ),
-        Padding(
-          padding: EdgeInsets.only(
-            top: 8,
-            bottom: 8,
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Padding(
-                padding: EdgeInsets.only(left: 4, right: 4),
-                child: Text("Mercado:"),
-              ),
-              Container(
-                height: 20,
-                width: 20,
-                decoration: BoxDecoration(
-                    color: Colors.orangeAccent,
-                    borderRadius: BorderRadius.all(Radius.circular(100))),
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: 4, right: 4),
-                child: Text("Contas:"),
-              ),
-              Container(
-                height: 20,
-                width: 20,
-                decoration: BoxDecoration(
-                    color: Colors.redAccent,
-                    borderRadius: BorderRadius.all(Radius.circular(100))),
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: 4, right: 4),
-                child: Text("Lazer:"),
-              ),
-              Container(
-                height: 20,
-                width: 20,
-                decoration: BoxDecoration(
-                    color: Colors.purpleAccent,
-                    borderRadius: BorderRadius.all(Radius.circular(100))),
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: 4, right: 4),
-                child: Text("Saúde:"),
-              ),
-              Container(
-                height: 20,
-                width: 20,
-                decoration: BoxDecoration(
-                    color: Colors.greenAccent,
-                    borderRadius: BorderRadius.all(Radius.circular(100))),
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: 4, right: 4),
-                child: Text("Outros:"),
-              ),
-              Container(
-                height: 20,
-                width: 20,
-                decoration: BoxDecoration(
-                    color: Colors.blueAccent,
-                    borderRadius: BorderRadius.all(Radius.circular(100))),
-              )
-            ],
-          ),
-        ),
-        Row(
-          children: [
+                          bottomLeft: Radius.circular(6))
+                      : key == partitionsWithSpend.length - 1
+                          ? BorderRadius.only(
+                              topRight: Radius.circular(6),
+                              bottomRight: Radius.circular(6))
+                          : BorderRadius.all(Radius.zero);
 
-          ],
-        )
+                  return MapEntry(
+                      key,
+                      Expanded(
+                          flex: value.percent.toInt(),
+                          child: Container(
+                            height: 20,
+                            decoration: BoxDecoration(
+                                color: colors[key], borderRadius: border),
+                          )));
+                })
+                .values
+                .toList()),
+        Padding(
+            padding: EdgeInsets.only(
+              top: 8,
+              bottom: 8,
+            ),
+            child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: descriptions.take(3).toList())),
+        Padding(
+            padding: EdgeInsets.only(
+              top: 8,
+              bottom: 8,
+            ),
+            child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: descriptions.skip(3).take(3).toList()))
       ],
     );
   }
 }
 
 class ExpenseListHeaderCards extends StatelessWidget {
+  List<ExpenseBrief> expenseBriefs;
 
-  Future<ExpenseOverview> expenseOverviewFuture;
-
-  ExpenseListHeaderCards(this.expenseOverviewFuture);
+  ExpenseListHeaderCards(this.expenseBriefs);
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: expenseOverviewFuture,
-      builder: (context, AsyncSnapshot<ExpenseOverview> snapshot) {
-        if (!snapshot.hasData) {
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        }
-        return ListView.builder(
-          itemCount: snapshot.data!.briefs.length,
-          scrollDirection: Axis.horizontal,
-          shrinkWrap: true,
-          itemBuilder: (BuildContext cxt, int index) {
-            return OverviewCardWithMargin(snapshot.data!.briefs[index].text);
-          },
-        );
-      },
+    return Container(
+      height: 100,
+      width: double.infinity,
+      child: ListView(
+        scrollDirection: Axis.horizontal,
+        shrinkWrap: true,
+        children:
+            expenseBriefs.map((e) => OverviewCardWithMargin(e.text)).toList(),
+      ),
     );
   }
 }
