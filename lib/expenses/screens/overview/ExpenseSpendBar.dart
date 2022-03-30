@@ -1,11 +1,10 @@
 import 'package:finance_controlinator_mobile/expenses/domain/overviews/ExpensePartition.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class ExpenseSpendBar extends StatelessWidget {
   List<ExpensePartition> _partitions;
 
-  ExpenseSpendBar(this._partitions);
+  ExpenseSpendBar(this._partitions, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +44,7 @@ class ExpenseSpendBar extends StatelessWidget {
                 .values
                 .toList()),
         Padding(
-            padding: EdgeInsets.only(
+            padding: const EdgeInsets.only(
               top: 8,
               bottom: 8,
             ),
@@ -53,7 +52,7 @@ class ExpenseSpendBar extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: descriptions.take(3).toList())),
         Padding(
-            padding: EdgeInsets.only(
+            padding: const EdgeInsets.only(
               top: 8,
               bottom: 8,
             ),
@@ -82,7 +81,7 @@ class ExpenseSpendBar extends StatelessWidget {
             Row(
               children: [
                 Padding(
-                  padding: EdgeInsets.only(left: 4, right: 4),
+                  padding: const EdgeInsets.only(left: 4, right: 4),
                   child: Text(value.type + ":"),
                 ),
                 Container(
@@ -90,7 +89,7 @@ class ExpenseSpendBar extends StatelessWidget {
                     width: 20,
                     decoration: BoxDecoration(
                         color: colors[key],
-                        borderRadius: BorderRadius.all(Radius.circular(100))))
+                        borderRadius: const BorderRadius.all(const Radius.circular(100))))
               ],
             )))
         .values
