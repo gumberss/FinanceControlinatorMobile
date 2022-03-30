@@ -54,7 +54,6 @@ class ExpenseListHeader extends StatelessWidget {
   }
 }
 
-
 class ExpenseListBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
