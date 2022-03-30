@@ -2,10 +2,10 @@ import 'package:finance_controlinator_mobile/expenses/domain/overviews/ExpensePa
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class ExpenseOverviewSpendBar extends StatelessWidget {
+class ExpenseSpendBar extends StatelessWidget {
   List<ExpensePartition> _partitions;
 
-  ExpenseOverviewSpendBar(this._partitions);
+  ExpenseSpendBar(this._partitions);
 
   @override
   Widget build(BuildContext context) {

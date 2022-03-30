@@ -1,7 +1,7 @@
 import 'package:finance_controlinator_mobile/expenses/domain/overviews/ExpenseBrief.dart';
 import 'package:finance_controlinator_mobile/expenses/domain/overviews/ExpenseOverview.dart';
 import 'package:finance_controlinator_mobile/expenses/webclients/ExpenseWebClient.dart';
-import 'package:finance_controlinator_mobile/expenses/screens/overview/ExpenseOverviewSpendBar.dart';
+import 'package:finance_controlinator_mobile/expenses/screens/overview/ExpenseSpendBar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -43,7 +43,7 @@ class ExpenseListHeader extends StatelessWidget {
               ),
               Padding(
                 padding: EdgeInsets.only(top: 16),
-                child: ExpenseOverviewSpendBar(snapshot.data!.partitions),
+                child: ExpenseSpendBar(snapshot.data!.partitions),
               ),
             ],
           );
@@ -52,7 +52,6 @@ class ExpenseListHeader extends StatelessWidget {
     );
   }
 }
-
 
 class ExpenseListHeaderCards extends StatelessWidget {
   List<ExpenseBrief> expenseBriefs;
