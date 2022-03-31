@@ -1,4 +1,3 @@
-
 class ExpenseType {
   String text;
   int value;
@@ -13,4 +12,7 @@ class ExpenseType {
     ExpenseType("Health", 40),
     ExpenseType("Other", 900),
   ];
+
+  static ExpenseType from(int value) =>
+      types.firstWhere((element) => element.value == value);
 }

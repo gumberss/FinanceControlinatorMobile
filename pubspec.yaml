@@ -37,6 +37,7 @@ dependencies:
   http_interceptor:
   uuid:
   flutter_dotenv: ^5.0.2
+  intl: ^0.17.0
 
 dev_dependencies:
   flutter_test:
