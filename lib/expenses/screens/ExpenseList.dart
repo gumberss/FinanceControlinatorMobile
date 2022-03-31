@@ -102,6 +102,7 @@ class ExpenseListBody extends StatelessWidget {
                   ),
                   Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Text("R\$ ${item.totalCost.toStringAsFixed(2)}"),
                       Text(
