@@ -1,10 +1,9 @@
+import 'package:finance_controlinator_mobile/expenses/components/InfiniteList.dart';
 import 'package:finance_controlinator_mobile/expenses/domain/Expense.dart';
 import 'package:finance_controlinator_mobile/expenses/domain/overviews/ExpenseOverview.dart';
 import 'package:finance_controlinator_mobile/expenses/webclients/ExpenseWebClient.dart';
 import 'package:finance_controlinator_mobile/expenses/screens/overview/ExpenseSpendBar.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:intl/intl.dart';
 
 import 'overview/ExpenseBriefCards.dart';
@@ -17,12 +16,10 @@ class ExpenseList extends StatelessWidget {
         title: const Text("Expenses List"),
       ),
       body: Column(
-        children: [Expanded(
-            flex: 35,
-            child: ExpenseListHeader()),
-        Expanded(
-            flex: 60,
-            child: ExpenseListBody())],
+        children: [
+          Expanded(flex: 35, child: ExpenseListHeader()),
+          Expanded(flex: 60, child: ExpenseListBody())
+        ],
       ),
     );
   }
@@ -34,6 +31,7 @@ class ExpenseListHeader extends StatelessWidget {
     return Container(
       color: Colors.lightBlue.shade100,
       alignment: Alignment.topCenter,
+      child: Padding(padding: EdgeInsets.all(8),
       child: FutureBuilder(
         future: ExpenseOverviewWebClient().GetOverview(),
         builder: (context, AsyncSnapshot<ExpenseOverview> snapshot) {
@@ -55,7 +53,7 @@ class ExpenseListHeader extends StatelessWidget {
             ],
           );
         },
-      ),
+      ),),
     );
   }
 }
@@ -66,9 +64,10 @@ class ExpenseListBody extends StatelessWidget {
     return Container(
       width: double.infinity,
       child: RefreshIndicator(
-        onRefresh: () => requestItems(0),
+        onRefresh: () => requestItems(1, 10),
         child: InifiniteList<Expense>(
           onRequest: requestItems,
+          itensPerPage: 10,
           itemBuilder: (context, item, index) => Container(
               height: 100,
               decoration: BoxDecoration(
@@ -119,59 +118,10 @@ class ExpenseListBody extends StatelessWidget {
   }
 }
 
-Future<List<Expense>> requestItems(int itemsCount) async {
-  const pageSize = 10;
-  var page = (itemsCount / pageSize).ceil() + 1;
-  return await ExpenseWebClient().getPage(page, pageSize);
+Future<List<Expense>> requestItems(int page, int itemsCount) async {
+  //const pageSize = 10;
+  //var page = (itemsCount / pageSize).ceil() + 1;
+  return await ExpenseWebClient().getPage(page, itemsCount);
 }
 
-typedef Future<List<T>> RequestFn<T>(int nextIndex);
-typedef Widget ItemBuilder<T>(BuildContext context, T item, int index);
 
-class InifiniteList<T> extends StatefulWidget {
-  final RequestFn<T> onRequest;
-  final ItemBuilder<T> itemBuilder;
-
-  const InifiniteList(
-      {Key? key, required this.onRequest, required this.itemBuilder})
-      : super(key: key);
-
-  @override
-  _InifiniteListState<T> createState() => _InifiniteListState<T>();
-}
-
-class _InifiniteListState<T> extends State<InifiniteList<T>> {
-  List<T> items = [];
-  bool end = false;
-
-  _getMoreItems() async {
-    final moreItems = await widget.onRequest(items.length);
-    if (!mounted) return;
-
-    if (moreItems.isEmpty) {
-      setState(() => end = true);
-      return;
-    }
-    setState(() => items = [...items, ...moreItems]);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return ListView.builder(
-      itemBuilder: (context, index) {
-        if (index < items.length) {
-          return widget.itemBuilder(context, items[index], index);
-        } else if (index == items.length && end) {
-          return const Center(child: Text('End of list'));
-        } else {
-          _getMoreItems();
-          return const SizedBox(
-            height: 80,
-            child: Center(child: CircularProgressIndicator()),
-          );
-        }
-      },
-      itemCount: items.length + 1,
-    );
-  }
-}
