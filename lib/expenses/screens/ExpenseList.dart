@@ -3,9 +3,9 @@ import 'package:finance_controlinator_mobile/expenses/domain/overviews/ExpenseOv
 import 'package:finance_controlinator_mobile/expenses/webclients/ExpenseWebClient.dart';
 import 'package:finance_controlinator_mobile/expenses/screens/overview/ExpenseSpendBar.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:intl/intl.dart';
 
 import 'overview/ExpenseBriefCards.dart';
 
@@ -17,10 +17,12 @@ class ExpenseList extends StatelessWidget {
         title: const Text("Expenses List"),
       ),
       body: Column(
-        children: [
-          Expanded(flex: 35, child: ExpenseListHeader()),
-          Expanded(flex: 60, child: ExpenseListBody())
-        ],
+        children: [Expanded(
+            flex: 35,
+            child: ExpenseListHeader()),
+        Expanded(
+            flex: 60,
+            child: ExpenseListBody())],
       ),
     );
   }
