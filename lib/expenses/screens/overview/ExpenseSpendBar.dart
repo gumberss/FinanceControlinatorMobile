@@ -49,15 +49,12 @@ class ExpenseSpendBar extends StatelessWidget {
               bottom: 8,
             ),
             child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: descriptions.take(3).toList())),
         Padding(
-            padding: const EdgeInsets.only(
-              top: 8,
-              bottom: 8,
-            ),
+            padding: const EdgeInsets.only(top: 8),
             child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: descriptions.skip(3).take(3).toList()))
       ],
     );
@@ -89,7 +86,8 @@ class ExpenseSpendBar extends StatelessWidget {
                     width: 20,
                     decoration: BoxDecoration(
                         color: colors[key],
-                        borderRadius: const BorderRadius.all(const Radius.circular(100))))
+                        borderRadius:
+                            const BorderRadius.all(const Radius.circular(100))))
               ],
             )))
         .values
