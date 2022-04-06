@@ -1,11 +1,11 @@
 import 'package:finance_controlinator_mobile/expenses/components/InfiniteList.dart';
 import 'package:finance_controlinator_mobile/expenses/domain/Expense.dart';
 import 'package:finance_controlinator_mobile/expenses/domain/overviews/ExpenseOverview.dart';
+import 'package:finance_controlinator_mobile/expenses/screens/Expenses.dart';
 import 'package:finance_controlinator_mobile/expenses/webclients/ExpenseWebClient.dart';
 import 'package:finance_controlinator_mobile/expenses/screens/overview/ExpenseSpendBar.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-
 import 'overview/ExpenseBriefCards.dart';
 
 class ExpenseList extends StatelessWidget {
@@ -20,6 +20,14 @@ class ExpenseList extends StatelessWidget {
           Expanded(flex: 35, child: ExpenseListHeader()),
           Expanded(flex: 60, child: ExpenseListBody())
         ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.blueAccent,
+        child: Icon(Icons.add),
+        onPressed: () => {
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (c) => ExpensesScreen()))
+        },
       ),
     );
   }
