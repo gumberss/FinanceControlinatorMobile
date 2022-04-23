@@ -7,7 +7,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:uuid/uuid.dart';
 
 class ExpenseItemsScreen extends StatefulWidget {
-
   List<ExpenseItem> items;
 
   ExpenseItemsScreen(this.items);
@@ -17,7 +16,6 @@ class ExpenseItemsScreen extends StatefulWidget {
 }
 
 class _ExpenseItemsScreenState extends State<ExpenseItemsScreen> {
-
   void addedItem(ExpenseItem item) {
     setState(() {
       widget.items.add(item);
@@ -111,7 +109,8 @@ class ExpenseItemsForm extends StatelessWidget {
 
                   if (ExpenseItem.isValidProperties(
                       name, description, cost, amount)) {
-                    addedItem(ExpenseItem(Uuid().v4(),name, description, cost!, amount!));
+                    addedItem(ExpenseItem(
+                        Uuid().v4(), name, description, cost!, amount!));
                     toast.showToast(
                       child: DefaultToast.Success("Item Added"),
                       gravity: ToastGravity.BOTTOM,
