@@ -1,6 +1,7 @@
-import 'package:finance_controlinator_mobile/authentications/screens/SignUp.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+
+import 'dashboard/Dashboard.dart';
 
 void main() async {
   await dotenv.load(fileName: ".env");
@@ -17,8 +18,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData.light(),
         darkTheme: ThemeData.dark(),
         themeMode: ThemeMode.system,
-        home: SignUp()
-        //Dashboard(),
+        home: Dashboard(),
         );
   }
 }
