@@ -86,16 +86,16 @@ class _SignUpForm extends StatelessWidget {
                           (_formKey.currentState?.validate() ?? false);
                       if (!isValidForm) return;
 
-                      var userName = _userNameController.text;
+                      var username = _userNameController.text;
                       var email = _emailController.text;
                       var password = _passwordController.text;
 
                       try {
                         var result = await AuthenticationWebClient()
-                            .signUp(SignUpUser(userName, password, email));
+                            .signUp(SignUpUser(username, password, email));
 
                         if (result == 200) {
-                          // go to login page
+                          Navigator.of(context).pop(username);
                         } else {
                           toast.showToast(
                             child: DefaultToast.Error(
