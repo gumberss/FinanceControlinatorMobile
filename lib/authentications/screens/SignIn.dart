@@ -9,6 +9,7 @@ import '../../dashboard/Dashboard.dart';
 import '../../expenses/components/DefaultToast.dart';
 import '../domain/SignInUser.dart';
 import '../webclients/AuthenticationWebClient.dart';
+import 'SignUp.dart';
 
 class SignIn extends StatelessWidget {
   @override
@@ -50,7 +51,6 @@ class _SignInFormState extends State<_SignInForm>
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _userNameController = TextEditingController();
 
-
   @override
   Widget build(BuildContext context) {
     widget.toast.init(context);
@@ -60,10 +60,10 @@ class _SignInFormState extends State<_SignInForm>
           children: [
             DefaultInput("User Name", TextInputType.text, _userNameController,
                 validator: (text) {
-                  return text == null || text.isEmpty
-                      ? "Uhhh, please, type your user name :)"
-                      : null;
-                }),
+              return text == null || text.isEmpty
+                  ? "Uhhh, please, type your user name :)"
+                  : null;
+            }),
             DefaultInput(
               "Password",
               TextInputType.visiblePassword,
@@ -77,7 +77,7 @@ class _SignInFormState extends State<_SignInForm>
                 child: OutlinedButton(
                     onPressed: () async {
                       var isValidForm =
-                      (widget._formKey.currentState?.validate() ?? false);
+                          (widget._formKey.currentState?.validate() ?? false);
                       if (!isValidForm) return;
 
                       _animationController.animateTo(1);
@@ -109,6 +109,26 @@ class _SignInFormState extends State<_SignInForm>
                     child: Text("Let's go!")),
               ),
             ),
+            Padding(
+                padding: const EdgeInsets.only(right: 16, top: 16),
+                child: Align(
+                  alignment: Alignment.topRight,
+                  child: InkWell(
+                      child: const Text(
+                        'Sign Up',
+                        style: TextStyle(color: Colors.blueAccent),
+                      ),
+                      onTap: () => {
+                            Navigator.of(context)
+                                .push<String>(
+                                    MaterialPageRoute(builder: (c) => SignUp()))
+                                .then((value) {
+                              if (value != null) {
+                                _userNameController.text = value;
+                              }
+                            })
+                          }),
+                )),
             SlideTransition(
               position: _offsetAnimation,
               child: Padding(
@@ -120,8 +140,9 @@ class _SignInFormState extends State<_SignInForm>
         ));
   }
 
-  void _ToastError({String message =
-  "Oh no! I think something goes wrong.\nTry again in a few minutes"}) {
+  void _ToastError(
+      {String message =
+          "Oh no! I think something goes wrong.\nTry again in a few minutes"}) {
     widget.toast.showToast(
       child: DefaultToast.Error(message),
       gravity: ToastGravity.TOP_RIGHT,
