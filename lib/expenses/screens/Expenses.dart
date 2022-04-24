@@ -119,70 +119,75 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
                   )
                 ],
               ),
-                  Padding(
-                    padding:
-                        EdgeInsets.only(left: 8, right: 8, top: 4, bottom: 8),
-                    child: SizedBox(
-                      width: double.maxFinite,
-                      child: ElevatedButton(
-                          onPressed: () async {
-                            var title = _titleController.text;
-                            var description = _descriptionController.text;
-                            var location = _locationController.text;
-                            var totalCost =
-                                double.tryParse(_totalCostController.text);
-                            var installmentsCount =
-                                int.tryParse(_installmentCountController.text);
-                            var purchaseDay =
-                                DateTime.now(); // todo: fix it later
-                            var typeInt = int.parse(typeDropDown.dropdownValue);
-                            var type = ExpenseType.types
-                                .where((element) => element.value == typeInt)
-                                .first;
+              Padding(
+                padding: EdgeInsets.only(left: 8, right: 8, top: 4, bottom: 8),
+                child: SizedBox(
+                  width: double.maxFinite,
+                  child: ElevatedButton(
+                      onPressed: () async {
+                        var title = _titleController.text;
+                        var description = _descriptionController.text;
+                        var location = _locationController.text;
+                        var totalCost =
+                            double.tryParse(_totalCostController.text);
+                        var installmentsCount =
+                            int.tryParse(_installmentCountController.text);
+                        var purchaseDay = DateTime.now(); // todo: fix it later
+                        var typeInt = int.parse(typeDropDown.dropdownValue);
+                        var type = ExpenseType.types
+                            .where((element) => element.value == typeInt)
+                            .first;
 
-                            if (Expense.areValidProperties(
-                                title,
-                                description,
-                                location,
-                                purchaseDay,
-                                type,
-                                totalCost,
-                                installmentsCount,
-                                "",
-                                items)) {
-
-                              var expense = Expense(expenseId, title, description, location, purchaseDay, type, totalCost!, installmentsCount!, "", items);
-                              try{
-                                await ExpenseWebClient().save(expense);
-                                toast.showToast(
-                                  child:
-                                  DefaultToast.Success("Expense Created :)"),
-                                  gravity: ToastGravity.BOTTOM,
-                                  toastDuration: Duration(seconds: 2),
-                                );
-                                Navigator.pop(context);
-                              }on HttpException catch(e){
-                                toast.showToast(
-                                  child: DefaultToast.Error(
-                                      e.message),
-                                  gravity: ToastGravity.BOTTOM,
-                                  toastDuration: Duration(seconds: 2),
-                                );
-                              }
-                            } else {
-                              toast.showToast(
-                                child: DefaultToast.Error(
-                                    "Ops! Are all fields correct filled?"),
-                                gravity: ToastGravity.BOTTOM,
-                                toastDuration: Duration(seconds: 2),
-                              );
-                            }
-                          },
-                          child: Text("Save")),
-                    ),
-                  )
-                ],
-              //DefaultInput("Items", TextInputType.text, _descriptionController),
+                        if (Expense.areValidProperties(
+                            title,
+                            description,
+                            location,
+                            purchaseDay,
+                            type,
+                            totalCost,
+                            installmentsCount,
+                            "",
+                            items)) {
+                          var expense = Expense(
+                              expenseId,
+                              title,
+                              description,
+                              location,
+                              purchaseDay,
+                              type,
+                              totalCost!,
+                              installmentsCount!,
+                              "",
+                              items);
+                          try {
+                            await ExpenseWebClient().save(expense);
+                            toast.showToast(
+                              child: DefaultToast.Success("Expense Created :)"),
+                              gravity: ToastGravity.BOTTOM,
+                              toastDuration: Duration(seconds: 2),
+                            );
+                            Navigator.pop(context);
+                          } on HttpException catch (e) {
+                            toast.showToast(
+                              child: DefaultToast.Error(e.message),
+                              gravity: ToastGravity.BOTTOM,
+                              toastDuration: Duration(seconds: 2),
+                            );
+                          }
+                        } else {
+                          toast.showToast(
+                            child: DefaultToast.Error(
+                                "Ops! Are all fields correct filled?"),
+                            gravity: ToastGravity.BOTTOM,
+                            toastDuration: Duration(seconds: 2),
+                          );
+                        }
+                      },
+                      child: Text("Save")),
+                ),
+              )
+            ],
+            //DefaultInput("Items", TextInputType.text, _descriptionController),
           ),
         ));
   }
