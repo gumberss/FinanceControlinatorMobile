@@ -44,16 +44,6 @@ class AuthenticationWebClient {
     if (response.statusCode == 500)
       throw new HttpException("It was not possible to sign in :(");
 
-    if (response.statusCode == 400) {
-      var decodedJson = jsonDecode(response.body);
-      var descriptions = (decodedJson as List)
-          .map((e) => e["description"].toString())
-          .map((e) => e.splitMapJoin(RegExp(r'^(.{25}.*?) '),
-              onMatch: (m) => '${m[0]}\n'))
-          .reduce((value, element) => value += "\n$element")
-          .toString();
-      throw new HttpException(descriptions);
-    }
     if (response.statusCode == 401) {
       throw new HttpException("User name or password is invalid");
     }
