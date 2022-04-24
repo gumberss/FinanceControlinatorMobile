@@ -35,9 +35,6 @@ class _SignInForm extends StatefulWidget {
 
 class _SignInFormState extends State<_SignInForm>
     with SingleTickerProviderStateMixin {
-  final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _userNameController = TextEditingController();
-
   late final AnimationController _animationController = AnimationController(
     duration: const Duration(seconds: 1),
     vsync: this,
@@ -50,16 +47,12 @@ class _SignInFormState extends State<_SignInForm>
     parent: _animationController,
     curve: Curves.easeInOutBack,
   ));
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _userNameController = TextEditingController();
 
-  @override
-  void dispose() {
-    _animationController.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
-    _animationController.stop();
     widget.toast.init(context);
     return Form(
         key: widget._formKey,
@@ -67,10 +60,10 @@ class _SignInFormState extends State<_SignInForm>
           children: [
             DefaultInput("User Name", TextInputType.text, _userNameController,
                 validator: (text) {
-              return text == null || text.isEmpty
-                  ? "Uhhh, please, type your user name :)"
-                  : null;
-            }),
+                  return text == null || text.isEmpty
+                      ? "Uhhh, please, type your user name :)"
+                      : null;
+                }),
             DefaultInput(
               "Password",
               TextInputType.visiblePassword,
@@ -84,7 +77,7 @@ class _SignInFormState extends State<_SignInForm>
                 child: OutlinedButton(
                     onPressed: () async {
                       var isValidForm =
-                          (widget._formKey.currentState?.validate() ?? false);
+                      (widget._formKey.currentState?.validate() ?? false);
                       if (!isValidForm) return;
 
                       _animationController.animateTo(1);
@@ -102,29 +95,15 @@ class _SignInFormState extends State<_SignInForm>
                           _passwordController.clear();
                           _animationController.reverse();
                         } else {
-                          widget.toast.showToast(
-                            child: DefaultToast.Error(
-                                "Oh no! I think something goes wrong.\nTry again in a few minutes"),
-                            gravity: ToastGravity.TOP_RIGHT,
-                            toastDuration: const Duration(seconds: 2),
-                          );
                           _animationController.reverse();
+                          _ToastError();
                         }
                       } on HttpException catch (e) {
                         _animationController.reverse();
-                        widget.toast.showToast(
-                          child: DefaultToast.Error(e.message),
-                          gravity: ToastGravity.TOP,
-                          toastDuration: const Duration(seconds: 2),
-                        );
+                        _ToastError(message: e.message);
                       } on Exception catch (e) {
-                        widget.toast.showToast(
-                          child: DefaultToast.Error(
-                              "Oh no! I think something goes wrong.\nTry again in a few minutes"),
-                          gravity: ToastGravity.TOP_RIGHT,
-                          toastDuration: const Duration(seconds: 2),
-                        );
                         _animationController.reverse();
+                        _ToastError();
                       }
                     },
                     child: Text("Let's go!")),
@@ -139,5 +118,14 @@ class _SignInFormState extends State<_SignInForm>
             )
           ],
         ));
+  }
+
+  void _ToastError({String message =
+  "Oh no! I think something goes wrong.\nTry again in a few minutes"}) {
+    widget.toast.showToast(
+      child: DefaultToast.Error(message),
+      gravity: ToastGravity.TOP_RIGHT,
+      toastDuration: const Duration(seconds: 2),
+    );
   }
 }
