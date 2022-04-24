@@ -51,7 +51,7 @@ class _SignUpForm extends StatelessWidget {
         key: _formKey,
         child: Column(
           children: [
-            DefaultInput("UserName", TextInputType.text, _userNameController,
+            DefaultInput("Username", TextInputType.text, _userNameController,
                 validator: (text) {
               return text == null || text.length < 4 || text.length > 30
                   ? "From 4 to 30 characters"
@@ -92,7 +92,7 @@ class _SignUpForm extends StatelessWidget {
 
                       try {
                         var result = await AuthenticationWebClient()
-                            .signup(SignUpUser(userName, password, email));
+                            .signUp(SignUpUser(userName, password, email));
 
                         if (result == 200) {
                           // go to login page
