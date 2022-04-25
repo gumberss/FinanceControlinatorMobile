@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:finance_controlinator_mobile/components/JwtService.dart';
 import 'package:finance_controlinator_mobile/components/Progress.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -54,6 +55,7 @@ class _SignInFormState extends State<_SignInForm>
   @override
   Widget build(BuildContext context) {
     widget.toast.init(context);
+
     return Form(
         key: widget._formKey,
         child: Column(
@@ -89,7 +91,8 @@ class _SignInFormState extends State<_SignInForm>
                         var result = await AuthenticationWebClient()
                             .signIn(SignInUser(userName, password));
 
-                        if (result == 200) {
+                        if (result != null) {
+                          await JwtService().store(result);
                           Navigator.of(context).push(
                               MaterialPageRoute(builder: (c) => Dashboard()));
                           _passwordController.clear();
