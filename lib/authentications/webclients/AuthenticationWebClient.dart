@@ -34,8 +34,8 @@ class AuthenticationWebClient {
     return response.statusCode;
   }
 
-  Future<int> signIn(SignInUser user) async {
-    final response = await client.post(Uri.http(baseUrl, "/SignIn"),
+  Future<String?> signIn(SignInUser user) async {
+    final response = await clientWithoutInterceptor.post(Uri.http(baseUrl, "/SignIn"),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -47,6 +47,10 @@ class AuthenticationWebClient {
     if (response.statusCode == 401) {
       throw new HttpException("User name or password is invalid");
     }
-    return response.statusCode;
+
+    if(response.statusCode == 200)
+      return jsonDecode(response.body)["token"];
+
+    return null;
   }
 }
