@@ -6,3 +6,5 @@ import 'Interceptors/logging_interceptor.dart';
 final Client client = InterceptedClient.build(interceptors: [
   LoggingInterceptor(),
 ], requestTimeout: Duration(seconds: 10));
+
+final Client clientWithoutInterceptor = Client();
