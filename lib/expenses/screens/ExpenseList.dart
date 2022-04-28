@@ -87,7 +87,7 @@ class ExpenseListBody extends StatelessWidget {
       child: RefreshIndicator(
         onRefresh: () => requestItems(1, 10),
         child: InifiniteList<Expense>(
-          onRequest: (p, c) => requestItems(p, c),
+          onRequest: requestItems,
           itensPerPage: 10,
           itemBuilder: (context, item, index) => Container(
               height: 100,
