@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:finance_controlinator_mobile/components/HttpClient/HttpResponseData.dart';
 import 'package:finance_controlinator_mobile/components/HttpClient/http_client.dart';
 import 'package:finance_controlinator_mobile/expenses/domain/Expense.dart';
 import 'package:finance_controlinator_mobile/expenses/domain/overviews/ExpenseOverview.dart';
@@ -10,7 +11,8 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class ExpenseWebClient {
   Uri baseUri = Uri.http(
-      dotenv.env['FINANCE_CONTROLINATOR_API_URL'].toString(), "/api/expenses");
+      dotenv.env['FINANCE_CONTROLINATOR_API_URL_EXPENSE'].toString(),
+      "/api/expenses");
 
   Future<Expense> save(Expense expense) async {
     final response = await client.post(baseUri,
@@ -35,26 +37,33 @@ class ExpenseWebClient {
     debugPrint(response.body);
 
     if (response.statusCode == 500)
-      throw new HttpException("It was not possible to \nGet the expense list :(");
+      throw new HttpException(
+          "It was not possible to \nGet the expense list :(");
+
+    if (response.statusCode == 401) {
+      return List.empty();
+    }
 
     Iterable expenseDecoded = json.decode(response.body);
 
-    return  List<Expense>.from(expenseDecoded.map((e) => Expense.fromJson(e))) ;
+    return List<Expense>.from(expenseDecoded.map((e) => Expense.fromJson(e)));
   }
 }
 
 class ExpenseOverviewWebClient {
-  Uri baseUri = Uri.http(dotenv.env['FINANCE_CONTROLINATOR_API_URL'].toString(),
+  Uri baseUri = Uri.http(
+      dotenv.env['FINANCE_CONTROLINATOR_API_URL_EXPENSE'].toString(),
       "/api/expenses/overview");
 
-  Future<ExpenseOverview> GetOverview() async {
+  Future<HttpResponseData<ExpenseOverview>> GetOverview() async {
     final response = await client.get(baseUri);
 
     if (response.statusCode == 500)
       throw new HttpException("It was not possible to \nfind the overview :(");
 
+    if(response.statusCode == 401)
+      return HttpResponseData(response.statusCode, null);
     var expenseOverview = ExpenseOverview.fromJson(jsonDecode(response.body));
-
-    return expenseOverview;
+    return HttpResponseData(response.statusCode, expenseOverview);
   }
 }

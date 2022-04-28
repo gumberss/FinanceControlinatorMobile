@@ -93,7 +93,7 @@ class _SignInFormState extends State<_SignInForm>
 
                         if (result != null) {
                           await JwtService().store(result);
-                          Navigator.of(context).push(
+                          Navigator.push(context,
                               MaterialPageRoute(builder: (c) => Dashboard()));
                           _passwordController.clear();
                           _animationController.reverse();
