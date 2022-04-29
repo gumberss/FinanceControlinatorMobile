@@ -1,23 +1,23 @@
+import 'dart:convert';
+
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:http_interceptor/http/interceptor_contract.dart';
-import 'package:http_interceptor/models/request_data.dart';
-import 'package:http_interceptor/models/response_data.dart';
 
-class LoggingInterceptor implements InterceptorContract {
-  @override
-  Future<RequestData> interceptRequest({required RequestData data}) async {
-    debugPrint(data.toString());
-    return data;
+class LoggingInterceptor extends InterceptorsWrapper{
+@override
+  void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
+    debugPrint(jsonEncode(options.data));
+    super.onRequest(options, handler);
   }
-
   @override
-  Future<ResponseData> interceptResponse({required ResponseData data}) async {
+  void onResponse(Response response, ResponseInterceptorHandler handler) {
     try {
-      debugPrint(data.toString());
-      return data;
+      debugPrint(jsonEncode(response.data));
+      super.onResponse(response, handler);
     } catch (e) {
       debugPrint('I $e');
       throw e;
     }
   }
 }
+
