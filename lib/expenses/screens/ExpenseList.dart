@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:finance_controlinator_mobile/components/HttpClient/HttpResponseData.dart';
 import 'package:finance_controlinator_mobile/expenses/components/InfiniteList.dart';
 import 'package:finance_controlinator_mobile/expenses/domain/Expense.dart';
 import 'package:finance_controlinator_mobile/expenses/domain/overviews/ExpenseOverview.dart';
@@ -6,6 +9,7 @@ import 'package:finance_controlinator_mobile/expenses/webclients/ExpenseWebClien
 import 'package:finance_controlinator_mobile/expenses/screens/overview/ExpenseSpendBar.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import '../../authentications/services/AuthorizationService.dart';
 import 'overview/ExpenseBriefCards.dart';
 
 class ExpenseList extends StatelessWidget {
@@ -25,8 +29,8 @@ class ExpenseList extends StatelessWidget {
         backgroundColor: Colors.blueAccent,
         child: Icon(Icons.add),
         onPressed: () => {
-        Navigator.of(context)
-            .push(MaterialPageRoute(builder: (c) => ExpensesScreen()))
+          Navigator.of(context)
+              .push(MaterialPageRoute(builder: (c) => ExpensesScreen()))
         },
       ),
     );
@@ -39,29 +43,38 @@ class ExpenseListHeader extends StatelessWidget {
     return Container(
       color: Colors.lightBlue.shade100,
       alignment: Alignment.topCenter,
-      child: Padding(padding: EdgeInsets.all(8),
-      child: FutureBuilder(
-        future: ExpenseOverviewWebClient().GetOverview(),
-        builder: (context, AsyncSnapshot<ExpenseOverview> snapshot) {
-          if (!snapshot.hasData) {
-            return const Center(
-              child: const CircularProgressIndicator(),
-            );
-          }
-          return Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(top: 16),
-                child: ExpenseListHeaderCards(snapshot.data!.briefs),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 16),
-                child: ExpenseSpendBar(snapshot.data!.partitions),
-              ),
-            ],
-          );
-        },
-      ),),
+      child: Padding(
+        padding: EdgeInsets.all(8),
+        child: FutureBuilder(
+          future: ExpenseOverviewWebClient().GetOverview(),
+          builder: (context,
+              AsyncSnapshot<HttpResponseData<ExpenseOverview>> snapshot) {
+            if (!snapshot.hasData) {
+              return const Center(
+                child: const CircularProgressIndicator(),
+              );
+            }
+            var response = snapshot.data!;
+            if (response.unauthorized()) {
+              AuthorizationService.redirectToSignIn(context);
+              return Text("Unauthorized :(");
+            } else {
+              return Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 16),
+                    child: ExpenseListHeaderCards(response.data!.briefs),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 16),
+                    child: ExpenseSpendBar(response.data!.partitions),
+                  ),
+                ],
+              );
+            }
+          },
+        ),
+      ),
     );
   }
 }
@@ -127,9 +140,5 @@ class ExpenseListBody extends StatelessWidget {
 }
 
 Future<List<Expense>> requestItems(int page, int itemsCount) async {
-  //const pageSize = 10;
-  //var page = (itemsCount / pageSize).ceil() + 1;
   return await ExpenseWebClient().getPage(page, itemsCount);
 }
-
-
