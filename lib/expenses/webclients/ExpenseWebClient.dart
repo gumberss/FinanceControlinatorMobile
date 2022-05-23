@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
@@ -6,8 +5,6 @@ import 'package:finance_controlinator_mobile/components/HttpClient/HttpResponseD
 import 'package:finance_controlinator_mobile/components/HttpClient/http_client.dart';
 import 'package:finance_controlinator_mobile/expenses/domain/Expense.dart';
 import 'package:finance_controlinator_mobile/expenses/domain/overviews/ExpenseOverview.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class ExpenseWebClient {
@@ -25,6 +22,11 @@ class ExpenseWebClient {
     if (response.statusCode == 500) {
       throw const HttpException(
           "It was not possible to \ncreate the expense :(");
+    }
+
+    if (response.statusCode == 401) {
+      throw const HttpException(
+          "Not Authorized :(");
     }
 
     return expense;
