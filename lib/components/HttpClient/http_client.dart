@@ -1,10 +1,24 @@
-import 'package:http/http.dart';
-import 'package:http_interceptor/http_interceptor.dart';
+import 'package:dio/dio.dart';
+import 'package:finance_controlinator_mobile/components/HttpClient/Interceptors/AuthenticationInterceptor.dart';
 
 import 'Interceptors/logging_interceptor.dart';
 
-final Client client = InterceptedClient.build(interceptors: [
-  LoggingInterceptor(),
-], requestTimeout: Duration(seconds: 10));
+final Dio client = _DioClient.addInterceptors(_DioClient.client());
 
-final Client clientWithoutInterceptor = Client();
+class _DioClient {
+  static Dio client() {
+    var dio = Dio();
+    dio.options.validateStatus = (status) {
+      return true;
+    };
+    return dio;
+  }
+
+  static Dio addInterceptors(Dio dio){
+    dio.interceptors.add(LoggingInterceptor());
+    dio.interceptors.add(AuthenticationInterceptor());
+    return dio;
+  }
+}
+
+final Dio clientWithoutInterceptor = _DioClient.client();
