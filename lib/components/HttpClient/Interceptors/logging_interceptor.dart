@@ -6,13 +6,13 @@ import 'package:flutter/cupertino.dart';
 class LoggingInterceptor extends InterceptorsWrapper{
 @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
-    debugPrint(jsonEncode(options.data));
+    debugPrint("Request: ${jsonEncode(options.data)}");
     super.onRequest(options, handler);
   }
   @override
   void onResponse(Response response, ResponseInterceptorHandler handler) {
     try {
-      debugPrint(jsonEncode(response.data));
+      debugPrint("Response: ${jsonEncode(response.data)}");
       super.onResponse(response, handler);
     } catch (e) {
       debugPrint('I $e');
