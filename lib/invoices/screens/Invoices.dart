@@ -1,27 +1,24 @@
 import 'dart:async';
 
-import 'package:finance_controlinator_mobile/components/HttpClient/HttpResponseData.dart';
 import 'package:finance_controlinator_mobile/invoices/domain/sync/InvoiceSync.dart';
 import 'package:finance_controlinator_mobile/invoices/services/InvoiceSyncService.dart';
 import 'package:finance_controlinator_mobile/invoices/services/SyncStorageService.dart';
 
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import '../../authentications/services/AuthorizationService.dart';
-import '../../expenses/components/InfiniteList.dart';
 import '../webclients/InvoiceSyncWebClient.dart';
 
 class Invoices extends StatelessWidget {
+  const Invoices({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
+    syncInvoices();
     return Scaffold(
       appBar: AppBar(
         title: const Text("Invoices List"), //from dto
       ),
       body: Column(
-        children: [
-          InvoiceOverview()
-        ],
+        children: [InvoiceOverview()],
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.blueAccent,
@@ -74,23 +71,23 @@ class InvoiceOverview extends StatelessWidget {
       ),
     );
   }
+}
 
-  Future<InvoiceSync?> syncInvoices() async {
-    var syncStorage = SyncStorageService();
+Future<InvoiceSync?> syncInvoices() async {
+  var syncStorage = SyncStorageService();
 
-    var lastSync = await syncStorage.stored();
-    var response =
-        await InvoiceSyncWebClient().GetSyncData(lastSync?.syncDate ?? 0);
+  var lastSync = await syncStorage.stored();
+  var response =
+      await InvoiceSyncWebClient().getSyncData(lastSync?.syncDate ?? 0);
 
-    if (response.unauthorized()) {
-      return null;
-    }
-    if (response.data == null) {
-      return null;
-    }
-    var updated = InvoiceSyncService().updateSync(lastSync, response.data!);
-    await syncStorage.store(updated);
-
-    return updated;
+  if (response.unauthorized()) {
+    return null;
   }
+  if (response.data == null) {
+    return null;
+  }
+  var updated = InvoiceSyncService().updateSync(lastSync, response.data!);
+  await syncStorage.store(updated);
+
+  return updated;
 }

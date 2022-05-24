@@ -1,19 +1,21 @@
+import 'package:flutter/cupertino.dart';
+
 class InvoiceSync {
   String syncName;
   num syncDate;
-  List<InvoiceMonthData>? monthDataSyncs;
+  List<InvoiceMonthData> monthDataSyncs;
 
   InvoiceSync.fromJson(Map<String, dynamic> json)
       : syncName = json['syncName'],
         syncDate = json['syncDate'],
         monthDataSyncs = (json['monthDataSyncs'] as List)
             .map((e) => InvoiceMonthData.fromJson(e))
-            .toList(growable: false);
+            .toList(growable: true);
 
   Map<String, dynamic> toJson() => {
         'syncName': syncName,
         'syncDate': syncDate,
-        'monthDataSyncs': monthDataSyncs?.map((e) => e.toJson()).toList(),
+        'monthDataSyncs': monthDataSyncs.map((e) => e.toJson()).toList(),
       };
 }
 
@@ -22,8 +24,8 @@ class InvoiceMonthData {
   Invoice invoice;
 
   InvoiceMonthData.fromJson(Map<String, dynamic> json)
-      : overview = json['overview'],
-        invoice = json['invoice'];
+      : overview = InvoiceOverview.fromJson(json['overview']),
+        invoice = Invoice.fromJson(json['invoice']);
 
   Map<String, dynamic> toJson() =>
       {'overview': overview.toJson(), 'invoice': invoice.toJson()};
@@ -34,8 +36,8 @@ class InvoiceOverview {
   String statusText;
   int status;
   String totalCost;
-  List<InvoiceBrief>? briefs;
-  List<InvoicePartition>? partitions;
+  List<InvoiceBrief> briefs;
+  List<InvoicePartition> partitions;
 
   InvoiceOverview.fromJson(Map<String, dynamic> json)
       : date = json['date'],
@@ -50,17 +52,23 @@ class InvoiceOverview {
             .toList(growable: false);
 
   Map<String, dynamic> toJson() => {
-        'briefs': briefs?.map((e) => e.toJson()).toList(),
-        'partitions': partitions?.map((e) => e.toJson()).toList()
+        'date': date,
+        'statusText': statusText,
+        'status': status,
+        'totalCost': totalCost,
+        'briefs': briefs.map((e) => e.toJson()).toList(),
+        'partitions': partitions.map((e) => e.toJson()).toList(),
       };
 }
 
 class Invoice {
   String id;
-  Invoice.fromJson(Map<String, dynamic> json)
-    : id = json['id'];
 
-  Map<String, dynamic> toJson() => { };
+  Invoice.fromJson(Map<String, dynamic> json) : id = json['id'];
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+      };
 }
 
 class InvoicePartition {
@@ -70,8 +78,8 @@ class InvoicePartition {
   num totalValue;
 
   InvoicePartition.fromJson(Map<String, dynamic> json)
-      : type = json['overview'],
-        percent = json['invoice'],
+      : type = json['type'],
+        percent = json['percent'],
         typeText = json['typeText'],
         totalValue = json['totalValue'];
 
