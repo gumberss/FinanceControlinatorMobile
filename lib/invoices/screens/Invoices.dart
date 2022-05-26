@@ -164,7 +164,13 @@ class OverviewHeader extends StatelessWidget {
 class OverviewBriefs extends StatelessWidget {
   final List<InvoiceBrief> briefs;
 
-  const OverviewBriefs(this.briefs, {Key? key}) : super(key: key);
+  OverviewBriefs(this.briefs, {Key? key}) : super(key: key);
+
+  final List<Color> colors = [
+    Colors.lightBlueAccent.shade200,
+    Colors.redAccent.shade100,
+    Colors.lightGreen.shade200,
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -174,8 +180,10 @@ class OverviewBriefs extends StatelessWidget {
       child: ListView(
         scrollDirection: Axis.horizontal,
         shrinkWrap: true,
-        //todo: status color
-        children: briefs.map((e) => OverviewCard(e.text)).toList(),
+        children: briefs
+            .map((brief) =>
+                OverviewCard(brief.text, color: colors[brief.status]))
+            .toList(),
       ),
     );
   }
