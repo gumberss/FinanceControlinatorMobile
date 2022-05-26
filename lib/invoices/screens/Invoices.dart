@@ -154,7 +154,7 @@ class OverviewHeader extends StatelessWidget {
     return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
       Text(date,
           style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
-      Text(statusText),
+      Text(statusText, style: const TextStyle(fontSize: 16)),
       Text(totalCost,
           style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20))
     ]);
