@@ -43,18 +43,38 @@ class InvoicesScreen extends StatelessWidget {
         // },
         );
   }
+
+  Future<InvoiceSync?> syncInvoices() async {
+    var syncStorage = SyncStorageService();
+
+    var lastSync = await syncStorage.stored();
+    var response =
+        await InvoiceSyncWebClient().getSyncData(lastSync?.syncDate ?? 0);
+
+    //todo: if timeout happen, show a toast
+    if (response.unauthorized()) {
+      return null;
+    }
+    if (response.data == null) {
+      return lastSync;
+    }
+    var updated = InvoiceSyncService().updateSync(lastSync, response.data!);
+    await syncStorage.store(updated);
+
+    return updated;
+  }
 }
 
 class InvoiceMonthDatasScreen extends StatelessWidget {
-  List<InvoiceMonthData> invoiceMonthDatas;
+  List<InvoiceMonthData> invoiceMonthData;
 
-  InvoiceMonthDatasScreen(this.invoiceMonthDatas, {Key? key}) : super(key: key);
+  InvoiceMonthDatasScreen(this.invoiceMonthData, {Key? key}) : super(key: key);
 
   //todo: do it for each of the list
   @override
   Widget build(BuildContext context) {
     return Column(
-      children: [InvoiceDataScreen(invoiceMonthDatas.first)],
+      children: [InvoiceDataScreen(invoiceMonthData.first)],
     );
   }
 }
@@ -86,10 +106,18 @@ class InvoiceOverviewScreen extends StatelessWidget {
 
   InvoiceOverviewScreen(this.overview, {Key? key}) : super(key: key);
 
+  final List<Color> colors = [
+    Colors.redAccent,
+    Colors.lightGreen,
+    Colors.orangeAccent.shade700,
+    Colors.lightBlueAccent.shade700,
+    Colors.tealAccent.shade700,
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Container(
-        color: Colors.lightBlue.shade100,
+        color: colors[overview.status].withOpacity(0.2),
         alignment: Alignment.topCenter,
         child: Padding(
             padding: const EdgeInsets.all(8),
@@ -134,9 +162,9 @@ class OverviewHeader extends StatelessWidget {
 }
 
 class OverviewBriefs extends StatelessWidget {
-  List<InvoiceBrief> briefs;
+  final List<InvoiceBrief> briefs;
 
-  OverviewBriefs(this.briefs, {Key? key}) : super(key: key);
+  const OverviewBriefs(this.briefs, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -151,24 +179,4 @@ class OverviewBriefs extends StatelessWidget {
       ),
     );
   }
-}
-
-Future<InvoiceSync?> syncInvoices() async {
-  var syncStorage = SyncStorageService();
-
-  var lastSync = await syncStorage.stored();
-  var response =
-      await InvoiceSyncWebClient().getSyncData(lastSync?.syncDate ?? 0);
-
-  //todo: if timeout happen, show a toast
-  if (response.unauthorized()) {
-    return null;
-  }
-  if (response.data == null) {
-    return lastSync;
-  }
-  var updated = InvoiceSyncService().updateSync(lastSync, response.data!);
-  await syncStorage.store(updated);
-
-  return updated;
 }
