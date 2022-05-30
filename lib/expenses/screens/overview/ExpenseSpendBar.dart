@@ -87,7 +87,7 @@ class ExpenseSpendBar extends StatelessWidget {
                     decoration: BoxDecoration(
                         color: colors[key],
                         borderRadius:
-                            const BorderRadius.all(const Radius.circular(100))))
+                            const BorderRadius.all(Radius.circular(100))))
               ],
             )))
         .values

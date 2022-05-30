@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:finance_controlinator_mobile/invoices/domain/sync/InvoiceSync.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import '../../components/HttpClient/HttpResponseData.dart';
@@ -14,12 +15,12 @@ class InvoiceSyncWebClient {
   Future<HttpResponseData<InvoiceSync?>> getSyncData(num i) async {
     final response;
 
-    try{
-       response = await client.get(baseUri.toString(), queryParameters: {'timestamp': i.toString()});
-    }catch (Exception ){
+    try {
+      response = await client.get(baseUri.toString(),
+          queryParameters: {'timestamp': 0.toString()});
+    } catch (Exception) {
       return HttpResponseData(500, null);
     }
-
 
     if (response.statusCode == 500) {
       throw const HttpException(
@@ -29,7 +30,6 @@ class InvoiceSyncWebClient {
     if (response.statusCode == 401) {
       return HttpResponseData(response.statusCode!, null);
     }
-
     var invoiceSync = InvoiceSync.fromJson(response.data);
     return HttpResponseData(response.statusCode!, invoiceSync);
   }
