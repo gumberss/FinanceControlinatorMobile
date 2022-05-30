@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import 'dart:core';
 
 class InvoiceSync {
   String syncName;
@@ -63,11 +63,59 @@ class InvoiceOverview {
 
 class Invoice {
   String id;
+  String totalCost;
+  String closeDate;
+  String dueDate;
+  String paymentDate;
+  int paymentStatus;
 
-  Invoice.fromJson(Map<String, dynamic> json) : id = json['id'];
+  List<InvoiceItem>? items;
+
+  Invoice.fromJson(Map<String, dynamic> json)
+      : id = json['id'],
+        totalCost = json['totalCost'],
+        closeDate = json['closeDate'],
+        dueDate = json['dueDate'],
+        paymentDate = json['paymentDate'],
+        paymentStatus = json['paymentStatus'],
+        items = (json['items'] as List?)
+            ?.map((e) => InvoiceItem.fromJson(e))
+            .toList();
 
   Map<String, dynamic> toJson() => {
         'id': id,
+        'items': items?.map((e) => e.toJson()).toList(),
+        'totalCost': totalCost,
+        'closeDate': closeDate,
+        'dueDate': dueDate,
+        'paymentDate': paymentDate,
+        'paymentStatus': paymentStatus,
+      };
+}
+
+class InvoiceItem {
+  String id;
+  String installmentNumber;
+  String installmentCost;
+  int type;
+  String purchaseDay;
+  String title;
+
+  InvoiceItem.fromJson(Map<String, dynamic> json)
+      : id = json['id'],
+        installmentNumber = json['installmentNumber'],
+        installmentCost = json['installmentCost'],
+        type = json['type'],
+        purchaseDay = json['purchaseDay'],
+        title = json['title'];
+
+  toJson() => {
+        'id': id,
+        'installmentNumber': installmentNumber,
+        'installmentCost': installmentCost,
+        'type': type,
+        'purchaseDay': purchaseDay,
+        'title': title,
       };
 }
 
