@@ -70,11 +70,11 @@ class InvoiceMonthDatasScreen extends StatelessWidget {
 
   InvoiceMonthDatasScreen(this.invoiceMonthData, {Key? key}) : super(key: key);
 
-  //todo: do it for each of the list
+  //todo: do it for each item in the list
   @override
   Widget build(BuildContext context) {
     return Column(
-      children: [InvoiceDataScreen(invoiceMonthData.first)],
+      children: [Expanded(child: InvoiceDataScreen(invoiceMonthData.first))],
     );
   }
 }
@@ -88,14 +88,16 @@ class InvoiceDataScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        SizedBox(
-          height: 250,
+        Expanded(
+          flex: 40,
           child: InvoiceOverviewScreen(invoiceMonthData.overview),
         ),
-        Padding(
+        Expanded(
+          flex: 60,
+            child: Padding(
           padding: const EdgeInsets.only(top: 16),
           child: InvoiceItemsComponent(invoiceMonthData.invoice.items!),
-        )
+        ))
       ],
     );
   }
@@ -113,8 +115,6 @@ class InvoiceItemsComponent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: double.infinity,
-      height: 300,
       child: InifiniteList<InvoiceItem>(
         onRequest: (page, count) => requestItems(page - 1, count),
         itensPerPage: 10,
