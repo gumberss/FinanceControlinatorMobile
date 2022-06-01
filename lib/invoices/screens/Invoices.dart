@@ -1,5 +1,5 @@
 import 'dart:async';
-
+import 'package:collection/collection.dart';
 import 'package:finance_controlinator_mobile/invoices/domain/sync/InvoiceSync.dart';
 import 'package:finance_controlinator_mobile/invoices/services/InvoiceSyncService.dart';
 import 'package:finance_controlinator_mobile/invoices/services/SyncStorageService.dart';
@@ -67,15 +67,46 @@ class InvoicesScreen extends StatelessWidget {
 
 class InvoiceMonthDatasScreen extends StatelessWidget {
   List<InvoiceMonthData> invoiceMonthData;
+  late PageController pageController;
 
   InvoiceMonthDatasScreen(this.invoiceMonthData, {Key? key}) : super(key: key);
 
   //todo: do it for each item in the list
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [Expanded(child: InvoiceDataScreen(invoiceMonthData.first))],
+    //todo: always open the screen with the opened invoice selected
+    var initialMonthData =
+        invoiceMonthData.where((element) => element.overview.status == 0);
+
+    if (initialMonthData.isEmpty) {
+      initialMonthData =
+          invoiceMonthData.where((element) => element.overview.status == 2);
+    }
+
+    if (initialMonthData.isEmpty) {
+      initialMonthData =
+          invoiceMonthData.where((element) => element.overview.status == 4);
+    }
+
+    if (initialMonthData.isEmpty) {
+      initialMonthData =
+          invoiceMonthData.where((element) => element.overview.status == 3);
+    }
+
+    pageController = PageController(
+      initialPage: invoiceMonthData.firstOrNull?.overview.status ??
+          invoiceMonthData.length - 1,
     );
+    PageView pageView = PageView(
+      controller: pageController,
+      children: invoiceMonthData
+          .map((e) => Column(
+                children: [Expanded(child: InvoiceDataScreen(e))],
+              ))
+          .toList(),
+    );
+
+    return pageView;
   }
 }
 
@@ -93,11 +124,11 @@ class InvoiceDataScreen extends StatelessWidget {
           child: InvoiceOverviewScreen(invoiceMonthData.overview),
         ),
         Expanded(
-          flex: 60,
+            flex: 60,
             child: Padding(
-          padding: const EdgeInsets.only(top: 16),
-          child: InvoiceItemsComponent(invoiceMonthData.invoice.items!),
-        ))
+              padding: const EdgeInsets.only(top: 16),
+              child: InvoiceItemsComponent(invoiceMonthData.invoice.items!),
+            ))
       ],
     );
   }
