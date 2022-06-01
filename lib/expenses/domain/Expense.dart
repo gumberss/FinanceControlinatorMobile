@@ -39,7 +39,9 @@ class Expense {
         totalCost = json['totalCost'],
         installmentsCount = json['installmentsCount'],
         observation = json['observation'],
-        items = (json['items'] as List?)?.map((e) => ExpenseItem.fromJson(e)).toList(growable: false);
+        items = (json['items'] as List?)
+            ?.map((e) => ExpenseItem.fromJson(e))
+            .toList(growable: false);
 
   Map<String, dynamic> toJson() => {
         'id': id,

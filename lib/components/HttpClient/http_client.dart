@@ -11,6 +11,8 @@ class _DioClient {
     dio.options.validateStatus = (status) {
       return true;
     };
+    dio.options.connectTimeout = 5000;
+
     return dio;
   }
 
