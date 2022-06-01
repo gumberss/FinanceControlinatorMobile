@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../expenses/components/OverviewCard.dart';
-import '../../expenses/components/OverviewSpendBar.dart';
+import '../../components/OverviewSpendBar.dart';
 import '../domain/sync/InvoiceSync.dart';
 
 class InvoiceOverviewScreen extends StatelessWidget {
@@ -39,7 +39,7 @@ class InvoiceOverviewScreen extends StatelessWidget {
                     child: OverviewSpendBar(
                         overview.partitions
                             .map((e) => PartitionData(
-                                e.type, e.typeText, e.percent, e.totalValue))
+                                e.type, e.typeText, e.percent))
                             .toList(),
                         InvoiceItem.colors)),
               ],
@@ -60,6 +60,8 @@ class OverviewHeader extends StatelessWidget {
     return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
       Text(date,
           style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+      Text(statusText,
+          style: const TextStyle(fontSize: 16)),
       Text(totalCost,
           style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20))
     ]);
