@@ -1,5 +1,8 @@
 import 'dart:core';
 
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+
 class InvoiceSync {
   String syncName;
   num syncDate;
@@ -98,8 +101,20 @@ class InvoiceItem {
   String installmentNumber;
   String installmentCost;
   int type;
+
+  //todo: purchaseDate
   String purchaseDay;
   String title;
+
+  static Map<int, Color> colors = {
+    0: Colors.orangeAccent.shade100,
+    10: Colors.redAccent.shade100,
+    20: Colors.blueAccent,
+    30: Colors.greenAccent,
+    40: Colors.blueGrey,
+    800: Colors.purpleAccent.shade100,
+    900: Colors.pinkAccent.shade100
+  };
 
   InvoiceItem.fromJson(Map<String, dynamic> json)
       : id = json['id'],
@@ -124,6 +139,8 @@ class InvoicePartition {
   double percent;
   String typeText;
   num totalValue;
+
+  static List<Color> colors = InvoiceItem.colors.values.toList();
 
   InvoicePartition.fromJson(Map<String, dynamic> json)
       : type = json['type'],

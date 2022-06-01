@@ -121,9 +121,7 @@ class InvoiceItemsComponent extends StatelessWidget {
         itemBuilder: (context, item, index) => Container(
             height: 100,
             decoration: BoxDecoration(
-                color: index % 2 == 0
-                    ? Colors.lightBlue.shade50
-                    : Colors.lightBlue.shade100,
+                color: InvoiceItem.colors[item.type],
                 borderRadius: BorderRadius.circular(8),
                 boxShadow: [
                   BoxShadow(

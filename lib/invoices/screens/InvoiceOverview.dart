@@ -1,4 +1,3 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -37,10 +36,12 @@ class InvoiceOverviewScreen extends StatelessWidget {
                     child: OverviewBriefs(overview.briefs)),
                 Padding(
                     padding: const EdgeInsets.only(bottom: 8),
-                    child: OverviewSpendBar(overview.partitions
-                        .map((e) => PartitionData(
-                        e.type, e.typeText, e.percent, e.totalValue))
-                        .toList())),
+                    child: OverviewSpendBar(
+                        overview.partitions
+                            .map((e) => PartitionData(
+                                e.type, e.typeText, e.percent, e.totalValue))
+                            .toList(),
+                        InvoiceItem.colors)),
               ],
             )));
   }
@@ -59,7 +60,6 @@ class OverviewHeader extends StatelessWidget {
     return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
       Text(date,
           style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
-      Text(statusText, style: const TextStyle(fontSize: 16)),
       Text(totalCost,
           style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20))
     ]);
@@ -87,7 +87,7 @@ class OverviewBriefs extends StatelessWidget {
         shrinkWrap: true,
         children: briefs
             .map((brief) =>
-            OverviewCard(brief.text, color: colors[brief.status]))
+                OverviewCard(brief.text, color: colors[brief.status]))
             .toList(),
       ),
     );
