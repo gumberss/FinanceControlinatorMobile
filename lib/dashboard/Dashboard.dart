@@ -1,6 +1,7 @@
 import 'package:finance_controlinator_mobile/expenses/screens/ExpenseList.dart';
-import 'package:finance_controlinator_mobile/expenses/screens/Expenses.dart';
 import 'package:flutter/material.dart';
+
+import '../invoices/screens/InvoicesScreen.dart';
 
 class Dashboard extends StatelessWidget {
   @override
@@ -52,7 +53,8 @@ class Colls extends StatelessWidget {
               Navigator.of(context)
                   .push(MaterialPageRoute(builder: (c) => ExpenseList()));
             }),
-            Card(Icons.list_alt, "Invoices", () => {}),
+            Card(Icons.list_alt, "Invoices", () => Navigator.of(context)
+                .push(MaterialPageRoute(builder: (c) => const InvoicesScreen()))),
           ],
         ),
         Column(
