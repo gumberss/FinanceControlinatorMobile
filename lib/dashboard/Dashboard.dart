@@ -61,6 +61,7 @@ class Colls extends StatelessWidget {
           children: [
             Card(Icons.payment, "Payment", () => {}),
             Card(Icons.save, "Piggy Banks", () => {}),
+            Card(Icons.shopping_cart, "Purchases", () => {}),
           ],
         ),
       ],
