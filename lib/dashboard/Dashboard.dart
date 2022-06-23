@@ -30,7 +30,7 @@ class Carousel extends StatelessWidget {
           Card(Icons.account_balance_wallet, "Account", () => {}),
           Card(Icons.money_off, "Expenses", () => {}),
           Card(Icons.list_alt, "Invoices", () => {}),
-          Card(Icons.payment, "Payment", () => {}),
+          Card(Icons.payment, "Payments", () => {}),
           Card(Icons.save, "Piggy Banks", () => {}),
         ],
       ),
