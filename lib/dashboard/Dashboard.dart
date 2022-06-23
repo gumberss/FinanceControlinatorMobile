@@ -1,4 +1,5 @@
 import 'package:finance_controlinator_mobile/expenses/screens/ExpenseList.dart';
+import 'package:finance_controlinator_mobile/purchases/screens/PurchasesLists.dart';
 import 'package:flutter/material.dart';
 
 import '../invoices/screens/InvoicesScreen.dart';
@@ -61,7 +62,8 @@ class Colls extends StatelessWidget {
           children: [
             Card(Icons.payment, "Payment", () => {}),
             Card(Icons.save, "Piggy Banks", () => {}),
-            Card(Icons.shopping_cart, "Purchases", () => {}),
+            Card(Icons.shopping_cart, "Purchases", () => Navigator.of(context)
+                .push(MaterialPageRoute(builder: (c) => PurchasesListsScreen()))),
           ],
         ),
       ],
