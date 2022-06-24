@@ -1,4 +1,4 @@
-import 'package:finance_controlinator_mobile/invoices/screens/Invoices.dart';
+import 'package:finance_controlinator_mobile/dashboard/Dashboard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'authentications/screens/SignIn.dart';
@@ -19,7 +19,8 @@ class MyApp extends StatelessWidget {
         theme: ThemeData.light(),
         darkTheme: ThemeData.dark(),
         themeMode: ThemeMode.system,
-        home: SignIn(),
+        home: Dashboard()
+        //SignIn(),
         );
   }
 }
