@@ -46,34 +46,34 @@ class ExpenseListHeader extends StatelessWidget {
       child: Padding(
         padding: EdgeInsets.all(8),
         child: FutureBuilder(
-          future: ExpenseOverviewWebClient().GetOverview(),
-          builder: (context,
-              AsyncSnapshot<HttpResponseData<ExpenseOverview>> snapshot) {
-            if (!snapshot.hasData) {
-              return const Center(
-                child: const CircularProgressIndicator(),
-              );
-            }
-            var response = snapshot.data!;
-            if (response.unauthorized()) {
-              AuthorizationService.redirectToSignIn(context);
-              return Text("Unauthorized :(");
-            } else {
-              return Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(top: 16),
-                    child: ExpenseListHeaderCards(response.data!.briefs),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 16),
-                    child: ExpenseSpendBar(response.data!.partitions),
-                  ),
-                ],
-              );
-            }
-          },
-        ),
+        future: ExpenseOverviewWebClient().GetOverview(),
+        builder: (context,
+            AsyncSnapshot<HttpResponseData<ExpenseOverview>> snapshot) {
+          if (!snapshot.hasData) {
+            return const Center(
+              child: const CircularProgressIndicator(),
+            );
+          }
+          var response = snapshot.data!;
+          if (response.unauthorized()) {
+            AuthorizationService.redirectToSignIn(context);
+            return Text("Unauthorized :(");
+          } else {
+            return Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 16),
+                  child: ExpenseListHeaderCards(response.data!.briefs),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 16),
+                  child: ExpenseSpendBar(response.data!.partitions),
+                ),
+              ],
+            );
+          }
+        },
+      ),
       ),
     );
   }
