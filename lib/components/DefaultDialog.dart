@@ -2,7 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class DefaultDialog {
-  showDialog(BuildContext context, List<Widget> content) {
+  showDialog(BuildContext context, List<Widget> content, {double? height}) {
+    height ??= 180;
     showModalBottomSheet(
         context: context,
         isScrollControlled: true,
@@ -15,7 +16,7 @@ class DefaultDialog {
                 padding: EdgeInsets.only(
                     bottom: MediaQuery.of(context).viewInsets.bottom),
                 child: Container(
-                    height: 180,
+                    height: height,
                     child: Container(
                         decoration: BoxDecoration(
                             color: Theme.of(context).canvasColor,
