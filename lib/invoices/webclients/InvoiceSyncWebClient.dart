@@ -12,12 +12,12 @@ class InvoiceSyncWebClient {
       dotenv.env['FINANCE_CONTROLINATOR_API_URL_INVOICE'].toString(),
       "/api/invoices/sync");
 
-  Future<HttpResponseData<InvoiceSync?>> getSyncData(num i) async {
+  Future<HttpResponseData<InvoiceSync?>> getSyncData(num lastSync) async {
     final response;
 
     try {
       response = await client.get(baseUri.toString(),
-          queryParameters: {'timestamp': 0.toString()});
+          queryParameters: {'timestamp': lastSync});
     } catch (Exception) {
       return HttpResponseData(500, null);
     }

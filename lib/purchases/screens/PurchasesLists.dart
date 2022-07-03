@@ -1,11 +1,10 @@
+import 'dart:ffi';
+
 import 'package:finance_controlinator_mobile/purchases/webclients/PurchaseListWebClient.dart';
 import 'package:flutter/material.dart';
 import 'package:finance_controlinator_mobile/components/DefaultInput.dart';
-
 import '../../authentications/services/AuthorizationService.dart';
 import '../../components/DefaultDialog.dart';
-import '../../components/HttpClient/HttpResponseData.dart';
-import '../../expenses/components/InfiniteList.dart';
 import '../domain/PurchaseList.dart';
 
 class PurchasesListsScreen extends StatelessWidget {
@@ -23,8 +22,7 @@ class PurchasesListsScreen extends StatelessWidget {
         floatingActionButton: FloatingActionButton(
           backgroundColor: Colors.blueAccent,
           child: Icon(Icons.add),
-          onPressed: () =>
-          {
+          onPressed: () => {
             DefaultDialog().showDialog(context, NewPurchaseListDialog(context))
           },
         ));
@@ -72,6 +70,16 @@ class _PurchaseListsState extends State<PurchaseLists> {
       AuthorizationService.redirectToSignIn(context);
       return;
     }
+
+    if (response.serverError()) {
+      setState(() {
+        purchaseLists = List<PurchaseList>.empty(growable: false);
+        starting = false;
+      });
+      //todo: toast error
+      return;
+    }
+
     setState(() {
       purchaseLists = response.data!;
       starting = false;
@@ -85,46 +93,69 @@ class _PurchaseListsState extends State<PurchaseLists> {
         child: RefreshIndicator(
             onRefresh: loadLists,
             child: starting
-                ? Center(child: CircularProgressIndicator())
+                ? const Center(child: CircularProgressIndicator())
                 : ListView.builder(
-                itemCount: purchaseLists?.length,
-                itemBuilder: (context, index) {
-                  if (purchaseLists == null) return Text("");
-                  return Container(
-                      height: 100,
-                      decoration: BoxDecoration(
-                          color: Colors.lightGreen.shade100,
-                          borderRadius: BorderRadius.circular(8),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(.6),
-                              spreadRadius: 1,
-                              blurRadius: 2,
-                              offset: const Offset(
-                                  2, 2), // changes position of shadow
-                            )
-                          ]),
-                      margin: const EdgeInsets.only(
-                          top: 8, bottom: 8, left: 4, right: 4),
-                      padding: const EdgeInsets.all(16),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Column(
-                            mainAxisAlignment:
-                            MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text(
-                                purchaseLists![index].name,
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 20),
-                              )
-                            ],
-                          ),
-                        ],
-                      ));
-                })));
+                    itemCount: purchaseLists?.length,
+                    itemBuilder: (context, index) {
+                      if (purchaseLists == null) return const Text("");
+                      return PurchaseListItem(purchaseLists![index]);
+                    })));
+  }
+}
+
+class PurchaseListItem extends StatelessWidget {
+  final PurchaseList _purchaseList;
+
+  const PurchaseListItem(PurchaseList purchaseList, {Key? key})
+      : _purchaseList = purchaseList,
+        super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 80,
+      width: double.infinity,
+      decoration: BoxDecoration(
+          color: Colors.lightGreen.shade100,
+          borderRadius: BorderRadius.circular(8),
+          boxShadow: [
+            BoxShadow(
+                color: Colors.grey.withOpacity(.6),
+                spreadRadius: 1,
+                blurRadius: 2,
+                offset: const Offset(2, 2))
+          ]),
+      margin: const EdgeInsets.only(top: 8, bottom: 8, left: 4, right: 4),
+      padding: const EdgeInsets.all(16),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
+            flex: 6,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  _purchaseList.name,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 2,
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold, fontSize: 18),
+                )
+              ],
+            ),
+          ),
+          _purchaseList.inProgress
+              ? const Padding(
+                  padding: EdgeInsets.only(left: 20),
+                  child: Icon(
+                    Icons.shopping_cart,
+                    color: Colors.blueAccent,
+                  ))
+              : const SizedBox.shrink(),
+        ],
+      ),
+    );
   }
 }
