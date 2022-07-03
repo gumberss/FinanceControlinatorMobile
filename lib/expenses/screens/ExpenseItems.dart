@@ -1,7 +1,6 @@
 import 'package:finance_controlinator_mobile/components/DefaultInput.dart';
 import 'package:finance_controlinator_mobile/expenses/components/DefaultToast.dart';
 import 'package:finance_controlinator_mobile/expenses/domain/ExpenseItem.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:uuid/uuid.dart';
