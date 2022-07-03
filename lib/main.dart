@@ -19,8 +19,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData.light(),
         darkTheme: ThemeData.dark(),
         themeMode: ThemeMode.system,
-        home: Dashboard()
-        //SignIn(),
+        home: SignIn(),
         );
   }
 }
