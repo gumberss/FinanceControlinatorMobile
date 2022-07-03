@@ -23,7 +23,8 @@ class PurchasesListsScreen extends StatelessWidget {
         floatingActionButton: FloatingActionButton(
           backgroundColor: Colors.blueAccent,
           child: Icon(Icons.add),
-          onPressed: () => {
+          onPressed: () =>
+          {
             DefaultDialog().showDialog(context, NewPurchaseListDialog(context))
           },
         ));
@@ -56,8 +57,15 @@ class PurchaseLists extends StatefulWidget {
 
 class _PurchaseListsState extends State<PurchaseLists> {
   List<PurchaseList>? purchaseLists;
+  bool starting = true;
 
-  Future getLists() async {
+  @override
+  void initState() {
+    super.initState();
+    loadLists();
+  }
+
+  Future loadLists() async {
     var response = await PurchaseListWebClient().getAll();
 
     if (response.unauthorized()) {
@@ -66,6 +74,7 @@ class _PurchaseListsState extends State<PurchaseLists> {
     }
     setState(() {
       purchaseLists = response.data!;
+      starting = false;
     });
   }
 
@@ -74,44 +83,48 @@ class _PurchaseListsState extends State<PurchaseLists> {
     return Container(
         width: double.infinity,
         child: RefreshIndicator(
-            onRefresh: getLists,
-            child: ListView.builder(
+            onRefresh: loadLists,
+            child: starting
+                ? Center(child: CircularProgressIndicator())
+                : ListView.builder(
                 itemCount: purchaseLists?.length,
                 itemBuilder: (context, index) {
-              if (purchaseLists == null) return Text("");
-              return Container(
-                  height: 100,
-                  decoration: BoxDecoration(
-                      color: Colors.lightGreen.shade100,
-                      borderRadius: BorderRadius.circular(8),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(.6),
-                          spreadRadius: 1,
-                          blurRadius: 2,
-                          offset:
-                              const Offset(2, 2), // changes position of shadow
-                        )
-                      ]),
-                  margin: const EdgeInsets.only(
-                      top: 8, bottom: 8, left: 4, right: 4),
-                  padding: const EdgeInsets.all(16),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
+                  if (purchaseLists == null) return Text("");
+                  return Container(
+                      height: 100,
+                      decoration: BoxDecoration(
+                          color: Colors.lightGreen.shade100,
+                          borderRadius: BorderRadius.circular(8),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(.6),
+                              spreadRadius: 1,
+                              blurRadius: 2,
+                              offset: const Offset(
+                                  2, 2), // changes position of shadow
+                            )
+                          ]),
+                      margin: const EdgeInsets.only(
+                          top: 8, bottom: 8, left: 4, right: 4),
+                      padding: const EdgeInsets.all(16),
+                      child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Text(
-                            purchaseLists![index].name,
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 20),
-                          )
+                          Column(
+                            mainAxisAlignment:
+                            MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(
+                                purchaseLists![index].name,
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 20),
+                              )
+                            ],
+                          ),
                         ],
-                      ),
-                    ],
-                  ));
-            })));
+                      ));
+                })));
   }
 }
