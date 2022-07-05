@@ -11,12 +11,12 @@ class PurchaseListWebClient {
       dotenv.env['FINANCE_CONTROLINATOR_API_URL_PURCHASE_LIST'].toString(),
       "/api/purchases/lists");
 
-  Future<PurchaseList> save(PurchaseList purchaseList) async {
+  Future<HttpResponseData<PurchaseList>> create(String name) async {
     final response = await client.postUri(baseUri,
         options: Options(headers: {
           'Content-Type': 'application/json; charset=UTF-8',
         }),
-        data: purchaseList.toJson());
+        data: {"name": name});
 
     if (response.statusCode == 500) {
       throw const HttpException(
@@ -27,7 +27,12 @@ class PurchaseListWebClient {
       throw const HttpException("Not Authorized :(");
     }
 
-    return purchaseList;
+    if (response.statusCode == 400) {
+      return throw HttpException(response.data!.error.message);
+    }
+
+    return HttpResponseData(
+        response.statusCode!, PurchaseList.fromJson(response.data!));
   }
 
   Future<HttpResponseData<List<PurchaseList>>> getAll() async {

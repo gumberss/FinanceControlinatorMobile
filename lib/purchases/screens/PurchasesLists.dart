@@ -8,6 +8,8 @@ import '../../components/DefaultDialog.dart';
 import '../domain/PurchaseList.dart';
 
 class PurchasesListsScreen extends StatelessWidget {
+  final listStateKey = GlobalKey<_PurchaseListsState>();
+
   @override
   Widget build(BuildContext context) {
     //if (response.unauthorized()) {
@@ -18,7 +20,7 @@ class PurchasesListsScreen extends StatelessWidget {
         appBar: AppBar(
           title: Text("[[PURCHASE_LISTS_SCREEN_TITLE]]"), //from dto
         ),
-        body: PurchaseLists(),
+        body: PurchaseLists(listStateKey),
         floatingActionButton: FloatingActionButton(
           backgroundColor: Colors.blueAccent,
           child: Icon(Icons.add),
@@ -28,20 +30,36 @@ class PurchasesListsScreen extends StatelessWidget {
         ));
   }
 
+  TextEditingController newPurchaseListNameController = TextEditingController();
+
   List<Widget> NewPurchaseListDialog(BuildContext context) {
     return [
       DefaultInput("[[PURCHASE_LIST_INPUT]]", TextInputType.text,
-          TextEditingController()),
+          newPurchaseListNameController),
       Padding(
-          padding: EdgeInsets.only(left: 8, right: 8, top: 8),
+          padding: const EdgeInsets.only(left: 8, right: 8, top: 8),
           child: SizedBox(
               width: double.maxFinite,
               child: OutlinedButton(
                   style: OutlinedButton.styleFrom(
                       primary: Colors.green[900],
                       backgroundColor: Colors.green[100]),
-                  onPressed: () {
-                    Navigator.pop(context);
+                  onPressed: () async {
+                    if (newPurchaseListNameController.text.isEmpty) {
+                      //todo: toast error
+                      return;
+                    }
+
+                    try {
+                      await PurchaseListWebClient()
+                          .create(newPurchaseListNameController.text);
+                      listStateKey.currentState?.loadLists();
+                      //todo: toast success
+                      Navigator.pop(context);
+                    } on Exception catch (e) {
+                      debugPrint(e.toString());
+                      //todo: toast error
+                    }
                   },
                   child: Text("[[CREATE_BUTTON]]"))))
     ];
@@ -49,6 +67,9 @@ class PurchasesListsScreen extends StatelessWidget {
 }
 
 class PurchaseLists extends StatefulWidget {
+
+  PurchaseLists(Key? key) : super(key: key);
+
   @override
   State<PurchaseLists> createState() => _PurchaseListsState();
 }
