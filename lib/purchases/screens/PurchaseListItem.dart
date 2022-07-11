@@ -2,7 +2,6 @@ import 'package:finance_controlinator_mobile/purchases/webclients/PurchaseListWe
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter/material.dart';
-
 import '../domain/PurchaseList.dart';
 
 class PurchaseListItem extends StatelessWidget {
@@ -32,8 +31,8 @@ class PurchaseListItem extends StatelessWidget {
             ]),
         margin: const EdgeInsets.only(top: 8, bottom: 8, left: 4, right: 4),
         child: Slidable(
-          startActionPane: slideLeftBackground(),
-          endActionPane: slideRightBackground(),
+          startActionPane: slideLeftBackground(context),
+          endActionPane: slideRightBackground(context),
           key: Key(_purchaseList.name),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -70,26 +69,24 @@ class PurchaseListItem extends StatelessWidget {
         ));
   }
 
-  ActionPane slideLeftBackground() {
+  ActionPane slideLeftBackground(BuildContext context) {
     return ActionPane(
       motion: const ScrollMotion(),
       children: [
         SlidableAction(
           onPressed: (ctx) async {
             await PurchaseListWebClient().disable(_purchaseList.id!);
-
             _onChangeHappen();
           },
           backgroundColor: Colors.redAccent,
           foregroundColor: Colors.white,
           icon: Icons.delete,
-          label: '[[DELETE]]',
         )
       ],
     );
   }
 
-  ActionPane slideRightBackground() {
+  ActionPane slideRightBackground(BuildContext context) {
     return ActionPane(
       motion: const ScrollMotion(),
       children: [
@@ -98,14 +95,12 @@ class PurchaseListItem extends StatelessWidget {
           backgroundColor: Colors.greenAccent,
           foregroundColor: Colors.white,
           icon: Icons.edit,
-          label: '[[EDIT]]',
         ),
         SlidableAction(
           onPressed: (ctx) {},
           backgroundColor: Colors.blueAccent,
           foregroundColor: Colors.white,
           icon: Icons.link,
-          label: '[[LINK_USER]]',
         )
       ],
     );

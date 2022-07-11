@@ -1,8 +1,8 @@
-import 'dart:ffi';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:finance_controlinator_mobile/purchases/webclients/PurchaseListWebClient.dart';
 import 'package:flutter/material.dart';
 import 'package:finance_controlinator_mobile/components/DefaultInput.dart';
+import 'package:intl/intl.dart';
 import '../../authentications/services/AuthorizationService.dart';
 import '../../components/DefaultDialog.dart';
 import '../domain/PurchaseList.dart';
@@ -17,9 +17,10 @@ class PurchasesListsScreen extends StatelessWidget {
     //AuthorizationService.redirectToSignIn(context);
     // return Text("Unauthorized :(");
     //       } else {
+
     return Scaffold(
         appBar: AppBar(
-          title: Text("[[PURCHASE_LISTS_SCREEN_TITLE]]"), //from dto
+          title: Text(AppLocalizations.of(context)!.purchaseListScreenTitle), //from dto
         ),
         body: PurchaseLists(listStateKey),
         floatingActionButton: FloatingActionButton(
@@ -35,7 +36,7 @@ class PurchasesListsScreen extends StatelessWidget {
 
   List<Widget> NewPurchaseListDialog(BuildContext context) {
     return [
-      DefaultInput("[[PURCHASE_LIST_INPUT]]", TextInputType.text,
+      DefaultInput(AppLocalizations.of(context)!.purchaseListName, TextInputType.text,
           newPurchaseListNameController),
       Padding(
           padding: const EdgeInsets.only(left: 8, right: 8, top: 8),
@@ -62,7 +63,7 @@ class PurchasesListsScreen extends StatelessWidget {
                       //todo: toast error
                     }
                   },
-                  child: Text("[[CREATE_BUTTON]]"))))
+                  child: Text(AppLocalizations.of(context)!.create))))
     ];
   }
 }
