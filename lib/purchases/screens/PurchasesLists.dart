@@ -119,7 +119,7 @@ class _PurchaseListsState extends State<PurchaseLists> {
                     itemCount: purchaseLists?.length,
                     itemBuilder: (context, index) {
                       if (purchaseLists == null) return const Text("");
-                      return PurchaseListItem(purchaseLists![index]);
+                      return PurchaseListItem(purchaseLists![index], loadLists);
                     })));
   }
 }

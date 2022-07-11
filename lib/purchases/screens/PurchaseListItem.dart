@@ -1,3 +1,4 @@
+import 'package:finance_controlinator_mobile/purchases/webclients/PurchaseListWebClient.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter/material.dart';
@@ -6,9 +7,12 @@ import '../domain/PurchaseList.dart';
 
 class PurchaseListItem extends StatelessWidget {
   final PurchaseList _purchaseList;
+  final Function _onChangeHappen;
 
-  const PurchaseListItem(PurchaseList purchaseList, {Key? key})
+  const PurchaseListItem(PurchaseList purchaseList, Function onChangeHappen,
+      {Key? key})
       : _purchaseList = purchaseList,
+        _onChangeHappen = onChangeHappen,
         super(key: key);
 
   @override
@@ -71,7 +75,11 @@ class PurchaseListItem extends StatelessWidget {
       motion: const ScrollMotion(),
       children: [
         SlidableAction(
-          onPressed: (ctx) {},
+          onPressed: (ctx) async {
+            await PurchaseListWebClient().disable(_purchaseList.id!);
+
+            _onChangeHappen();
+          },
           backgroundColor: Colors.redAccent,
           foregroundColor: Colors.white,
           icon: Icons.delete,
