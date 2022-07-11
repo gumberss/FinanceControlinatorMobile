@@ -1,24 +1,28 @@
-import 'dart:ffi';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:finance_controlinator_mobile/purchases/webclients/PurchaseListWebClient.dart';
 import 'package:flutter/material.dart';
 import 'package:finance_controlinator_mobile/components/DefaultInput.dart';
+import 'package:intl/intl.dart';
 import '../../authentications/services/AuthorizationService.dart';
 import '../../components/DefaultDialog.dart';
 import '../domain/PurchaseList.dart';
+import 'PurchaseListItem.dart';
 
 class PurchasesListsScreen extends StatelessWidget {
+  final listStateKey = GlobalKey<_PurchaseListsState>();
+
   @override
   Widget build(BuildContext context) {
     //if (response.unauthorized()) {
     //AuthorizationService.redirectToSignIn(context);
     // return Text("Unauthorized :(");
     //       } else {
+
     return Scaffold(
         appBar: AppBar(
-          title: Text("[[PURCHASE_LISTS_SCREEN_TITLE]]"), //from dto
+          title: Text(AppLocalizations.of(context)!.purchaseListScreenTitle), //from dto
         ),
-        body: PurchaseLists(),
+        body: PurchaseLists(listStateKey),
         floatingActionButton: FloatingActionButton(
           backgroundColor: Colors.blueAccent,
           child: Icon(Icons.add),
@@ -28,27 +32,45 @@ class PurchasesListsScreen extends StatelessWidget {
         ));
   }
 
+  TextEditingController newPurchaseListNameController = TextEditingController();
+
   List<Widget> NewPurchaseListDialog(BuildContext context) {
     return [
-      DefaultInput("[[PURCHASE_LIST_INPUT]]", TextInputType.text,
-          TextEditingController()),
+      DefaultInput(AppLocalizations.of(context)!.purchaseListName, TextInputType.text,
+          newPurchaseListNameController),
       Padding(
-          padding: EdgeInsets.only(left: 8, right: 8, top: 8),
+          padding: const EdgeInsets.only(left: 8, right: 8, top: 8),
           child: SizedBox(
               width: double.maxFinite,
               child: OutlinedButton(
                   style: OutlinedButton.styleFrom(
                       primary: Colors.green[900],
                       backgroundColor: Colors.green[100]),
-                  onPressed: () {
-                    Navigator.pop(context);
+                  onPressed: () async {
+                    if (newPurchaseListNameController.text.isEmpty) {
+                      //todo: toast error
+                      return;
+                    }
+
+                    try {
+                      await PurchaseListWebClient()
+                          .create(newPurchaseListNameController.text);
+                      listStateKey.currentState?.loadLists();
+                      //todo: toast success
+                      Navigator.pop(context);
+                    } on Exception catch (e) {
+                      debugPrint(e.toString());
+                      //todo: toast error
+                    }
                   },
-                  child: Text("[[CREATE_BUTTON]]"))))
+                  child: Text(AppLocalizations.of(context)!.create))))
     ];
   }
 }
 
 class PurchaseLists extends StatefulWidget {
+  PurchaseLists(Key? key) : super(key: key);
+
   @override
   State<PurchaseLists> createState() => _PurchaseListsState();
 }
@@ -98,64 +120,7 @@ class _PurchaseListsState extends State<PurchaseLists> {
                     itemCount: purchaseLists?.length,
                     itemBuilder: (context, index) {
                       if (purchaseLists == null) return const Text("");
-                      return PurchaseListItem(purchaseLists![index]);
+                      return PurchaseListItem(purchaseLists![index], loadLists);
                     })));
-  }
-}
-
-class PurchaseListItem extends StatelessWidget {
-  final PurchaseList _purchaseList;
-
-  const PurchaseListItem(PurchaseList purchaseList, {Key? key})
-      : _purchaseList = purchaseList,
-        super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 80,
-      width: double.infinity,
-      decoration: BoxDecoration(
-          color: Colors.lightGreen.shade100,
-          borderRadius: BorderRadius.circular(8),
-          boxShadow: [
-            BoxShadow(
-                color: Colors.grey.withOpacity(.6),
-                spreadRadius: 1,
-                blurRadius: 2,
-                offset: const Offset(2, 2))
-          ]),
-      margin: const EdgeInsets.only(top: 8, bottom: 8, left: 4, right: 4),
-      padding: const EdgeInsets.all(16),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Expanded(
-            flex: 6,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  _purchaseList.name,
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 2,
-                  style: const TextStyle(
-                      fontWeight: FontWeight.bold, fontSize: 18),
-                )
-              ],
-            ),
-          ),
-          _purchaseList.inProgress
-              ? const Padding(
-                  padding: EdgeInsets.only(left: 20),
-                  child: Icon(
-                    Icons.shopping_cart,
-                    color: Colors.blueAccent,
-                  ))
-              : const SizedBox.shrink(),
-        ],
-      ),
-    );
   }
 }
