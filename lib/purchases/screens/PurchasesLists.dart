@@ -8,6 +8,38 @@ import '../../components/DefaultDialog.dart';
 import '../domain/PurchaseList.dart';
 import 'PurchaseListItem.dart';
 
+List<Widget> TextInputActionDialog(BuildContext context, String text,
+    TextEditingController controller, VoidCallback action) {
+  return [
+    DefaultInput(text, TextInputType.text, controller),
+    Padding(
+        padding: const EdgeInsets.only(left: 8, right: 8, top: 8),
+        child: SizedBox(
+            width: double.maxFinite,
+            child: OutlinedButton(
+                style: OutlinedButton.styleFrom(
+                    primary: Colors.green[900],
+                    backgroundColor: Colors.green[100]),
+                onPressed: () async {
+                  if (controller.text.isEmpty) {
+                    //todo: toast error
+                    return;
+                  }
+
+                  try {
+                    action();
+                    //todo: toast success
+                    controller.clear();
+                    Navigator.pop(context);
+                  } on Exception catch (e) {
+                    debugPrint(e.toString());
+                    //todo: toast error
+                  }
+                },
+                child: Text(AppLocalizations.of(context)!.create))))
+  ];
+}
+
 class PurchasesListsScreen extends StatelessWidget {
   final listStateKey = GlobalKey<_PurchaseListsState>();
 
@@ -20,7 +52,8 @@ class PurchasesListsScreen extends StatelessWidget {
 
     return Scaffold(
         appBar: AppBar(
-          title: Text(AppLocalizations.of(context)!.purchaseListScreenTitle), //from dto
+          title: Text(
+              AppLocalizations.of(context)!.purchaseListScreenTitle), //from dto
         ),
         body: PurchaseLists(listStateKey),
         floatingActionButton: FloatingActionButton(
@@ -35,36 +68,13 @@ class PurchasesListsScreen extends StatelessWidget {
   TextEditingController newPurchaseListNameController = TextEditingController();
 
   List<Widget> NewPurchaseListDialog(BuildContext context) {
-    return [
-      DefaultInput(AppLocalizations.of(context)!.purchaseListName, TextInputType.text,
-          newPurchaseListNameController),
-      Padding(
-          padding: const EdgeInsets.only(left: 8, right: 8, top: 8),
-          child: SizedBox(
-              width: double.maxFinite,
-              child: OutlinedButton(
-                  style: OutlinedButton.styleFrom(
-                      primary: Colors.green[900],
-                      backgroundColor: Colors.green[100]),
-                  onPressed: () async {
-                    if (newPurchaseListNameController.text.isEmpty) {
-                      //todo: toast error
-                      return;
-                    }
-
-                    try {
-                      await PurchaseListWebClient()
-                          .create(newPurchaseListNameController.text);
-                      listStateKey.currentState?.loadLists();
-                      //todo: toast success
-                      Navigator.pop(context);
-                    } on Exception catch (e) {
-                      debugPrint(e.toString());
-                      //todo: toast error
-                    }
-                  },
-                  child: Text(AppLocalizations.of(context)!.create))))
-    ];
+    return TextInputActionDialog(
+        context,
+        AppLocalizations.of(context)!.purchaseListName,
+        newPurchaseListNameController, () async {
+      await PurchaseListWebClient().create(newPurchaseListNameController.text);
+      listStateKey.currentState?.loadLists();
+    });
   }
 }
 
@@ -105,6 +115,25 @@ class _PurchaseListsState extends State<PurchaseLists> {
     setState(() {
       purchaseLists = response.data!;
       starting = false;
+    });
+  }
+
+  TextEditingController editPurchaseListNameController =
+      TextEditingController();
+
+  List<Widget> EditPurchaseListDialog(
+      BuildContext context, PurchaseList purchaseList) {
+    editPurchaseListNameController.text = purchaseList.name;
+    return TextInputActionDialog(
+        context,
+        AppLocalizations.of(context)!.purchaseListName,
+        editPurchaseListNameController, () async {
+      if (purchaseList.name != editPurchaseListNameController.text) {
+        purchaseList.name = editPurchaseListNameController.text;
+        await PurchaseListWebClient()
+            .edit(purchaseList);
+        loadLists();
+      }
     });
   }
 

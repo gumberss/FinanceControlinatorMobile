@@ -41,6 +41,30 @@ class PurchaseListWebClient {
         response.statusCode!, PurchaseList.fromJson(response.data!));
   }
 
+  Future<HttpResponseData<PurchaseList>> edit(PurchaseList purchaseList) async {
+    final response = await client.putUri(baseUri,
+        options: Options(headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+        }),
+        data: purchaseList.toJson());
+
+    if (response.statusCode == 500) {
+      throw const HttpException(
+          "It was not possible to \nedit the purchase list :(");
+    }
+
+    if (response.statusCode == 401) {
+      throw const HttpException("Not Authorized :(");
+    }
+
+    if (response.statusCode == 400) {
+      return throw HttpException(response.data!.error.message);
+    }
+
+    return HttpResponseData(
+        response.statusCode!, PurchaseList.fromJson(response.data!));
+  }
+
   Future<HttpResponseData<List<PurchaseList>>> getAll() async {
     final response;
     try {
@@ -67,14 +91,13 @@ class PurchaseListWebClient {
             decodedData.map((e) => PurchaseList.fromJson(e))));
   }
 
-  Future<HttpResponseData<PurchaseList>> disable(String id) async {
+  Future<HttpResponseData<String>> disable(String id) async {
     final response;
     try {
       response = await client.deleteUri(Uri.http(baseUrl, basePath + "/$id"),
           options: Options(headers: {
             'Content-Type': 'application/json; charset=UTF-8',
           }));
-      debugPrint(Uri.http(baseUrl, basePath + "/$id").toString());
     } catch (Exception) {
       return HttpResponseData(500, null);
     }
@@ -87,6 +110,6 @@ class PurchaseListWebClient {
     }
 
     return HttpResponseData(
-        response.statusCode!, PurchaseList.fromJson(response.data));
+        response.statusCode!, response.data['id']);
   }
 }
