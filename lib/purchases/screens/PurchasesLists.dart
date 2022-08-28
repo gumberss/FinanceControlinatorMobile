@@ -2,7 +2,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:finance_controlinator_mobile/purchases/webclients/PurchaseListWebClient.dart';
 import 'package:flutter/material.dart';
 import 'package:finance_controlinator_mobile/components/DefaultInput.dart';
-import 'package:intl/intl.dart';
 import '../../authentications/services/AuthorizationService.dart';
 import '../../components/DefaultDialog.dart';
 import '../domain/PurchaseList.dart';
@@ -121,21 +120,7 @@ class _PurchaseListsState extends State<PurchaseLists> {
   TextEditingController editPurchaseListNameController =
       TextEditingController();
 
-  List<Widget> EditPurchaseListDialog(
-      BuildContext context, PurchaseList purchaseList) {
-    editPurchaseListNameController.text = purchaseList.name;
-    return TextInputActionDialog(
-        context,
-        AppLocalizations.of(context)!.purchaseListName,
-        editPurchaseListNameController, () async {
-      if (purchaseList.name != editPurchaseListNameController.text) {
-        purchaseList.name = editPurchaseListNameController.text;
-        await PurchaseListWebClient()
-            .edit(purchaseList);
-        loadLists();
-      }
-    });
-  }
+
 
   @override
   Widget build(BuildContext context) {
