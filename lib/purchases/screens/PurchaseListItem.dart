@@ -1,14 +1,16 @@
 import 'package:finance_controlinator_mobile/purchases/webclients/PurchaseListWebClient.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter/material.dart';
+import '../../components/DefaultDialog.dart';
 import '../domain/PurchaseList.dart';
+import 'PurchasesLists.dart';
 
 class PurchaseListItem extends StatelessWidget {
   final PurchaseList _purchaseList;
   final Function _onChangeHappen;
 
-  const PurchaseListItem(PurchaseList purchaseList, Function onChangeHappen,
+  PurchaseListItem(PurchaseList purchaseList, Function onChangeHappen,
       {Key? key})
       : _purchaseList = purchaseList,
         _onChangeHappen = onChangeHappen,
@@ -58,11 +60,11 @@ class PurchaseListItem extends StatelessWidget {
               ),
               _purchaseList.inProgress
                   ? const Padding(
-                      padding: EdgeInsets.only(left: 20),
-                      child: Icon(
-                        Icons.shopping_cart,
-                        color: Colors.blueAccent,
-                      ))
+                  padding: EdgeInsets.only(left: 20),
+                  child: Icon(
+                    Icons.shopping_cart,
+                    color: Colors.blueAccent,
+                  ))
                   : const SizedBox.shrink(),
             ],
           ),
@@ -91,7 +93,9 @@ class PurchaseListItem extends StatelessWidget {
       motion: const ScrollMotion(),
       children: [
         SlidableAction(
-          onPressed: (ctx) {},
+          onPressed: (ctx) {
+            DefaultDialog().showDialog(context, EditPurchaseListDialog(context, _purchaseList));
+          },
           backgroundColor: Colors.greenAccent,
           foregroundColor: Colors.white,
           icon: Icons.edit,
@@ -104,5 +108,23 @@ class PurchaseListItem extends StatelessWidget {
         )
       ],
     );
+  }
+
+  TextEditingController editPurchaseListNameController = TextEditingController();
+
+  List<Widget> EditPurchaseListDialog(
+      BuildContext context, PurchaseList purchaseList) {
+    editPurchaseListNameController.text = purchaseList.name;
+    return TextInputActionDialog(
+        context,
+        AppLocalizations.of(context)!.purchaseListName,
+        editPurchaseListNameController, () async {
+      if (purchaseList.name != editPurchaseListNameController.text) {
+        purchaseList.name = editPurchaseListNameController.text;
+        await PurchaseListWebClient()
+            .edit(purchaseList);
+        _onChangeHappen();
+      }
+    });
   }
 }
