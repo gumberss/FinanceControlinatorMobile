@@ -12,10 +12,7 @@ class PurchaseListManagement extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text(
-              AppLocalizations.of(context)!.purchaseListScreenTitle), //from dto
-        ),
+        appBar: AppBar(title: Text(_purchaseList.name)),
         body: Text(_purchaseList.name),
         floatingActionButton: FloatingActionButton(
           backgroundColor: Colors.blueAccent,
