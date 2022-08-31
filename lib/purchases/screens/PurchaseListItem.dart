@@ -1,3 +1,4 @@
+import 'package:finance_controlinator_mobile/purchases/screens/PurchaseListManagement.dart';
 import 'package:finance_controlinator_mobile/purchases/webclients/PurchaseListWebClient.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -32,43 +33,47 @@ class PurchaseListItem extends StatelessWidget {
                   offset: const Offset(2, 2))
             ]),
         margin: const EdgeInsets.only(top: 8, bottom: 8, left: 4, right: 4),
-        child: Slidable(
-          startActionPane: slideLeftBackground(context),
-          endActionPane: slideRightBackground(context),
-          key: Key(_purchaseList.name),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(
-                flex: 6,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.only(left: 10),
-                      child: Text(
-                        _purchaseList.name,
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 2,
-                        style: const TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 18),
-                      ),
-                    )
-                  ],
-                ),
-              ),
-              _purchaseList.inProgress
-                  ? const Padding(
-                  padding: EdgeInsets.only(left: 20),
-                  child: Icon(
-                    Icons.shopping_cart,
-                    color: Colors.blueAccent,
-                  ))
-                  : const SizedBox.shrink(),
-            ],
-          ),
-        ));
+        child: InkWell(
+         child: Slidable(
+           startActionPane: slideLeftBackground(context),
+           endActionPane: slideRightBackground(context),
+           key: Key(_purchaseList.name),
+           child: Row(
+             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+             children: [
+               Expanded(
+                 flex: 6,
+                 child: Column(
+                   crossAxisAlignment: CrossAxisAlignment.start,
+                   mainAxisAlignment: MainAxisAlignment.center,
+                   children: [
+                     Padding(
+                       padding: EdgeInsets.only(left: 10),
+                       child: Text(
+                         _purchaseList.name,
+                         overflow: TextOverflow.ellipsis,
+                         maxLines: 2,
+                         style: const TextStyle(
+                             fontWeight: FontWeight.bold, fontSize: 18),
+                       ),
+                     )
+                   ],
+                 ),
+               ),
+               _purchaseList.inProgress
+                   ? const Padding(
+                   padding: EdgeInsets.only(left: 20),
+                   child: Icon(
+                     Icons.shopping_cart,
+                     color: Colors.blueAccent,
+                   ))
+                   : const SizedBox.shrink(),
+             ],
+           ),
+         ), onTap: () =>  Navigator.of(context)
+            .push(MaterialPageRoute(builder: (c) => PurchaseListManagement(_purchaseList)))),
+
+        );
   }
 
   ActionPane slideLeftBackground(BuildContext context) {
