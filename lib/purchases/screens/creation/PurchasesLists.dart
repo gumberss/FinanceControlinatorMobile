@@ -2,9 +2,9 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:finance_controlinator_mobile/purchases/webclients/PurchaseListWebClient.dart';
 import 'package:flutter/material.dart';
 import 'package:finance_controlinator_mobile/components/DefaultInput.dart';
-import '../../authentications/services/AuthorizationService.dart';
-import '../../components/DefaultDialog.dart';
-import '../domain/PurchaseList.dart';
+import '../../../authentications/services/AuthorizationService.dart';
+import '../../../components/DefaultDialog.dart';
+import '../../domain/PurchaseList.dart';
 import 'PurchaseListItem.dart';
 
 List<Widget> TextInputActionDialog(BuildContext context, String text,

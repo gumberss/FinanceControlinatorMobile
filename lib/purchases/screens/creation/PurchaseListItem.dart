@@ -1,10 +1,10 @@
-import 'package:finance_controlinator_mobile/purchases/screens/PurchaseListManagement.dart';
+import 'package:finance_controlinator_mobile/purchases/screens/management/PurchaseListManagement.dart';
 import 'package:finance_controlinator_mobile/purchases/webclients/PurchaseListWebClient.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter/material.dart';
-import '../../components/DefaultDialog.dart';
-import '../domain/PurchaseList.dart';
+import '../../../components/DefaultDialog.dart';
+import '../../domain/PurchaseList.dart';
 import 'PurchasesLists.dart';
 
 class PurchaseListItem extends StatelessWidget {
@@ -71,7 +71,7 @@ class PurchaseListItem extends StatelessWidget {
              ],
            ),
          ), onTap: () =>  Navigator.of(context)
-            .push(MaterialPageRoute(builder: (c) => PurchaseListManagement(_purchaseList)))),
+            .push(MaterialPageRoute(builder: (c) => PurchaseListManagementScreen(_purchaseList)))),
 
         );
   }
