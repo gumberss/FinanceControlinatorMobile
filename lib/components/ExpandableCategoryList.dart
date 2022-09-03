@@ -5,25 +5,26 @@ class ExpandableCategoryList<TCategory, TItem> extends StatelessWidget {
   final List<TItem> items;
   final List<TCategory> categories;
   final ListTile Function(TItem) buildItem;
-  final String? Function(TItem) groupProperty;
+  final String? Function(TItem) itemGroupProperty;
   final ListTile Function(TCategory)? buildDefaultTile;
   final String Function(TCategory) categoryGroupItemsProperty;
-  final String Function(TCategory) categoryTitle;
+  final ExpansionTile Function(TCategory, List<ListTile> items)
+      buildCategoryTile;
 
   const ExpandableCategoryList(
       {Key? key,
       required this.items,
       required this.buildItem,
-      required this.groupProperty,
+      required this.itemGroupProperty,
       required this.categories,
       required this.categoryGroupItemsProperty,
-      required this.categoryTitle,
+      required this.buildCategoryTile,
       this.buildDefaultTile})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    var groupedItems = groupBy(items, groupProperty).map(buildItemTile).entries;
+    var groupedItems = groupBy(items, itemGroupProperty).map(buildItemTile).entries;
 
     var expandableTiles = categories
         .map((e) => buildExpansionTile(
@@ -47,8 +48,7 @@ class ExpandableCategoryList<TCategory, TItem> extends StatelessWidget {
     var itemsTiles = buildDefaultTile != null
         ? [...entries, buildDefaultTile!(category)]
         : [...entries];
-    return ExpansionTile(
-        title: Text(categoryTitle(category)), children: itemsTiles);
+    return buildCategoryTile(category, itemsTiles);
   }
 }
 

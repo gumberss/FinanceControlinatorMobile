@@ -2,7 +2,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 import '../../../components/ExpandableCategoryList.dart';
-import '../../../components/ExpandableList.dart';
 import '../../domain/PurchaseList.dart';
 
 class PurchaseListManagementScreen extends StatelessWidget {
@@ -35,8 +34,10 @@ class PurchaseListManagement extends StatelessWidget {
         categories: c,
         buildItem: (i) => ListTile(title: Text(i.toString())),
         categoryGroupItemsProperty: (x) => x,
-        categoryTitle: (c)=> c,
-        buildDefaultTile: (c) => const ListTile(title: Text("Create a nwe one")),
-        groupProperty: (i) => i.toString());
+        buildCategoryTile: (c, items) => ExpansionTile(
+            initiallyExpanded: true, title: Text(c), children: items),
+        buildDefaultTile: (c) =>
+            const ListTile(title: Text("Create a new one")),
+        itemGroupProperty: (i) => i.toString());
   }
 }
