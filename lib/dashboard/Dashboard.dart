@@ -1,5 +1,5 @@
 import 'package:finance_controlinator_mobile/expenses/screens/ExpenseList.dart';
-import 'package:finance_controlinator_mobile/purchases/screens/PurchasesLists.dart';
+import 'package:finance_controlinator_mobile/purchases/screens/creation/PurchasesLists.dart';
 import 'package:flutter/material.dart';
 
 import '../invoices/screens/InvoicesScreen.dart';
