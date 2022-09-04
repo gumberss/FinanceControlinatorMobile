@@ -65,8 +65,9 @@ class _PurchaseListManagementState extends State<PurchaseListManagement> {
       children: lists,
       itemDivider:
           Divider(thickness: 2, height: 2, color: Colors.grey.shade200),
-      itemDecorationWhileDragging: BoxDecoration(color: Colors.white,
-      boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 4)]),
+      itemDecorationWhileDragging: BoxDecoration(
+          color: Colors.white,
+          boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 4)]),
       onItemReorder: onItemReorder,
       onListReorder: onListReorder,
       itemDragHandle: buildDragHandle(),
@@ -103,12 +104,11 @@ class _PurchaseListManagementState extends State<PurchaseListManagement> {
       header: Container(
           padding: EdgeInsets.all(8),
           child: Text(e.header,
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16))),
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.blueGrey))),
       children: e.items
           .map((i) => DragAndDropItem(
                   child: ListTile(
-                leading: Image.network(i.urlImage,
-                    width: 40, height: 40, fit: BoxFit.cover),
+                //leading: Image.network(i.urlImage,width: 40, height: 40, fit: BoxFit.cover),
                 title: Text(i.title),
               )))
           .toList());
