@@ -16,7 +16,15 @@ class PurchaseListManagementScreen extends StatelessWidget {
     return Scaffold(
         appBar: AppBar(title: Text(_purchaseList.name)),
         backgroundColor: Colors.grey.shade200,
-        body: PurchaseListManagement(),
+        body: Column(
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            Expanded(
+              flex: 1,
+              child: PurchaseListManagement(),
+            )
+          ],
+        ),
         floatingActionButton: FloatingActionButton(
           backgroundColor: Colors.blueAccent,
           child: Icon(Icons.add),
@@ -104,7 +112,10 @@ class _PurchaseListManagementState extends State<PurchaseListManagement> {
       header: Container(
           padding: EdgeInsets.all(8),
           child: Text(e.header,
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.blueGrey))),
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                  color: Colors.blueGrey))),
       children: e.items
           .map((i) => DragAndDropItem(
                   child: ListTile(
