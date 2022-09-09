@@ -11,10 +11,41 @@ class PurchaseListManagementScreen extends StatelessWidget {
   PurchaseListManagementScreen(PurchaseList purchaseList)
       : _purchaseList = purchaseList;
 
+  Widget addCategoryButton()
+  => SizedBox(
+    height: 24,
+    width: 48 ,
+    child: Stack(
+      alignment: Alignment.center,
+      children: [
+        Align(
+          alignment: Alignment.topLeft,
+          child: Container(
+            padding: const EdgeInsets.only(bottom: 8, right: 16),
+            child: const Icon(
+              Icons.category_outlined,
+            ),
+          ),
+        ),
+        Align(
+          alignment: Alignment.bottomRight,
+          child: Container(
+            padding: const EdgeInsets.only(top: 12, left: 12),
+            child: const Icon(
+              Icons.add,
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: Text(_purchaseList.name)),
+        appBar: AppBar(title: Text(_purchaseList.name), actions: [
+          IconButton(onPressed: () {}, icon: addCategoryButton())
+        ],),
         backgroundColor: Colors.grey.shade200,
         body: Column(
           mainAxisSize: MainAxisSize.max,
@@ -24,14 +55,6 @@ class PurchaseListManagementScreen extends StatelessWidget {
               flex: 1,
               child: PurchaseListManagement(),
             ),
-            Padding(
-              padding: EdgeInsets.only(left: 8, right: 8, top: 4, bottom: 8),
-              child: SizedBox(
-                width: double.maxFinite,
-                child: ElevatedButton(
-                    onPressed: () {}, child: Text("Save and back")),
-              ),
-            )
           ],
         ),
         floatingActionButton: FloatingActionButton(
