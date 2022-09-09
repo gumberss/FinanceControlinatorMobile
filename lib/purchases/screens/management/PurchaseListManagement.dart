@@ -18,10 +18,19 @@ class PurchaseListManagementScreen extends StatelessWidget {
         backgroundColor: Colors.grey.shade200,
         body: Column(
           mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Expanded(
               flex: 1,
               child: PurchaseListManagement(),
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 8, right: 8, top: 4, bottom: 8),
+              child: SizedBox(
+                width: double.maxFinite,
+                child: ElevatedButton(
+                    onPressed: () {}, child: Text("Save and back")),
+              ),
             )
           ],
         ),
@@ -54,17 +63,38 @@ class _PurchaseListManagementState extends State<PurchaseListManagement> {
       DraggableList(header: "Draggable list 2", items: [
         DraggableListItem(title: "Item 3", urlImage: url),
         DraggableListItem(title: "Item 4", urlImage: url)
+      ]),
+      DraggableList(header: "Draggable list 2", items: [
+        DraggableListItem(title: "Item 3", urlImage: url),
+        DraggableListItem(title: "Item 4", urlImage: url)
+      ]),
+      DraggableList(header: "Draggable list 2", items: [
+        DraggableListItem(title: "Item 3", urlImage: url),
+        DraggableListItem(title: "Item 4", urlImage: url)
+      ]),
+      DraggableList(header: "Draggable list 2", items: [
+        DraggableListItem(title: "Item 3", urlImage: url),
+        DraggableListItem(title: "Item 4", urlImage: url)
       ])
     ];
 
     lists = list.map(buildList).toList();
   }
 
+  DragAndDropItem newItem() => DragAndDropItem(
+      canDrag: false,
+      child: ListTile(
+        title: Text(
+          "+ Item",
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
+          textAlign: TextAlign.center,
+        ),
+      ));
+
   @override
   Widget build(BuildContext context) {
-    var a = [1, 2, 3, 1, 2, 4];
-    var c = ["1", "2", "3", "4", "5"];
-
     return DragAndDropLists(
       listPadding: EdgeInsets.all(16),
       listInnerDecoration: BoxDecoration(
@@ -81,31 +111,6 @@ class _PurchaseListManagementState extends State<PurchaseListManagement> {
       itemDragHandle: buildDragHandle(),
       listDragHandle: buildDragHandle(isList: true),
     );
-
-    /*
-   *  return ExpandableCategoryList<String, int>(
-        items: a,
-        categories: c,
-        buildItem: (i) => LongPressDraggable(
-              data: i,
-              child: ListTile(title: Text(i.toString())),
-              feedback: Material(
-                  child: ConstrainedBox(
-                      constraints: BoxConstraints(
-                          maxWidth: MediaQuery.of(context).size.width),
-                      child: ListTile(title: Text(i.toString())))),
-              childWhenDragging: Container(),
-            ),
-        categoryGroupItemsProperty: (x) => x,
-        buildCategoryTile: (c, items) => DragTarget<int>(ExpansionTile(
-            initiallyExpanded: true, title: Text(c), children: items)),
-        buildDefaultTile: (c) => LongPressDraggable(
-              child: ListTile(title: Text("Create a new one")),
-              data: c,
-              feedback: Text("Create a new one"),
-              childWhenDragging: Container(),
-            ),
-        itemGroupProperty: (i) => i.toString());*/
   }
 
   DragAndDropList buildList(DraggableList e) => DragAndDropList(
@@ -122,7 +127,8 @@ class _PurchaseListManagementState extends State<PurchaseListManagement> {
                 //leading: Image.network(i.urlImage,width: 40, height: 40, fit: BoxFit.cover),
                 title: Text(i.title),
               )))
-          .toList());
+          .toList()
+        ..add(newItem()));
 
   void onItemReorder(
       int oldItemIndex, int oldListIndex, int newItemIndex, int newListIndex) {
