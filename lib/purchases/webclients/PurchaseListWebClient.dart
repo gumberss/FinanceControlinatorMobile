@@ -4,10 +4,11 @@ import 'package:dio/dio.dart';
 import 'package:finance_controlinator_mobile/components/HttpClient/HttpResponseData.dart';
 import 'package:finance_controlinator_mobile/components/HttpClient/http_client.dart';
 import 'package:finance_controlinator_mobile/purchases/domain/PurchaseList.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
+import '../domain/PurchaseCategory.dart';
 import '../domain/PurchaseItem.dart';
+import '../domain/PurchaseListManagementData.dart';
 
 class PurchaseListWebClient {
   String baseUrl =

@@ -1,173 +1,7 @@
 import 'package:drag_and_drop_lists/drag_and_drop_lists.dart';
-import 'package:finance_controlinator_mobile/purchases/domain/PurchaseItem.dart';
-import 'package:finance_controlinator_mobile/purchases/webclients/PurchaseListWebClient.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_colorpicker/flutter_colorpicker.dart';
-import 'package:uuid/uuid.dart';
-import 'dart:math' as math;
 
-import '../../../components/DefaultDialog.dart';
-import '../../../components/DefaultInput.dart';
 import '../../../components/ExpandableCategoryList.dart';
-import '../../domain/PurchaseList.dart';
-
-class PurchaseListManagementScreen extends StatelessWidget {
-  PurchaseList _purchaseList;
-
-  PurchaseListManagementScreen(PurchaseList purchaseList)
-      : _purchaseList = purchaseList;
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: Text(_purchaseList.name),
-          actions: [
-            PurchaseCateggoryAdderWidget(
-                onActionDispatched: (name, color) => {
-                      PurchaseListWebClient().addCategory(
-                          _purchaseList.id!,
-                          PurchaseCategory(Uuid().v4(), name, _purchaseList.id!,
-                              color.value))
-                    })
-          ],
-        ),
-        backgroundColor: Colors.grey.shade200,
-        body: Column(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Expanded(
-              flex: 1,
-              child: PurchaseListManagement(),
-            ),
-          ],
-        ),
-        floatingActionButton: FloatingActionButton(
-          backgroundColor: Colors.blueAccent,
-          child: Icon(Icons.add),
-          onPressed: () => {},
-        ));
-  }
-}
-
-class PurchaseCateggoryAdderWidget extends StatefulWidget {
-  Function(String title, Color color) onActionDispatched;
-
-  PurchaseCateggoryAdderWidget({Key? key, required this.onActionDispatched})
-      : super(key: key);
-
-  @override
-  State<PurchaseCateggoryAdderWidget> createState() =>
-      _PurchaseCateggoryAdderWidgetState();
-}
-
-class _PurchaseCateggoryAdderWidgetState
-    extends State<PurchaseCateggoryAdderWidget> {
-  late Color pickerColor;
-
-  _PurchaseCateggoryAdderWidgetState() {
-    pickerColor = randomColor();
-  }
-
-  Widget addCategoryButton() => SizedBox(
-        height: 24,
-        width: 48,
-        child: Stack(
-          alignment: Alignment.center,
-          children: [
-            Align(
-              alignment: Alignment.topLeft,
-              child: Container(
-                padding: const EdgeInsets.only(bottom: 8, right: 16),
-                child: const Icon(
-                  Icons.category_outlined,
-                ),
-              ),
-            ),
-            Align(
-              alignment: Alignment.bottomRight,
-              child: Container(
-                padding: const EdgeInsets.only(top: 12, left: 12),
-                child: const Icon(
-                  Icons.add,
-                ),
-              ),
-            ),
-          ],
-        ),
-      );
-
-  Color randomColor() {
-    return Color((math.Random().nextDouble() * 0xFFFFFF).toInt())
-        .withOpacity(1.0);
-  }
-
-  TextEditingController newPurchaseCategoryNameController =
-      TextEditingController();
-
-  @override
-  Widget build(BuildContext context) {
-    return IconButton(
-        onPressed: () {
-          DefaultDialog().showDialog(
-              context,
-              addCategoryWidgets(
-                  context,
-                  AppLocalizations.of(context)!.purchaseCategoryName,
-                  newPurchaseCategoryNameController,
-                  widget.onActionDispatched),
-              height: 490);
-        },
-        icon: addCategoryButton());
-  }
-
-  void changeColor(Color color) {
-    setState(() => pickerColor = color);
-  }
-
-  List<Widget> addCategoryWidgets(
-      BuildContext context,
-      String label,
-      TextEditingController controller,
-      Function(String title, Color color) action) {
-    return [
-      HueRingPicker(
-        pickerColor: pickerColor,
-        displayThumbColor: true,
-        enableAlpha: false,
-        onColorChanged: changeColor,
-      ),
-      DefaultInput(label, TextInputType.text, controller),
-      Padding(
-          padding: const EdgeInsets.only(left: 8, right: 8, top: 8),
-          child: SizedBox(
-              width: double.maxFinite,
-              child: OutlinedButton(
-                  style: OutlinedButton.styleFrom(
-                      primary: Colors.green[900],
-                      backgroundColor: Colors.green[100]),
-                  onPressed: () async {
-                    if (controller.text.isEmpty) {
-                      //todo: toast error
-                      return;
-                    }
-
-                    try {
-                      action(controller.text, pickerColor);
-                      //todo: toast success
-                      controller.clear();
-                      Navigator.pop(context);
-                    } on Exception catch (e) {
-                      debugPrint(e.toString());
-                      //todo: toast error
-                    }
-                  },
-                  child: Text(AppLocalizations.of(context)!.create))))
-    ];
-  }
-}
 
 class PurchaseListManagement extends StatefulWidget {
   @override
@@ -209,7 +43,7 @@ class _PurchaseListManagementState extends State<PurchaseListManagement> {
   }
 
   Function(String itemId, int oldPosition, int newPosition) onReorderItem() =>
-      (String itemId, int oldPosition, int newPosition) => {};
+          (String itemId, int oldPosition, int newPosition) => {};
 
   DragAndDropItem newItem() => DragAndDropItem(
       canDrag: false,
@@ -232,7 +66,7 @@ class _PurchaseListManagementState extends State<PurchaseListManagement> {
           borderRadius: BorderRadius.circular(10)),
       children: lists,
       itemDivider:
-          Divider(thickness: 2, height: 2, color: Colors.grey.shade200),
+      Divider(thickness: 2, height: 2, color: Colors.grey.shade200),
       itemDecorationWhileDragging: const BoxDecoration(
           color: Colors.white,
           boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 4)]),
@@ -253,10 +87,10 @@ class _PurchaseListManagementState extends State<PurchaseListManagement> {
                   color: Colors.blueGrey))),
       children: e.items
           .map((i) => DragAndDropItem(
-                  child: ListTile(
-                //leading: Image.network(i.urlImage,width: 40, height: 40, fit: BoxFit.cover),
-                title: Text(i.title),
-              )))
+          child: ListTile(
+            //leading: Image.network(i.urlImage,width: 40, height: 40, fit: BoxFit.cover),
+            title: Text(i.title),
+          )))
           .toList()
         ..add(newItem()));
 
