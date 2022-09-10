@@ -113,14 +113,14 @@ class _PurchaseListManagementState extends State<PurchaseListManagement> {
   }
 
   DragHandle buildDragHandle({bool isList = false}) {
-    final verticalAligment = isList
+    final verticalAlignment = isList
         ? DragHandleVerticalAlignment.top
         : DragHandleVerticalAlignment.center;
 
     final color = isList ? Colors.blueGrey : Colors.black26;
 
     return DragHandle(
-      verticalAlignment: verticalAligment,
+      verticalAlignment: verticalAlignment,
       child: Container(
         padding: const EdgeInsets.only(right: 10),
         child: Icon(Icons.menu, color: color),
