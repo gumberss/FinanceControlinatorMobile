@@ -1,5 +1,6 @@
 {
     "purchaseListScreenTitle":"Purchase List Screen",
     "purchaseListName": "Purchase List Name",
-    "create": "Create"
+    "create": "Create",
+    "purchaseCategoryName": "Purchase Category Name"
 }

@@ -27,9 +27,15 @@ class PurchaseItem {
 class PurchaseCategory {
   String? id;
   String name;
-  int orderPosition;
+  int? orderPosition;
   String purchaseListId;
-  String color;
+  int color;
+
+  PurchaseCategory(
+      this.id,
+      this.name,
+      this.purchaseListId,
+      this.color);
 
   PurchaseCategory.fromJson(Map<String, dynamic> json)
       : id = json['id'],

@@ -17,7 +17,7 @@ class _DioClient {
     return dio;
   }
 
-  static Dio addInterceptors(Dio dio){
+  static Dio addInterceptors(Dio dio) {
     dio.interceptors.add(LoggingInterceptor());
     dio.interceptors.add(AuthenticationInterceptor());
     return dio;
@@ -26,9 +26,8 @@ class _DioClient {
 
 final Dio clientWithoutInterceptor = _DioClient.client();
 
-
-Future<HttpResponseData<T>> tryRequest<T>(Future<Response> request,
-    HttpResponseData<T> Function(Response) onSuccess) async {
+Future<HttpResponseData<T?>> tryRequest<T>(Future<Response> request,
+    HttpResponseData<T?> Function(Response) onSuccess) async {
   final Response response;
   try {
     response = await request;
@@ -37,6 +36,11 @@ Future<HttpResponseData<T>> tryRequest<T>(Future<Response> request,
   }
   if (response.statusCode == 500) {
     return HttpResponseData(response.statusCode!, null);
+  }
+
+  if (response.statusCode == 400) {
+    return HttpResponseData(response.statusCode!, null)
+        .withErrorMessage(response.data!["message"]);
   }
 
   if (response.statusCode == 401) {

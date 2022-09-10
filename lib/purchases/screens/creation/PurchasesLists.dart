@@ -71,8 +71,13 @@ class PurchasesListsScreen extends StatelessWidget {
         context,
         AppLocalizations.of(context)!.purchaseListName,
         newPurchaseListNameController, () async {
-      await PurchaseListWebClient().create(newPurchaseListNameController.text);
-      listStateKey.currentState?.loadLists();
+      var result = await PurchaseListWebClient()
+          .create(newPurchaseListNameController.text);
+      if (result.success()) {
+        listStateKey.currentState?.loadLists();
+      } else {
+        debugPrint(result.errorMessage);
+      }
     });
   }
 }
@@ -119,8 +124,6 @@ class _PurchaseListsState extends State<PurchaseLists> {
 
   TextEditingController editPurchaseListNameController =
       TextEditingController();
-
-
 
   @override
   Widget build(BuildContext context) {
