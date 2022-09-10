@@ -11,41 +11,41 @@ class PurchaseListManagementScreen extends StatelessWidget {
   PurchaseListManagementScreen(PurchaseList purchaseList)
       : _purchaseList = purchaseList;
 
-  Widget addCategoryButton()
-  => SizedBox(
-    height: 24,
-    width: 48 ,
-    child: Stack(
-      alignment: Alignment.center,
-      children: [
-        Align(
-          alignment: Alignment.topLeft,
-          child: Container(
-            padding: const EdgeInsets.only(bottom: 8, right: 16),
-            child: const Icon(
-              Icons.category_outlined,
+  Widget addCategoryButton() => SizedBox(
+        height: 24,
+        width: 48,
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            Align(
+              alignment: Alignment.topLeft,
+              child: Container(
+                padding: const EdgeInsets.only(bottom: 8, right: 16),
+                child: const Icon(
+                  Icons.category_outlined,
+                ),
+              ),
             ),
-          ),
-        ),
-        Align(
-          alignment: Alignment.bottomRight,
-          child: Container(
-            padding: const EdgeInsets.only(top: 12, left: 12),
-            child: const Icon(
-              Icons.add,
+            Align(
+              alignment: Alignment.bottomRight,
+              child: Container(
+                padding: const EdgeInsets.only(top: 12, left: 12),
+                child: const Icon(
+                  Icons.add,
+                ),
+              ),
             ),
-          ),
+          ],
         ),
-      ],
-    ),
-  );
+      );
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: Text(_purchaseList.name), actions: [
-          IconButton(onPressed: () {}, icon: addCategoryButton())
-        ],),
+        appBar: AppBar(
+          title: Text(_purchaseList.name),
+          actions: [IconButton(onPressed: () {}, icon: addCategoryButton())],
+        ),
         backgroundColor: Colors.grey.shade200,
         body: Column(
           mainAxisSize: MainAxisSize.max,
@@ -104,9 +104,14 @@ class _PurchaseListManagementState extends State<PurchaseListManagement> {
     lists = list.map(buildList).toList();
   }
 
+  Function(String itemId, int oldPosition, int newPosition) onReorderItem() =>
+      (String itemId, int oldPosition, int newPosition) => {
+
+      };
+
   DragAndDropItem newItem() => DragAndDropItem(
       canDrag: false,
-      child: ListTile(
+      child: const ListTile(
         title: Text(
           "+ Item",
           style: TextStyle(
@@ -119,14 +124,14 @@ class _PurchaseListManagementState extends State<PurchaseListManagement> {
   @override
   Widget build(BuildContext context) {
     return DragAndDropLists(
-      listPadding: EdgeInsets.all(16),
+      listPadding: const EdgeInsets.all(16),
       listInnerDecoration: BoxDecoration(
           color: Theme.of(context).canvasColor,
           borderRadius: BorderRadius.circular(10)),
       children: lists,
       itemDivider:
           Divider(thickness: 2, height: 2, color: Colors.grey.shade200),
-      itemDecorationWhileDragging: BoxDecoration(
+      itemDecorationWhileDragging: const BoxDecoration(
           color: Colors.white,
           boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 4)]),
       onItemReorder: onItemReorder,
@@ -138,9 +143,9 @@ class _PurchaseListManagementState extends State<PurchaseListManagement> {
 
   DragAndDropList buildList(DraggableList e) => DragAndDropList(
       header: Container(
-          padding: EdgeInsets.all(8),
+          padding: const EdgeInsets.all(8),
           child: Text(e.header,
-              style: TextStyle(
+              style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 16,
                   color: Colors.blueGrey))),
@@ -181,7 +186,7 @@ class _PurchaseListManagementState extends State<PurchaseListManagement> {
     return DragHandle(
       verticalAlignment: verticalAligment,
       child: Container(
-        padding: EdgeInsets.only(right: 10),
+        padding: const EdgeInsets.only(right: 10),
         child: Icon(Icons.menu, color: color),
       ),
     );
