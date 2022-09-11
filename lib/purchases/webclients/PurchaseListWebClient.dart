@@ -4,41 +4,36 @@ import 'package:dio/dio.dart';
 import 'package:finance_controlinator_mobile/components/HttpClient/HttpResponseData.dart';
 import 'package:finance_controlinator_mobile/components/HttpClient/http_client.dart';
 import 'package:finance_controlinator_mobile/purchases/domain/PurchaseList.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+
+import '../domain/PurchaseCategory.dart';
+import '../domain/PurchaseItem.dart';
+import '../domain/PurchaseListManagementData.dart';
 
 class PurchaseListWebClient {
   String baseUrl =
       dotenv.env['FINANCE_CONTROLINATOR_API_URL_PURCHASE_LIST'].toString();
   String basePath = "/api/purchases/lists";
+
   late Uri baseUri;
+
+  Options defaultOptions = Options(headers: {
+    'Content-Type': 'application/json; charset=UTF-8',
+  });
 
   PurchaseListWebClient() {
     baseUri = Uri.http(baseUrl, basePath);
   }
 
-  Future<HttpResponseData<PurchaseList>> create(String name) async {
-    final response = await client.postUri(baseUri,
-        options: Options(headers: {
-          'Content-Type': 'application/json; charset=UTF-8',
-        }),
-        data: {"name": name});
-
-    if (response.statusCode == 500) {
-      throw const HttpException(
-          "It was not possible to \ncreate the purchase list :(");
-    }
-
-    if (response.statusCode == 401) {
-      throw const HttpException("Not Authorized :(");
-    }
-
-    if (response.statusCode == 400) {
-      return throw HttpException(response.data!.error.message);
-    }
-
-    return HttpResponseData(
-        response.statusCode!, PurchaseList.fromJson(response.data!));
+  Future<HttpResponseData<PurchaseList?>> create(String name) async {
+    return await tryRequest(
+        client.postUri(baseUri,
+            options: Options(headers: {
+              'Content-Type': 'application/json; charset=UTF-8',
+            }),
+            data: {"name": name}),
+        (response) => HttpResponseData(
+            response.statusCode!, PurchaseList.fromJson(response.data!)));
   }
 
   Future<HttpResponseData<PurchaseList>> edit(PurchaseList purchaseList) async {
@@ -58,7 +53,7 @@ class PurchaseListWebClient {
     }
 
     if (response.statusCode == 400) {
-      return throw HttpException(response.data!.error.message);
+      throw HttpException(response.data!.error.message);
     }
 
     return HttpResponseData(
@@ -66,7 +61,7 @@ class PurchaseListWebClient {
   }
 
   Future<HttpResponseData<List<PurchaseList>>> getAll() async {
-    final response;
+    final Response response;
     try {
       response = await client.getUri(baseUri,
           options: Options(headers: {
@@ -92,7 +87,7 @@ class PurchaseListWebClient {
   }
 
   Future<HttpResponseData<String>> disable(String id) async {
-    final response;
+    final Response response;
     try {
       response = await client.deleteUri(Uri.http(baseUrl, basePath + "/$id"),
           options: Options(headers: {
@@ -109,7 +104,36 @@ class PurchaseListWebClient {
       return HttpResponseData(response.statusCode!, null);
     }
 
-    return HttpResponseData(
-        response.statusCode!, response.data['id']);
+    return HttpResponseData(response.statusCode!, response.data['id']);
+  }
+
+  Future<HttpResponseData<PurchaseListManagementData?>> getItemsAndCategories(
+      String purchaseListId) async {
+    return await tryRequest(
+        client.getUri(
+            Uri.http(baseUrl, basePath + "/$purchaseListId/managementData"),
+            options: defaultOptions),
+        (response) => HttpResponseData(response.statusCode!,
+            PurchaseListManagementData.fromJson(response.data)));
+  }
+
+  Future<HttpResponseData<PurchaseItem?>> addItem(
+      String purchaseListId, PurchaseItem item) async {
+    return await tryRequest(
+        client.postUri(Uri.http(baseUrl, basePath + "/$purchaseListId/add/item"),
+            options: defaultOptions, data: item.toJson()),
+        (response) => HttpResponseData(
+            response.statusCode!, PurchaseItem.fromJson(response.data)));
+  }
+
+  Future<HttpResponseData<PurchaseCategory?>> addCategory(
+      String purchaseListId, PurchaseCategory category) async {
+    return await tryRequest(
+        client.postUri(
+            Uri.http(baseUrl, basePath + "/$purchaseListId/add/category"),
+            options: defaultOptions,
+            data: category.toJson()),
+        (response) => HttpResponseData(
+            response.statusCode!, PurchaseCategory.fromJson(response.data)));
   }
 }

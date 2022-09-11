@@ -1,4 +1,4 @@
-import 'package:finance_controlinator_mobile/purchases/screens/management/PurchaseListManagement.dart';
+import 'package:finance_controlinator_mobile/purchases/screens/management/PurchaseListManagementScreen.dart';
 import 'package:finance_controlinator_mobile/purchases/webclients/PurchaseListWebClient.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';

@@ -1,5 +1,6 @@
 {
     "purchaseListScreenTitle":"Listas de compras",
     "purchaseListName": "Nome da lista de compras",
-    "create": "Criar"
+    "create": "Criar",
+    "purchaseCategoryName": "Nome da categoria das compras"
 }
