@@ -35,7 +35,7 @@ class PurchaseListManagementScreen extends StatelessWidget {
           children: [
             Expanded(
               flex: 1,
-              child: PurchaseListManagement(),
+              child: PurchaseListManagement(_purchaseList),
             ),
           ],
         ),

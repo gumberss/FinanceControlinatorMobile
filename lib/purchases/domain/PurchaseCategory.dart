@@ -3,7 +3,7 @@ class PurchaseCategory {
   String? id;
   String name;
   int? orderPosition;
-  String purchaseListId;
+  String? purchaseListId;
   int color;
 
   PurchaseCategory(
@@ -16,7 +16,6 @@ class PurchaseCategory {
       : id = json['id'],
         name = json['name'],
         color = json['color'],
-        purchaseListId = json['purchaseListId'],
         orderPosition = json['orderPosition'] ?? 0;
 
   Map<String, dynamic> toJson() => {

@@ -64,6 +64,7 @@ class _PurchaseCategoryAdderWidgetState
   Widget build(BuildContext context) {
     return IconButton(
         onPressed: () {
+          changeColor(randomColor());
           DefaultDialog().showDialog(
               context,
               addCategoryWidgets(

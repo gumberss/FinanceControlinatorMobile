@@ -111,7 +111,7 @@ class PurchaseListWebClient {
       String purchaseListId) async {
     return await tryRequest(
         client.getUri(
-            Uri.http(baseUrl, basePath + "$purchaseListId/managementData"),
+            Uri.http(baseUrl, basePath + "/$purchaseListId/managementData"),
             options: defaultOptions),
         (response) => HttpResponseData(response.statusCode!,
             PurchaseListManagementData.fromJson(response.data)));

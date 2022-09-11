@@ -65,7 +65,6 @@ class BasicTile<T> {
   const BasicTile({required this.title, this.items = const []});
 }
 
-
 class DraggableList {
   final String header;
   final List<DraggableListItem> items;
