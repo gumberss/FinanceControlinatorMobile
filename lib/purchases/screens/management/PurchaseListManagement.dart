@@ -2,7 +2,6 @@ import 'package:drag_and_drop_lists/drag_and_drop_lists.dart';
 import 'package:flutter/material.dart';
 import '../../../authentications/services/AuthorizationService.dart';
 
-import '../../../components/ExpandableCategoryList.dart';
 import '../../domain/PurchaseCategory.dart';
 import '../../domain/PurchaseItem.dart';
 import '../../domain/PurchaseList.dart';
@@ -12,23 +11,19 @@ import '../../webclients/PurchaseListWebClient.dart';
 class PurchaseListManagement extends StatefulWidget {
   PurchaseList _purchaseList;
 
-  PurchaseListManagement(PurchaseList purchaseList)
-      : _purchaseList = purchaseList;
+  PurchaseListManagement(PurchaseList purchaseList, {Key? key})
+      : _purchaseList = purchaseList, super(key: key);
 
   @override
   State<PurchaseListManagement> createState() =>
-      _PurchaseListManagementState(_purchaseList);
+      PurchaseListManagementState();
 }
 
-class _PurchaseListManagementState extends State<PurchaseListManagement> {
-  PurchaseList _purchaseList;
+class PurchaseListManagementState extends State<PurchaseListManagement> {
   PurchaseListManagementData? purchaseListManagementData;
 
-  _PurchaseListManagementState(PurchaseList purchaseList)
-      : _purchaseList = purchaseList;
-
   late List<DragAndDropList> lists;
-  bool starting = true;
+  bool loadingData = true;
 
   @override
   void initState() {
@@ -37,8 +32,12 @@ class _PurchaseListManagementState extends State<PurchaseListManagement> {
   }
 
   Future loadLists() async {
+    setState(() {
+      loadingData = true;
+    });
+
     var response =
-        await PurchaseListWebClient().getItemsAndCategories(_purchaseList.id!);
+        await PurchaseListWebClient().getItemsAndCategories(widget._purchaseList.id!);
 
     if (response.unauthorized()) {
       AuthorizationService.redirectToSignIn(context);
@@ -47,7 +46,7 @@ class _PurchaseListManagementState extends State<PurchaseListManagement> {
 
     if (response.serverError()) {
       setState(() {
-        starting = false;
+        loadingData = false;
       });
       //todo: toast error
       return;
@@ -55,7 +54,7 @@ class _PurchaseListManagementState extends State<PurchaseListManagement> {
 
     setState(() {
       purchaseListManagementData = response.data!;
-      starting = false;
+      loadingData = false;
     });
   }
 
@@ -78,7 +77,7 @@ class _PurchaseListManagementState extends State<PurchaseListManagement> {
   Widget build(BuildContext context) {
     return RefreshIndicator(
         onRefresh: loadLists,
-        child: starting
+        child: loadingData
             ? const Center(child: CircularProgressIndicator())
             : DragAndDropLists(
                 listPadding: const EdgeInsets.all(16),

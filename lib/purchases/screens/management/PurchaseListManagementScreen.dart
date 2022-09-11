@@ -9,9 +9,12 @@ import 'PurchaseListManagement.dart';
 
 class PurchaseListManagementScreen extends StatelessWidget {
   final PurchaseList _purchaseList;
+  final purchaseListManagementStateKey =
+      GlobalKey<PurchaseListManagementState>();
 
-  const PurchaseListManagementScreen(PurchaseList purchaseList, {Key? key})
-      : _purchaseList = purchaseList, super(key: key);
+  PurchaseListManagementScreen(PurchaseList purchaseList, {Key? key})
+      : _purchaseList = purchaseList,
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -20,12 +23,13 @@ class PurchaseListManagementScreen extends StatelessWidget {
           title: Text(_purchaseList.name),
           actions: [
             PurchaseCategoryAdderWidget(
-                onActionDispatched: (name, color) => {
-                      PurchaseListWebClient().addCategory(
-                          _purchaseList.id!,
-                          PurchaseCategory(Uuid().v4(), name, _purchaseList.id!,
-                              color.value))
-                    })
+                onActionDispatched: (name, color) async {
+              await PurchaseListWebClient().addCategory(
+                  _purchaseList.id!,
+                  PurchaseCategory(
+                      Uuid().v4(), name, _purchaseList.id!, color.value));
+              purchaseListManagementStateKey.currentState?.loadLists();
+            })
           ],
         ),
         backgroundColor: Colors.grey.shade200,
@@ -35,7 +39,8 @@ class PurchaseListManagementScreen extends StatelessWidget {
           children: [
             Expanded(
               flex: 1,
-              child: PurchaseListManagement(_purchaseList),
+              child: PurchaseListManagement(_purchaseList,
+                  key: purchaseListManagementStateKey),
             ),
           ],
         ),
@@ -46,5 +51,3 @@ class PurchaseListManagementScreen extends StatelessWidget {
         ));
   }
 }
-
-
