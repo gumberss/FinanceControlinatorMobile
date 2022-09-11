@@ -1,5 +1,7 @@
 import 'package:drag_and_drop_lists/drag_and_drop_lists.dart';
+import 'package:finance_controlinator_mobile/components/DefaultInput.dart';
 import 'package:flutter/material.dart';
+import 'package:uuid/uuid.dart';
 import '../../../authentications/services/AuthorizationService.dart';
 
 import '../../domain/PurchaseCategory.dart';
@@ -12,11 +14,11 @@ class PurchaseListManagement extends StatefulWidget {
   PurchaseList _purchaseList;
 
   PurchaseListManagement(PurchaseList purchaseList, {Key? key})
-      : _purchaseList = purchaseList, super(key: key);
+      : _purchaseList = purchaseList,
+        super(key: key);
 
   @override
-  State<PurchaseListManagement> createState() =>
-      PurchaseListManagementState();
+  State<PurchaseListManagement> createState() => PurchaseListManagementState();
 }
 
 class PurchaseListManagementState extends State<PurchaseListManagement> {
@@ -36,8 +38,8 @@ class PurchaseListManagementState extends State<PurchaseListManagement> {
       loadingData = true;
     });
 
-    var response =
-        await PurchaseListWebClient().getItemsAndCategories(widget._purchaseList.id!);
+    var response = await PurchaseListWebClient()
+        .getItemsAndCategories(widget._purchaseList.id!);
 
     if (response.unauthorized()) {
       AuthorizationService.redirectToSignIn(context);
@@ -61,17 +63,68 @@ class PurchaseListManagementState extends State<PurchaseListManagement> {
   Function(String itemId, int oldPosition, int newPosition) onReorderItem() =>
       (String itemId, int oldPosition, int newPosition) => {};
 
-  DragAndDropItem newItem() => DragAndDropItem(
+  TextEditingController newItemNameController = TextEditingController();
+
+  DragAndDropItem newItem(PurchaseCategory category) => DragAndDropItem(
       canDrag: false,
-      child: const ListTile(
-        title: Text(
-          "+ Item",
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-          ),
-          textAlign: TextAlign.center,
-        ),
-      ));
+      child: addingItemCategory != null && addingItemCategory == category.id
+          ? Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: DefaultInput(
+                    "mentira da barata",
+                    TextInputType.text,
+                    newItemNameController,
+                    autoFocus: true,
+                    onSubmitted: () async {
+                      setState(() {
+                        addingItem = true;
+                      });
+
+                      var result = await PurchaseListWebClient().addItem(
+                          widget._purchaseList.id!,
+                          PurchaseItem(Uuid().v4(), newItemNameController.text,
+                              category.id!));
+                      if (result.success()) {
+                        onAddItem(null);
+                      } else {
+                        setState(() {
+                          addingItem = false;
+                        });
+                      }
+                    },
+                  ),
+                ),
+                IconButton(
+                    onPressed: () {
+                      onAddItem(null);
+                    },
+                    icon: const Icon(Icons.close))
+              ],
+            )
+          : ListTile(
+              onTap: () => onAddItem(category),
+              title: const Text(
+                "+ Item",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ));
+
+  String? addingItemCategory;
+  bool addingItem = false;
+
+  void onAddItem(PurchaseCategory? category) {
+    setState(() {
+      addingItem = false;
+      newItemNameController.clear();
+      addingItemCategory = category?.id;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -85,10 +138,10 @@ class PurchaseListManagementState extends State<PurchaseListManagement> {
                     color: Theme.of(context).canvasColor,
                     borderRadius: BorderRadius.circular(10)),
                 children: purchaseListManagementData != null
-                    ? buildLists(purchaseListManagementData!.categories,
-                        <PurchaseItem>[]
+                    ? buildLists(
+                        purchaseListManagementData!.categories, <PurchaseItem>[]
                         //purchaseListManagementData!.items
-                )
+                        )
                     : <DragAndDropList>[],
                 itemDivider: Divider(
                     thickness: 2, height: 2, color: Colors.grey.shade200),
@@ -124,7 +177,7 @@ class PurchaseListManagementState extends State<PurchaseListManagement> {
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
                       color: Color(category.color)))),
-          children: categoryItems.toList()..add(newItem()));
+          children: categoryItems.toList()..add(newItem(category)));
 
   DragAndDropItem buildPurchaseItem(PurchaseItem item) => DragAndDropItem(
           child: ListTile(
