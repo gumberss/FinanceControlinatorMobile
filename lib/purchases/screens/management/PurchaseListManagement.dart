@@ -138,10 +138,8 @@ class PurchaseListManagementState extends State<PurchaseListManagement> {
                     color: Theme.of(context).canvasColor,
                     borderRadius: BorderRadius.circular(10)),
                 children: purchaseListManagementData != null
-                    ? buildLists(
-                        purchaseListManagementData!.categories, <PurchaseItem>[]
-                        //purchaseListManagementData!.items
-                        )
+                    ? buildLists(purchaseListManagementData!.categories,
+                        purchaseListManagementData!.items)
                     : <DragAndDropList>[],
                 itemDivider: Divider(
                     thickness: 2, height: 2, color: Colors.grey.shade200),
