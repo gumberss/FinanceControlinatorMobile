@@ -6,7 +6,7 @@ import '../../../components/DefaultDialog.dart';
 import '../../../components/DefaultInput.dart';
 
 class PurchaseCategoryAdderWidget extends StatefulWidget {
-  Function(String title, Color color) onActionDispatched;
+  Future<bool> Function(String title, Color color) onActionDispatched;
 
   PurchaseCategoryAdderWidget({Key? key, required this.onActionDispatched})
       : super(key: key);
@@ -85,7 +85,7 @@ class _PurchaseCategoryAdderWidgetState
       BuildContext context,
       String label,
       TextEditingController controller,
-      Function(String title, Color color) action) {
+      Future<bool> Function(String title, Color color) action) {
     return [
       HueRingPicker(
         pickerColor: pickerColor,
@@ -109,10 +109,14 @@ class _PurchaseCategoryAdderWidgetState
                     }
 
                     try {
-                      action(controller.text, pickerColor);
-                      //todo: toast success
-                      controller.clear();
-                      Navigator.pop(context);
+                      var result = await action(controller.text, pickerColor);
+                      if (result) {
+                        //todo: toast success
+                        controller.clear();
+                        Navigator.pop(context);
+                      } else {
+                        //todo: toast error
+                      }
                     } on Exception catch (e) {
                       debugPrint(e.toString());
                       //todo: toast error

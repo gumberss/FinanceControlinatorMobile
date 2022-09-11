@@ -24,11 +24,15 @@ class PurchaseListManagementScreen extends StatelessWidget {
           actions: [
             PurchaseCategoryAdderWidget(
                 onActionDispatched: (name, color) async {
-              await PurchaseListWebClient().addCategory(
+              var result = await PurchaseListWebClient().addCategory(
                   _purchaseList.id!,
                   PurchaseCategory(
                       Uuid().v4(), name, _purchaseList.id!, color.value));
-              purchaseListManagementStateKey.currentState?.loadLists();
+              if (result.success()) {
+                purchaseListManagementStateKey.currentState?.loadLists();
+              }
+
+              return result.success();
             })
           ],
         ),
