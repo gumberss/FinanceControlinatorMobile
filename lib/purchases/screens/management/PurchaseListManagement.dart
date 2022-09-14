@@ -86,10 +86,14 @@ class PurchaseListManagementState extends State<PurchaseListManagement> {
 
                       var result = await PurchaseListWebClient().addItem(
                           widget._purchaseList.id!,
-                          PurchaseItem(Uuid().v4(), newItemNameController.text,
-                              category.id!));
+                          category.id!,
+                          PurchaseItem(
+                            Uuid().v4(),
+                            newItemNameController.text,
+                          ));
                       if (result.success()) {
                         onAddItem(null);
+                        loadLists();
                       } else {
                         setState(() {
                           addingItem = false;
@@ -139,8 +143,7 @@ class PurchaseListManagementState extends State<PurchaseListManagement> {
                     color: Theme.of(context).canvasColor,
                     borderRadius: BorderRadius.circular(10)),
                 children: purchaseListManagementData != null
-                    ? buildLists(purchaseListManagementData!.categories,
-                        purchaseListManagementData!.items)
+                    ? buildLists(purchaseListManagementData!.categories)
                     : <DragAndDropList>[],
                 itemDivider: Divider(
                     thickness: 2, height: 2, color: Colors.grey.shade200),
@@ -156,18 +159,10 @@ class PurchaseListManagementState extends State<PurchaseListManagement> {
               ));
   }
 
-  List<DragAndDropList> buildLists(
-          List<PurchaseCategory> categories, List<PurchaseItem> items) =>
-      categories
-          .map((category) => buildCategoryList(
-              category,
-              items
-                  .where((element) => element.categoryId == category.id)
-                  .map(buildPurchaseItem)))
-          .toList();
+  List<DragAndDropList> buildLists(List<PurchaseCategory> categories) =>
+      categories.map((category) => buildCategoryList(category)).toList();
 
-  DragAndDropList buildCategoryList(
-          PurchaseCategory category, Iterable<DragAndDropItem> categoryItems) =>
+  DragAndDropList buildCategoryList(PurchaseCategory category) =>
       DragAndDropList(
           header: Container(
               padding: const EdgeInsets.all(8),
@@ -176,7 +171,8 @@ class PurchaseListManagementState extends State<PurchaseListManagement> {
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
                       color: Color(category.color)))),
-          children: categoryItems.toList()..add(newItem(category)));
+          children: category.items.map(buildPurchaseItem).toList()
+            ..add(newItem(category)));
 
   DragAndDropItem buildPurchaseItem(PurchaseItem item) => DragAndDropItem(
           child: ListTile(
