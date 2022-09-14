@@ -2,16 +2,16 @@ class PurchaseItem {
   String? id;
   String name;
   int quantity;
-  int orderPosition;
+  int? orderPosition;
   String categoryId;
-  String purchaseListId;
+
+  PurchaseItem(this.id, this.name, this.categoryId) : quantity = 0;
 
   PurchaseItem.fromJson(Map<String, dynamic> json)
       : id = json['id'],
         name = json['name'],
         quantity = json['quantity'] ?? 0,
         orderPosition = json['orderPosition'] ?? 0,
-        purchaseListId = json['purchaseListId'],
         categoryId = json['categoryId'];
 
   Map<String, dynamic> toJson() => {
@@ -19,7 +19,6 @@ class PurchaseItem {
         'name': name,
         'quantity': quantity,
         'orderPosition': orderPosition,
-        'purchaseListId': purchaseListId,
-        'category': categoryId,
+        'categoryId': categoryId,
       };
 }

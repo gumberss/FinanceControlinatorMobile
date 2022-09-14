@@ -6,3 +6,5 @@ Documentation:
 - [Invoices](doc/Invoices.md)
 
 ![image](https://user-images.githubusercontent.com/38296002/159391368-6aa9a6d3-c871-4fcf-ae8a-35622354a054.png)
+
+Run `flutter gen-l10n` to generate i10n codes when new sentences are added
