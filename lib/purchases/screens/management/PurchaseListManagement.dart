@@ -1,3 +1,4 @@
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:drag_and_drop_lists/drag_and_drop_lists.dart';
 import 'package:finance_controlinator_mobile/components/DefaultInput.dart';
 import 'package:flutter/material.dart';
@@ -74,7 +75,7 @@ class PurchaseListManagementState extends State<PurchaseListManagement> {
               children: [
                 Expanded(
                   child: DefaultInput(
-                    "mentira da barata",
+                    AppLocalizations.of(context)!.purchaseCategoryItem,
                     TextInputType.text,
                     newItemNameController,
                     autoFocus: true,

@@ -2,5 +2,6 @@
     "purchaseListScreenTitle":"Purchase List Screen",
     "purchaseListName": "Purchase List Name",
     "create": "Create",
-    "purchaseCategoryName": "Purchase Category Name"
+    "purchaseCategoryName": "Purchase Category Name",
+    "purchaseCategoryItem": "Purchase Item Name"
 }
