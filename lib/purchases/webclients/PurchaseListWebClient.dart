@@ -118,9 +118,9 @@ class PurchaseListWebClient {
   }
 
   Future<HttpResponseData<PurchaseItem?>> addItem(
-      String purchaseListId, PurchaseItem item) async {
+      String purchaseListId, String categoryId, PurchaseItem item) async {
     return await tryRequest(
-        client.postUri(Uri.http(baseUrl, basePath + "/$purchaseListId/add/item"),
+        client.postUri(Uri.http(baseUrl, basePath + "/$purchaseListId/category/$categoryId/add/item"),
             options: defaultOptions, data: item.toJson()),
         (response) => HttpResponseData(
             response.statusCode!, PurchaseItem.fromJson(response.data)));

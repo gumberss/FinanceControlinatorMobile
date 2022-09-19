@@ -27,7 +27,7 @@ class PurchaseListManagementScreen extends StatelessWidget {
               var result = await PurchaseListWebClient().addCategory(
                   _purchaseList.id!,
                   PurchaseCategory(
-                      Uuid().v4(), name, _purchaseList.id!, color.value));
+                      Uuid().v4(), name, _purchaseList.id!, color.value, []));
               if (result.success()) {
                 purchaseListManagementStateKey.currentState?.loadLists();
               }
