@@ -25,7 +25,6 @@ class PurchaseListManagement extends StatefulWidget {
 class PurchaseListManagementState extends State<PurchaseListManagement> {
   PurchaseListManagementData? purchaseListManagementData;
 
-  late List<DragAndDropList> lists;
   bool loadingData = true;
 
   @override
@@ -183,18 +182,21 @@ class PurchaseListManagementState extends State<PurchaseListManagement> {
   void onItemReorder(
       int oldItemIndex, int oldListIndex, int newItemIndex, int newListIndex) {
     setState(() {
-      final oldListItems = lists[oldListIndex].children;
-      final newListItems = lists[newListIndex].children;
+      final oldListItems = purchaseListManagementData!.categories[oldListIndex].items;
+      final newListItems = purchaseListManagementData!.categories[newListIndex].items;
 
       final movedItem = oldListItems.removeAt(oldItemIndex);
       newListItems.insert(newItemIndex, movedItem);
     });
   }
 
-  void onListReorder(int oldListIndex, int newListIndex) {
+  void onListReorder(int oldListIndex, int newListIndex) async {
+    await PurchaseListWebClient()
+        .changeCategoryOrder(widget._purchaseList.id!, oldListIndex, newListIndex);
+
     setState(() {
-      final movedList = lists.removeAt(oldListIndex);
-      lists.insert(newListIndex, movedList);
+      final movedList = purchaseListManagementData!.categories.removeAt(oldListIndex);
+      purchaseListManagementData!.categories.insert(newListIndex, movedList);
     });
   }
 
