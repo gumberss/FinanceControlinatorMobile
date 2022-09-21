@@ -1,4 +1,3 @@
-
 import 'PurchaseItem.dart';
 
 class PurchaseCategory {
@@ -10,11 +9,7 @@ class PurchaseCategory {
   List<PurchaseItem> items;
 
   PurchaseCategory(
-      this.id,
-      this.name,
-      this.purchaseListId,
-      this.color,
-      this.items);
+      this.id, this.name, this.purchaseListId, this.color, this.items);
 
   PurchaseCategory.fromJson(Map<String, dynamic> json)
       : id = json['id'],
@@ -26,11 +21,10 @@ class PurchaseCategory {
         orderPosition = json['orderPosition'] ?? 0;
 
   Map<String, dynamic> toJson() => {
-    'id': id,
-    'name': name,
-    'color': color,
-    'purchaseListId': purchaseListId,
-    'purchaseItems': items.map((e) => e.toJson()).toList(),
-    'orderPosition': orderPosition,
-  };
+        'id': id,
+        'name': name,
+        'color': color,
+        'purchaseItems': items.map((e) => e.toJson()).toList(),
+        'orderPosition': orderPosition,
+      };
 }
