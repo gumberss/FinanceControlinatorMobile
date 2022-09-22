@@ -179,25 +179,41 @@ class PurchaseListManagementState extends State<PurchaseListManagement> {
         title: Text(item.name),
       ));
 
-  void onItemReorder(
-      int oldItemIndex, int oldListIndex, int newItemIndex, int newListIndex) {
-    setState(() {
-      final oldListItems = purchaseListManagementData!.categories[oldListIndex].items;
-      final newListItems = purchaseListManagementData!.categories[newListIndex].items;
+  void onItemReorder(int oldItemIndex, int oldListIndex, int newItemIndex,
+      int newListIndex) async {
+    var oldCategory = purchaseListManagementData!.categories[oldListIndex];
+    var newCategory = purchaseListManagementData!.categories[newListIndex];
 
-      final movedItem = oldListItems.removeAt(oldItemIndex);
-      newListItems.insert(newItemIndex, movedItem);
-    });
+    var result = await PurchaseListWebClient().changeItemOrder(
+        widget._purchaseList.id!,
+        oldCategory.id!,
+        newCategory.id!,
+        oldItemIndex,
+        newItemIndex);
+
+    if (result.success()) {
+      setState(() {
+        final oldListItems =
+            purchaseListManagementData!.categories[oldListIndex].items;
+        final newListItems =
+            purchaseListManagementData!.categories[newListIndex].items;
+
+        final movedItem = oldListItems.removeAt(oldItemIndex);
+        newListItems.insert(newItemIndex, movedItem);
+      });
+    }
   }
 
   void onListReorder(int oldListIndex, int newListIndex) async {
-    await PurchaseListWebClient()
-        .changeCategoryOrder(widget._purchaseList.id!, oldListIndex, newListIndex);
-
-    setState(() {
-      final movedList = purchaseListManagementData!.categories.removeAt(oldListIndex);
-      purchaseListManagementData!.categories.insert(newListIndex, movedList);
-    });
+    var result = await PurchaseListWebClient().changeCategoryOrder(
+        widget._purchaseList.id!, oldListIndex, newListIndex);
+    if (result.success()) {
+      setState(() {
+        final movedList =
+            purchaseListManagementData!.categories.removeAt(oldListIndex);
+        purchaseListManagementData!.categories.insert(newListIndex, movedList);
+      });
+    }
   }
 
   DragHandle buildDragHandle({bool isList = false}) {
