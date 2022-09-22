@@ -141,14 +141,31 @@ class PurchaseListWebClient {
             response.statusCode!, PurchaseCategory.fromJson(response.data)));
   }
 
-  Future<HttpResponseData<PurchaseCategory?>> changeCategoryOrder(String purchaseListId, int oldPosition, int newPosition) async {
-    debugPrint(basePath + "/$purchaseListId/category/changeOrder/$oldPosition/$newPosition");
+  Future<HttpResponseData<PurchaseCategory?>> changeCategoryOrder(
+      String purchaseListId, int oldPosition, int newPosition) async {
     return await tryRequest(
         client.postUri(
-            Uri.http(baseUrl, basePath + "/$purchaseListId/categories/changeOrder/$oldPosition/$newPosition"),
+            Uri.http(
+                baseUrl,
+                basePath +
+                    "/$purchaseListId/categories/changeOrder/$oldPosition/$newPosition"),
             options: defaultOptions),
-            (response) => HttpResponseData(
-            response.statusCode!, null));
+        (response) => HttpResponseData(response.statusCode!, null));
   }
 
+  Future<HttpResponseData<PurchaseCategory?>> changeItemOrder(
+      String purchaseListId,
+      String oldCategoryId,
+      String newCategoryId,
+      int oldPosition,
+      int newPosition) async {
+    return await tryRequest(
+        client.postUri(
+            Uri.http(
+                baseUrl,
+                basePath +
+                    "/$purchaseListId/items/changeOrder/$oldCategoryId/$newCategoryId/$oldPosition/$newPosition"),
+            options: defaultOptions),
+        (response) => HttpResponseData(response.statusCode!, null));
+  }
 }
