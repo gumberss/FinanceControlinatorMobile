@@ -1,3 +1,4 @@
+import 'package:finance_controlinator_mobile/purchases/webclients/ItemWebClient.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:drag_and_drop_lists/drag_and_drop_lists.dart';
 import 'package:finance_controlinator_mobile/components/DefaultInput.dart';
@@ -84,12 +85,11 @@ class PurchaseListManagementState extends State<PurchaseListManagement> {
                         addingItem = true;
                       });
 
-                      var result = await PurchaseListWebClient().addItem(
-                          widget._purchaseList.id!,
-                          category.id!,
+                      var result = await ItemWebClient().addItem(
                           PurchaseItem(
                             Uuid().v4(),
                             newItemNameController.text,
+                            category.id!,
                           ));
                       if (result.success()) {
                         onAddItem(null);

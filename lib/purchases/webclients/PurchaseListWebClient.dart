@@ -7,7 +7,6 @@ import 'package:finance_controlinator_mobile/purchases/domain/PurchaseList.dart'
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import '../domain/PurchaseCategory.dart';
-import '../domain/PurchaseItem.dart';
 import '../domain/PurchaseListManagementData.dart';
 
 class PurchaseListWebClient {
@@ -116,19 +115,6 @@ class PurchaseListWebClient {
         (response) => HttpResponseData(response.statusCode!,
             PurchaseListManagementData.fromJson(response.data)));
   }
-
-  Future<HttpResponseData<PurchaseItem?>> addItem(
-      String purchaseListId, String categoryId, PurchaseItem item) async {
-    return await tryRequest(
-        client.postUri(
-            Uri.http(baseUrl,
-                basePath + "/$purchaseListId/category/$categoryId/add/item"),
-            options: defaultOptions,
-            data: item.toJson()),
-        (response) => HttpResponseData(
-            response.statusCode!, PurchaseItem.fromJson(response.data)));
-  }
-
 
   Future<HttpResponseData<PurchaseCategory?>> changeItemOrder(
       String purchaseListId,

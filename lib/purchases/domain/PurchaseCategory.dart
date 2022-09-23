@@ -15,7 +15,7 @@ class PurchaseCategory {
         name = json['name'],
         color = json['color'],
         purchaseListId = json['purchaseListId'],
-        items = (json['purchaseItems'] as List)
+        items = (json['items'] as List)
             .map((e) => PurchaseItem.fromJson(e))
             .toList(growable: true),
         orderPosition = json['orderPosition'] ?? 0;
