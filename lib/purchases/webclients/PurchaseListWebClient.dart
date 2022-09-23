@@ -116,19 +116,4 @@ class PurchaseListWebClient {
             PurchaseListManagementData.fromJson(response.data)));
   }
 
-  Future<HttpResponseData<PurchaseCategory?>> changeItemOrder(
-      String purchaseListId,
-      String oldCategoryId,
-      String newCategoryId,
-      int oldPosition,
-      int newPosition) async {
-    return await tryRequest(
-        client.postUri(
-            Uri.http(
-                baseUrl,
-                basePath +
-                    "/$purchaseListId/items/changeOrder/$oldCategoryId/$newCategoryId/$oldPosition/$newPosition"),
-            options: defaultOptions),
-        (response) => HttpResponseData(response.statusCode!, null));
-  }
 }

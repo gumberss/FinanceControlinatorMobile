@@ -37,13 +37,13 @@ class CategoryWebClient {
   }
 
   Future<HttpResponseData<PurchaseCategory?>> changeCategoryOrder(
-      String purchaseListId, int oldPosition, int newPosition) async {
+      String categoryId, int newPosition) async {
     return await tryRequest(
-        client.postUri(
+        client.putUri(
             Uri.http(
                 baseUrl,
                 basePath +
-                    "/$purchaseListId/categories/changeOrder/$oldPosition/$newPosition"),
+                    "/$categoryId/changeOrder/$newPosition"),
             options: defaultOptions),
             (response) => HttpResponseData(response.statusCode!, null));
   }

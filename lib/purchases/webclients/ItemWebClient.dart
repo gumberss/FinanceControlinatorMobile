@@ -32,4 +32,14 @@ class ItemWebClient {
         (response) => HttpResponseData(
             response.statusCode!, PurchaseItem.fromJson(response.data)));
   }
+
+  Future<HttpResponseData<PurchaseCategory?>> changeItemOrder(
+      String itemId, String newCategoryId, int newPosition) async {
+    return await tryRequest(
+        client.putUri(
+            Uri.http(baseUrl,
+                basePath + "/$itemId/changeOrder/$newCategoryId/$newPosition"),
+            options: defaultOptions),
+        (response) => HttpResponseData(response.statusCode!, null));
+  }
 }

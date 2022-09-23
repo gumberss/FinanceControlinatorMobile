@@ -15,9 +15,9 @@ class PurchaseCategory {
         name = json['name'],
         color = json['color'],
         purchaseListId = json['purchaseListId'],
-        items = (json['items'] as List)
+        items = json['items']!= null ? (json['items'] as List)
             .map((e) => PurchaseItem.fromJson(e))
-            .toList(growable: true),
+            .toList(growable: true) : null,
         orderPosition = json['orderPosition'] ?? 0;
 
   Map<String, dynamic> toJson() =>
@@ -26,7 +26,6 @@ class PurchaseCategory {
         'name': name,
         'color': color,
         'purchaseListId': purchaseListId,
-        'items': items!.map((e) => e.toJson()).toList(),
         'orderPosition': orderPosition,
       };
 }
