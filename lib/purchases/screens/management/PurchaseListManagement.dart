@@ -9,6 +9,7 @@ import '../../domain/PurchaseCategory.dart';
 import '../../domain/PurchaseItem.dart';
 import '../../domain/PurchaseList.dart';
 import '../../domain/PurchaseListManagementData.dart';
+import '../../webclients/CategoryWebClient.dart';
 import '../../webclients/PurchaseListWebClient.dart';
 
 class PurchaseListManagement extends StatefulWidget {
@@ -170,7 +171,7 @@ class PurchaseListManagementState extends State<PurchaseListManagement> {
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
                       color: Color(category.color)))),
-          children: category.items.map(buildPurchaseItem).toList()
+          children: category.items!.map(buildPurchaseItem).toList()
             ..add(newItem(category)));
 
   DragAndDropItem buildPurchaseItem(PurchaseItem item) => DragAndDropItem(
@@ -198,14 +199,14 @@ class PurchaseListManagementState extends State<PurchaseListManagement> {
         final newListItems =
             purchaseListManagementData!.categories[newListIndex].items;
 
-        final movedItem = oldListItems.removeAt(oldItemIndex);
-        newListItems.insert(newItemIndex, movedItem);
+        final movedItem = oldListItems!.removeAt(oldItemIndex);
+        newListItems!.insert(newItemIndex, movedItem);
       });
     }
   }
 
   void onListReorder(int oldListIndex, int newListIndex) async {
-    var result = await PurchaseListWebClient().changeCategoryOrder(
+    var result = await CategoryWebClient().changeCategoryOrder(
         widget._purchaseList.id!, oldListIndex, newListIndex);
     if (result.success()) {
       setState(() {

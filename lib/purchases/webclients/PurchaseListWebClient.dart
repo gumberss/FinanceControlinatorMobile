@@ -4,7 +4,6 @@ import 'package:dio/dio.dart';
 import 'package:finance_controlinator_mobile/components/HttpClient/HttpResponseData.dart';
 import 'package:finance_controlinator_mobile/components/HttpClient/http_client.dart';
 import 'package:finance_controlinator_mobile/purchases/domain/PurchaseList.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import '../domain/PurchaseCategory.dart';
@@ -130,28 +129,6 @@ class PurchaseListWebClient {
             response.statusCode!, PurchaseItem.fromJson(response.data)));
   }
 
-  Future<HttpResponseData<PurchaseCategory?>> addCategory(
-      String purchaseListId, PurchaseCategory category) async {
-    return await tryRequest(
-        client.postUri(
-            Uri.http(baseUrl, basePath + "/$purchaseListId/add/category"),
-            options: defaultOptions,
-            data: category.toJson()),
-        (response) => HttpResponseData(
-            response.statusCode!, PurchaseCategory.fromJson(response.data)));
-  }
-
-  Future<HttpResponseData<PurchaseCategory?>> changeCategoryOrder(
-      String purchaseListId, int oldPosition, int newPosition) async {
-    return await tryRequest(
-        client.postUri(
-            Uri.http(
-                baseUrl,
-                basePath +
-                    "/$purchaseListId/categories/changeOrder/$oldPosition/$newPosition"),
-            options: defaultOptions),
-        (response) => HttpResponseData(response.statusCode!, null));
-  }
 
   Future<HttpResponseData<PurchaseCategory?>> changeItemOrder(
       String purchaseListId,
