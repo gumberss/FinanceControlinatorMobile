@@ -6,25 +6,26 @@ class PurchaseCategory {
   int? orderPosition;
   String? purchaseListId;
   int color;
-  List<PurchaseItem> items;
+  List<PurchaseItem>? items;
 
-  PurchaseCategory(
-      this.id, this.name, this.purchaseListId, this.color, this.items);
+  PurchaseCategory(this.id, this.name, this.purchaseListId, this.color);
 
   PurchaseCategory.fromJson(Map<String, dynamic> json)
       : id = json['id'],
         name = json['name'],
         color = json['color'],
-        items = (json['purchaseItems'] as List)
+        purchaseListId = json['purchaseListId'],
+        items = json['items']!= null ? (json['items'] as List)
             .map((e) => PurchaseItem.fromJson(e))
-            .toList(growable: true),
+            .toList(growable: true) : null,
         orderPosition = json['orderPosition'] ?? 0;
 
-  Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() =>
+      {
         'id': id,
         'name': name,
         'color': color,
-        'purchaseItems': items.map((e) => e.toJson()).toList(),
+        'purchaseListId': purchaseListId,
         'orderPosition': orderPosition,
       };
 }

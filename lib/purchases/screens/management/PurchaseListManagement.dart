@@ -1,3 +1,4 @@
+import 'package:finance_controlinator_mobile/purchases/webclients/ItemWebClient.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:drag_and_drop_lists/drag_and_drop_lists.dart';
 import 'package:finance_controlinator_mobile/components/DefaultInput.dart';
@@ -9,6 +10,7 @@ import '../../domain/PurchaseCategory.dart';
 import '../../domain/PurchaseItem.dart';
 import '../../domain/PurchaseList.dart';
 import '../../domain/PurchaseListManagementData.dart';
+import '../../webclients/CategoryWebClient.dart';
 import '../../webclients/PurchaseListWebClient.dart';
 
 class PurchaseListManagement extends StatefulWidget {
@@ -83,13 +85,11 @@ class PurchaseListManagementState extends State<PurchaseListManagement> {
                         addingItem = true;
                       });
 
-                      var result = await PurchaseListWebClient().addItem(
-                          widget._purchaseList.id!,
-                          category.id!,
-                          PurchaseItem(
-                            Uuid().v4(),
-                            newItemNameController.text,
-                          ));
+                      var result = await ItemWebClient().addItem(PurchaseItem(
+                        Uuid().v4(),
+                        newItemNameController.text,
+                        category.id!,
+                      ));
                       if (result.success()) {
                         onAddItem(null);
                         loadLists();
@@ -170,7 +170,7 @@ class PurchaseListManagementState extends State<PurchaseListManagement> {
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
                       color: Color(category.color)))),
-          children: category.items.map(buildPurchaseItem).toList()
+          children: category.items!.map(buildPurchaseItem).toList()
             ..add(newItem(category)));
 
   DragAndDropItem buildPurchaseItem(PurchaseItem item) => DragAndDropItem(
@@ -179,17 +179,24 @@ class PurchaseListManagementState extends State<PurchaseListManagement> {
         title: Text(item.name),
       ));
 
+  bool itemPlacedAfterNewItemButton(int newListIndex, int newItemIndex) {
+    return newItemIndex > 0 && newItemIndex >=
+        purchaseListManagementData!.categories[newListIndex].items!.length;
+  }
+
   void onItemReorder(int oldItemIndex, int oldListIndex, int newItemIndex,
       int newListIndex) async {
-    var oldCategory = purchaseListManagementData!.categories[oldListIndex];
     var newCategory = purchaseListManagementData!.categories[newListIndex];
 
-    var result = await PurchaseListWebClient().changeItemOrder(
-        widget._purchaseList.id!,
-        oldCategory.id!,
-        newCategory.id!,
-        oldItemIndex,
-        newItemIndex);
+    final item = purchaseListManagementData!
+        .categories[oldListIndex].items![oldItemIndex];
+
+    if (itemPlacedAfterNewItemButton(newListIndex, newItemIndex)) {
+      newItemIndex--;
+    }
+
+    var result = await ItemWebClient()
+        .changeItemOrder(item.id!, newCategory.id!, newItemIndex);
 
     if (result.success()) {
       setState(() {
@@ -198,15 +205,16 @@ class PurchaseListManagementState extends State<PurchaseListManagement> {
         final newListItems =
             purchaseListManagementData!.categories[newListIndex].items;
 
-        final movedItem = oldListItems.removeAt(oldItemIndex);
-        newListItems.insert(newItemIndex, movedItem);
+        final movedItem = oldListItems!.removeAt(oldItemIndex);
+        newListItems!.insert(newItemIndex, movedItem);
       });
     }
   }
 
   void onListReorder(int oldListIndex, int newListIndex) async {
-    var result = await PurchaseListWebClient().changeCategoryOrder(
-        widget._purchaseList.id!, oldListIndex, newListIndex);
+    var category = purchaseListManagementData!.categories[oldListIndex];
+    var result = await CategoryWebClient()
+        .changeCategoryOrder(category.id!, newListIndex);
     if (result.success()) {
       setState(() {
         final movedList =

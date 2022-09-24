@@ -4,6 +4,7 @@ import 'package:uuid/uuid.dart';
 
 import '../../domain/PurchaseCategory.dart';
 import '../../domain/PurchaseList.dart';
+import '../../webclients/CategoryWebClient.dart';
 import 'PurchaseCategoryAdderWidget.dart';
 import 'PurchaseListManagement.dart';
 
@@ -24,10 +25,9 @@ class PurchaseListManagementScreen extends StatelessWidget {
           actions: [
             PurchaseCategoryAdderWidget(
                 onActionDispatched: (name, color) async {
-              var result = await PurchaseListWebClient().addCategory(
-                  _purchaseList.id!,
+              var result = await CategoryWebClient().addCategory(
                   PurchaseCategory(
-                      Uuid().v4(), name, _purchaseList.id!, color.value, []));
+                      Uuid().v4(), name, _purchaseList.id!, color.value));
               if (result.success()) {
                 purchaseListManagementStateKey.currentState?.loadLists();
               }
