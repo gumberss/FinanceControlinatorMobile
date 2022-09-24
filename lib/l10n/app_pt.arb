@@ -3,5 +3,6 @@
     "purchaseListName": "Nome da lista de compras",
     "create": "Criar",
     "purchaseCategoryName": "Nome da categoria da compra",
-    "purchaseCategoryItem": "Nome do item da compra"
+    "purchaseCategoryItem": "Nome do item da compra",
+    "amountToBuy": "Quantidade para comprar: "
 }

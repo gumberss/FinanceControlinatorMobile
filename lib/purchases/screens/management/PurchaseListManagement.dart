@@ -86,7 +86,7 @@ class PurchaseListManagementState extends State<PurchaseListManagement> {
                       });
 
                       var result = await ItemWebClient().addItem(PurchaseItem(
-                        Uuid().v4(),
+                        const Uuid().v4(),
                         newItemNameController.text,
                         category.id!,
                       ));
@@ -177,11 +177,33 @@ class PurchaseListManagementState extends State<PurchaseListManagement> {
           child: ListTile(
         //leading: Image.network(i.urlImage,width: 40, height: 40, fit: BoxFit.cover),
         title: Text(item.name),
+        subtitle: Text(AppLocalizations.of(context)!.amountToBuy +
+            item.quantity.toString()),
+        trailing: Padding(
+          padding: const EdgeInsets.only(right: 24),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              IconButton(
+                  onPressed: () {}, icon: const Icon(Icons.arrow_upward)),
+              Padding(
+                padding: const EdgeInsets.all(4),
+                child: Container(
+                  width: 2,
+                  color: Colors.grey.shade300,
+                ),
+              ),
+              IconButton(
+                  onPressed: () {}, icon: const Icon(Icons.arrow_downward)),
+            ],
+          ),
+        ),
       ));
 
   bool itemPlacedAfterNewItemButton(int newListIndex, int newItemIndex) {
-    return newItemIndex > 0 && newItemIndex >=
-        purchaseListManagementData!.categories[newListIndex].items!.length;
+    return newItemIndex > 0 &&
+        newItemIndex >=
+            purchaseListManagementData!.categories[newListIndex].items!.length;
   }
 
   void onItemReorder(int oldItemIndex, int oldListIndex, int newItemIndex,
@@ -195,32 +217,38 @@ class PurchaseListManagementState extends State<PurchaseListManagement> {
       newItemIndex--;
     }
 
+    setState(() {
+      final oldListItems =
+          purchaseListManagementData!.categories[oldListIndex].items;
+      final newListItems =
+          purchaseListManagementData!.categories[newListIndex].items;
+
+      final movedItem = oldListItems!.removeAt(oldItemIndex);
+      newListItems!.insert(newItemIndex, movedItem);
+    });
+
     var result = await ItemWebClient()
         .changeItemOrder(item.id!, newCategory.id!, newItemIndex);
 
-    if (result.success()) {
-      setState(() {
-        final oldListItems =
-            purchaseListManagementData!.categories[oldListIndex].items;
-        final newListItems =
-            purchaseListManagementData!.categories[newListIndex].items;
-
-        final movedItem = oldListItems!.removeAt(oldItemIndex);
-        newListItems!.insert(newItemIndex, movedItem);
-      });
+    if (!result.success()) {
+      await loadLists();
     }
   }
 
   void onListReorder(int oldListIndex, int newListIndex) async {
     var category = purchaseListManagementData!.categories[oldListIndex];
+
+    setState(() {
+      final movedList =
+          purchaseListManagementData!.categories.removeAt(oldListIndex);
+      purchaseListManagementData!.categories.insert(newListIndex, movedList);
+    });
+
     var result = await CategoryWebClient()
         .changeCategoryOrder(category.id!, newListIndex);
-    if (result.success()) {
-      setState(() {
-        final movedList =
-            purchaseListManagementData!.categories.removeAt(oldListIndex);
-        purchaseListManagementData!.categories.insert(newListIndex, movedList);
-      });
+
+    if (!result.success()) {
+      await loadLists();
     }
   }
 

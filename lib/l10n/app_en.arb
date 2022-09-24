@@ -3,5 +3,6 @@
     "purchaseListName": "Purchase List Name",
     "create": "Create",
     "purchaseCategoryName": "Purchase Category Name",
-    "purchaseCategoryItem": "Purchase Item Name"
+    "purchaseCategoryItem": "Purchase Item Name",
+    "amountToBuy": "Amount to buy: "
 }
