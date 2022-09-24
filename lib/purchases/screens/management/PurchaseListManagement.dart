@@ -173,6 +173,15 @@ class PurchaseListManagementState extends State<PurchaseListManagement> {
           children: category.items!.map(buildPurchaseItem).toList()
             ..add(newItem(category)));
 
+  void delaySendToServer(PurchaseItem item){
+    var currentItemAmount = item.quantity;
+    Future.delayed(const Duration(milliseconds: 1500), () {
+      if (item.quantity == currentItemAmount) {
+        ItemWebClient().changeItemQuantity(item.id!, item.quantity);
+      }
+    });
+  }
+
   DragAndDropItem buildPurchaseItem(PurchaseItem item) => DragAndDropItem(
           child: ListTile(
         //leading: Image.network(i.urlImage,width: 40, height: 40, fit: BoxFit.cover),
@@ -189,6 +198,7 @@ class PurchaseListManagementState extends State<PurchaseListManagement> {
                     setState(() {
                       item.quantity++;
                     });
+                    delaySendToServer(item);
                   },
                   icon: const Icon(Icons.arrow_upward)),
               Padding(
@@ -204,6 +214,7 @@ class PurchaseListManagementState extends State<PurchaseListManagement> {
                       setState(() {
                         item.quantity--;
                       });
+                      delaySendToServer(item);
                     }
                   },
                   icon: const Icon(Icons.arrow_downward)),
