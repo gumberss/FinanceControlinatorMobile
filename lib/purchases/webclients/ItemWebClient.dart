@@ -33,7 +33,7 @@ class ItemWebClient {
             response.statusCode!, PurchaseItem.fromJson(response.data)));
   }
 
-  Future<HttpResponseData<PurchaseCategory?>> changeItemOrder(
+  Future<HttpResponseData<PurchaseItem?>> changeItemOrder(
       String itemId, String newCategoryId, int newPosition) async {
     return await tryRequest(
         client.putUri(
@@ -43,13 +43,21 @@ class ItemWebClient {
         (response) => HttpResponseData(response.statusCode!, null));
   }
 
-  Future<HttpResponseData<PurchaseCategory?>> changeItemQuantity(
+  Future<HttpResponseData<PurchaseItem?>> changeItemQuantity(
       String itemId, int newQuantity) async {
     return await tryRequest(
         client.putUri(
-            Uri.http(baseUrl,
-                basePath + "/$itemId/changeQuantity/$newQuantity"),
+            Uri.http(
+                baseUrl, basePath + "/$itemId/changeQuantity/$newQuantity"),
             options: defaultOptions),
-            (response) => HttpResponseData(response.statusCode!, null));
+        (response) => HttpResponseData(response.statusCode!, null));
+  }
+
+  Future<HttpResponseData<PurchaseItem?>> removeItem(
+      String itemId) async {
+    return await tryRequest(
+        client.deleteUri(Uri.http(baseUrl, basePath + "/$itemId"),
+            options: defaultOptions),
+        (response) => HttpResponseData(response.statusCode!, null));
   }
 }

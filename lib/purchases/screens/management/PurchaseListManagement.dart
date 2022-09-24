@@ -173,7 +173,7 @@ class PurchaseListManagementState extends State<PurchaseListManagement> {
           children: category.items!.map(buildPurchaseItem).toList()
             ..add(newItem(category)));
 
-  void delaySendToServer(PurchaseItem item){
+  void delaySendToServer(PurchaseItem item) {
     var currentItemAmount = item.quantity;
     Future.delayed(const Duration(milliseconds: 1500), () {
       if (item.quantity == currentItemAmount) {
@@ -183,42 +183,58 @@ class PurchaseListManagementState extends State<PurchaseListManagement> {
   }
 
   DragAndDropItem buildPurchaseItem(PurchaseItem item) => DragAndDropItem(
-          child: ListTile(
-        //leading: Image.network(i.urlImage,width: 40, height: 40, fit: BoxFit.cover),
-        title: Text(item.name),
-        subtitle: Text(AppLocalizations.of(context)!.amountToBuy +
-            item.quantity.toString()),
-        trailing: Padding(
-          padding: const EdgeInsets.only(right: 24),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              IconButton(
-                  onPressed: () {
-                    setState(() {
-                      item.quantity++;
-                    });
-                    delaySendToServer(item);
-                  },
-                  icon: const Icon(Icons.arrow_upward)),
-              Padding(
-                padding: const EdgeInsets.all(4),
-                child: Container(
-                  width: 2,
-                  color: Colors.grey.shade300,
-                ),
-              ),
-              IconButton(
-                  onPressed: () {
-                    if (item.quantity > 0) {
+          child: Dismissible(
+        key: Key(item.id.toString()),
+        onDismissed: (a) async {
+          var category = purchaseListManagementData!.categories
+              .firstWhere((e) => e.items!.contains(item));
+          setState(() {
+            category.items!.remove(item);
+          });
+
+          var result = await ItemWebClient().removeItem(item.id.toString());
+
+          if (!result.success()) {
+            await loadLists();
+          }
+        },
+        child: ListTile(
+          //leading: Image.network(i.urlImage,width: 40, height: 40, fit: BoxFit.cover),
+          title: Text(item.name),
+          subtitle: Text(AppLocalizations.of(context)!.amountToBuy +
+              item.quantity.toString()),
+          trailing: Padding(
+            padding: const EdgeInsets.only(right: 24),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                IconButton(
+                    onPressed: () {
                       setState(() {
-                        item.quantity--;
+                        item.quantity++;
                       });
                       delaySendToServer(item);
-                    }
-                  },
-                  icon: const Icon(Icons.arrow_downward)),
-            ],
+                    },
+                    icon: const Icon(Icons.arrow_upward)),
+                Padding(
+                  padding: const EdgeInsets.all(4),
+                  child: Container(
+                    width: 2,
+                    color: Colors.grey.shade300,
+                  ),
+                ),
+                IconButton(
+                    onPressed: () {
+                      if (item.quantity > 0) {
+                        setState(() {
+                          item.quantity--;
+                        });
+                        delaySendToServer(item);
+                      }
+                    },
+                    icon: const Icon(Icons.arrow_downward)),
+              ],
+            ),
           ),
         ),
       ));
