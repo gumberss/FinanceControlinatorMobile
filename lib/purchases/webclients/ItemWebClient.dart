@@ -42,4 +42,14 @@ class ItemWebClient {
             options: defaultOptions),
         (response) => HttpResponseData(response.statusCode!, null));
   }
+
+  Future<HttpResponseData<PurchaseCategory?>> changeItemQuantity(
+      String itemId, int newQuantity) async {
+    return await tryRequest(
+        client.putUri(
+            Uri.http(baseUrl,
+                basePath + "/$itemId/changeQuantity/$newQuantity"),
+            options: defaultOptions),
+            (response) => HttpResponseData(response.statusCode!, null));
+  }
 }
