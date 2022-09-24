@@ -185,7 +185,12 @@ class PurchaseListManagementState extends State<PurchaseListManagement> {
             mainAxisSize: MainAxisSize.min,
             children: [
               IconButton(
-                  onPressed: () {}, icon: const Icon(Icons.arrow_upward)),
+                  onPressed: () {
+                    setState(() {
+                      item.quantity++;
+                    });
+                  },
+                  icon: const Icon(Icons.arrow_upward)),
               Padding(
                 padding: const EdgeInsets.all(4),
                 child: Container(
@@ -194,7 +199,14 @@ class PurchaseListManagementState extends State<PurchaseListManagement> {
                 ),
               ),
               IconButton(
-                  onPressed: () {}, icon: const Icon(Icons.arrow_downward)),
+                  onPressed: () {
+                    if (item.quantity > 0) {
+                      setState(() {
+                        item.quantity--;
+                      });
+                    }
+                  },
+                  icon: const Icon(Icons.arrow_downward)),
             ],
           ),
         ),
