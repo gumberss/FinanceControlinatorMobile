@@ -170,7 +170,8 @@ class PurchaseListManagementState extends State<PurchaseListManagement> {
                       debugPrint(name);
                       category.name = name;
                       category.color = color.value;
-                      var result = await CategoryWebClient().editCategory(category);
+                      var result =
+                          await CategoryWebClient().editCategory(category);
                       await loadLists();
                       return result.success();
                     }).showDialog();
@@ -187,24 +188,26 @@ class PurchaseListManagementState extends State<PurchaseListManagement> {
                               actions: [
                                 OutlinedButton(
                                     style: OutlinedButton.styleFrom(
-                                        primary: Theme.of(context)
-                                            .colorScheme
-                                            .primary,
-                                        backgroundColor: Colors.green[100]),
+                                      side: const BorderSide(width: 1.0, color: Colors.green),
+                                    ),
                                     onPressed: () =>
                                         Navigator.of(ctx).pop(false),
-                                    child:
-                                        Text(AppLocalizations.of(context)!.no)),
+                                    child: Text(
+                                      AppLocalizations.of(context)!.no,
+                                      style:
+                                          Theme.of(context).textTheme.button,
+                                    )),
                                 OutlinedButton(
                                     style: OutlinedButton.styleFrom(
-                                        primary: Theme.of(context)
-                                            .colorScheme
-                                            .primary,
-                                        backgroundColor: Colors.red[100]),
+                                      side: const BorderSide(width: 1.0, color: Colors.redAccent),
+                                    ),
                                     onPressed: () =>
                                         Navigator.of(ctx).pop(true),
-                                    child:
-                                        Text(AppLocalizations.of(context)!.yes))
+                                    child: Text(
+                                        AppLocalizations.of(context)!.yes,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .button))
                               ],
                             ));
                   },
