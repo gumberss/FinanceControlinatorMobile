@@ -3,17 +3,13 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:finance_controlinator_mobile/components/HttpClient/HttpResponseData.dart';
 import 'package:finance_controlinator_mobile/components/HttpClient/http_client.dart';
-import 'package:finance_controlinator_mobile/purchases/domain/PurchaseList.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import '../domain/PurchaseCategory.dart';
-import '../domain/PurchaseItem.dart';
-import '../domain/PurchaseListManagementData.dart';
 
 class CategoryWebClient {
-
   String baseUrl =
-  dotenv.env['FINANCE_CONTROLINATOR_API_URL_PURCHASE_LIST'].toString();
+      dotenv.env['FINANCE_CONTROLINATOR_API_URL_PURCHASE_LIST'].toString();
   String basePath = "/api/purchases/categories";
 
   late Uri baseUri;
@@ -26,13 +22,12 @@ class CategoryWebClient {
     baseUri = Uri.http(baseUrl, basePath);
   }
 
-  Future<HttpResponseData<PurchaseCategory?>> addCategory(PurchaseCategory category) async {
+  Future<HttpResponseData<PurchaseCategory?>> addCategory(
+      PurchaseCategory category) async {
     return await tryRequest(
-        client.postUri(
-            Uri.http(baseUrl, basePath),
-            options: defaultOptions,
-            data: category.toJson()),
-            (response) => HttpResponseData(
+        client.postUri(Uri.http(baseUrl, basePath),
+            options: defaultOptions, data: category.toJson()),
+        (response) => HttpResponseData(
             response.statusCode!, PurchaseCategory.fromJson(response.data)));
   }
 
@@ -41,11 +36,9 @@ class CategoryWebClient {
     return await tryRequest(
         client.putUri(
             Uri.http(
-                baseUrl,
-                basePath +
-                    "/$categoryId/changeOrder/$newPosition"),
+                baseUrl, basePath + "/$categoryId/changeOrder/$newPosition"),
             options: defaultOptions),
-            (response) => HttpResponseData(response.statusCode!, null));
+        (response) => HttpResponseData(response.statusCode!, null));
   }
 
   Future<HttpResponseData<PurchaseCategory?>> removeCategory(
@@ -53,6 +46,14 @@ class CategoryWebClient {
     return await tryRequest(
         client.deleteUri(Uri.http(baseUrl, basePath + "/$categoryId"),
             options: defaultOptions),
-            (response) => HttpResponseData(response.statusCode!, null));
+        (response) => HttpResponseData(response.statusCode!, null));
+  }
+
+  Future<HttpResponseData<PurchaseCategory?>> editCategory(
+      PurchaseCategory category) async {
+    return await tryRequest(
+        client.putUri(Uri.http(baseUrl, basePath),
+            options: defaultOptions, data: category.toJson()),
+        (response) => HttpResponseData(response.statusCode!, null));
   }
 }

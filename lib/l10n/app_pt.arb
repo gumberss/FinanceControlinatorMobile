@@ -2,6 +2,7 @@
     "purchaseListScreenTitle":"Listas de compras",
     "purchaseListName": "Nome da lista de compras",
     "create": "Criar",
+    "edit": "Editar",
     "purchaseCategoryName": "Nome da categoria da compra",
     "purchaseCategoryItem": "Nome do item da compra",
     "amountToBuy": "Quantidade para comprar: ",
