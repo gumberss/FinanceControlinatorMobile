@@ -47,4 +47,12 @@ class CategoryWebClient {
             options: defaultOptions),
             (response) => HttpResponseData(response.statusCode!, null));
   }
+
+  Future<HttpResponseData<PurchaseCategory?>> removeCategory(
+      String categoryId) async {
+    return await tryRequest(
+        client.deleteUri(Uri.http(baseUrl, basePath + "/$categoryId"),
+            options: defaultOptions),
+            (response) => HttpResponseData(response.statusCode!, null));
+  }
 }
