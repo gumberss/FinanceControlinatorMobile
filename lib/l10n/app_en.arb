@@ -4,5 +4,9 @@
     "create": "Create",
     "purchaseCategoryName": "Purchase Category Name",
     "purchaseCategoryItem": "Purchase Item Name",
-    "amountToBuy": "Amount to buy: "
+    "amountToBuy": "Amount to buy: ",
+    "pleaseConfirm": "Please, confirm",
+    "sureDeleteCategory": "Are you sure you want to delete the category?",
+    "yes": "Yes",
+    "no": "No"
 }

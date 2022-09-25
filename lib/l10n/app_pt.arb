@@ -4,5 +4,9 @@
     "create": "Criar",
     "purchaseCategoryName": "Nome da categoria da compra",
     "purchaseCategoryItem": "Nome do item da compra",
-    "amountToBuy": "Quantidade para comprar: "
+    "amountToBuy": "Quantidade para comprar: ",
+    "pleaseConfirm": "Por favor, confirme",
+    "sureDeleteCategory": "Tem certeza que quer deletar a categoria?",
+    "yes": "Sim",
+    "no": "Não"
 }

@@ -163,13 +163,51 @@ class PurchaseListManagementState extends State<PurchaseListManagement> {
 
   DragAndDropList buildCategoryList(PurchaseCategory category) =>
       DragAndDropList(
-          header: Container(
-              padding: const EdgeInsets.all(8),
-              child: Text(category.name,
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                      color: Color(category.color)))),
+          header: Dismissible(
+              key: Key(category.id.toString()),
+              confirmDismiss: (e) {
+                return showDialog(
+                    context: context,
+                    builder: (ctx) => AlertDialog(
+                          title: Text(category.name),
+                          content: Text(
+                              AppLocalizations.of(context)!.sureDeleteCategory),
+                          actions: [
+                            OutlinedButton(
+                                style: OutlinedButton.styleFrom(
+                                    primary: Colors.black,
+                                    backgroundColor: Colors.green[100]),
+                                onPressed: () => Navigator.of(ctx).pop(false),
+                                child: Text(AppLocalizations.of(context)!.no)),
+                            OutlinedButton(
+                                style: OutlinedButton.styleFrom(
+                                    primary: Colors.black,
+                                    backgroundColor: Colors.red[100]),
+                                onPressed: () => Navigator.of(ctx).pop(true),
+                                child: Text(AppLocalizations.of(context)!.yes))
+                          ],
+                        ));
+              },
+              onDismissed: (a) async {
+                setState(() {
+                  purchaseListManagementData!.categories.remove(category);
+                });
+
+                var result = await CategoryWebClient()
+                    .removeCategory(category.id.toString());
+
+                if (!result.success()) {
+                  await loadLists();
+                }
+              },
+              child: Container(
+                  width: double.maxFinite,
+                  padding: const EdgeInsets.all(8),
+                  child: Text(category.name,
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                          color: Color(category.color))))),
           children: category.items!.map(buildPurchaseItem).toList()
             ..add(newItem(category)));
 
