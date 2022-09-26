@@ -1,3 +1,4 @@
+import 'package:finance_controlinator_mobile/purchases/screens/management/PurchaseCategoryDialog.dart';
 import 'package:finance_controlinator_mobile/purchases/webclients/ItemWebClient.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:drag_and_drop_lists/drag_and_drop_lists.dart';
@@ -57,7 +58,11 @@ class PurchaseListManagementState extends State<PurchaseListManagement> {
     }
 
     setState(() {
+      onAddItem(null);
+      onEditingItem(null);
       purchaseListManagementData = response.data!;
+      showHandler = true;
+
       loadingData = false;
     });
   }
@@ -81,10 +86,6 @@ class PurchaseListManagementState extends State<PurchaseListManagement> {
                     newItemNameController,
                     autoFocus: true,
                     onSubmitted: () async {
-                      setState(() {
-                        addingItem = true;
-                      });
-
                       var result = await ItemWebClient().addItem(PurchaseItem(
                         const Uuid().v4(),
                         newItemNameController.text,
@@ -93,10 +94,6 @@ class PurchaseListManagementState extends State<PurchaseListManagement> {
                       if (result.success()) {
                         onAddItem(null);
                         loadLists();
-                      } else {
-                        setState(() {
-                          addingItem = false;
-                        });
                       }
                     },
                   ),
@@ -120,11 +117,9 @@ class PurchaseListManagementState extends State<PurchaseListManagement> {
             ));
 
   String? addingItemCategory;
-  bool addingItem = false;
 
   void onAddItem(PurchaseCategory? category) {
     setState(() {
-      addingItem = false;
       newItemNameController.clear();
       addingItemCategory = category?.id;
     });
@@ -153,8 +148,9 @@ class PurchaseListManagementState extends State<PurchaseListManagement> {
                     ]),
                 onItemReorder: onItemReorder,
                 onListReorder: onListReorder,
-                itemDragHandle: buildDragHandle(),
-                listDragHandle: buildDragHandle(isList: true),
+                itemDragHandle: showHandler ? buildDragHandle() : null,
+                listDragHandle:
+                    showHandler ? buildDragHandle(isList: true) : null,
               ));
   }
 
@@ -163,51 +159,78 @@ class PurchaseListManagementState extends State<PurchaseListManagement> {
 
   DragAndDropList buildCategoryList(PurchaseCategory category) =>
       DragAndDropList(
-          header: Dismissible(
-              key: Key(category.id.toString()),
-              confirmDismiss: (e) {
-                return showDialog(
+          header: GestureDetector(
+              onLongPress: () {
+                PurchaseCategoryDialog(
+                    title: category.name,
+                    color: category.color,
                     context: context,
-                    builder: (ctx) => AlertDialog(
-                          title: Text(category.name),
-                          content: Text(
-                              AppLocalizations.of(context)!.sureDeleteCategory),
-                          actions: [
-                            OutlinedButton(
-                                style: OutlinedButton.styleFrom(
-                                    primary: Colors.black,
-                                    backgroundColor: Colors.green[100]),
-                                onPressed: () => Navigator.of(ctx).pop(false),
-                                child: Text(AppLocalizations.of(context)!.no)),
-                            OutlinedButton(
-                                style: OutlinedButton.styleFrom(
-                                    primary: Colors.black,
-                                    backgroundColor: Colors.red[100]),
-                                onPressed: () => Navigator.of(ctx).pop(true),
-                                child: Text(AppLocalizations.of(context)!.yes))
-                          ],
-                        ));
+                    onActionDispatched: (name, color) async {
+                      debugPrint(category.name);
+                      debugPrint(name);
+                      category.name = name;
+                      category.color = color.value;
+                      var result =
+                          await CategoryWebClient().editCategory(category);
+                      await loadLists();
+                      return result.success();
+                    }).showDialog();
               },
-              onDismissed: (a) async {
-                setState(() {
-                  purchaseListManagementData!.categories.remove(category);
-                });
+              child: Dismissible(
+                  key: Key(category.id.toString()),
+                  confirmDismiss: (e) {
+                    return showDialog(
+                        context: context,
+                        builder: (ctx) => AlertDialog(
+                              title: Text(category.name),
+                              content: Text(AppLocalizations.of(context)!
+                                  .sureDeleteCategory),
+                              actions: [
+                                OutlinedButton(
+                                    style: OutlinedButton.styleFrom(
+                                      side: const BorderSide(width: 1.0, color: Colors.green),
+                                    ),
+                                    onPressed: () =>
+                                        Navigator.of(ctx).pop(false),
+                                    child: Text(
+                                      AppLocalizations.of(context)!.no,
+                                      style:
+                                          Theme.of(context).textTheme.button,
+                                    )),
+                                OutlinedButton(
+                                    style: OutlinedButton.styleFrom(
+                                      side: const BorderSide(width: 1.0, color: Colors.redAccent),
+                                    ),
+                                    onPressed: () =>
+                                        Navigator.of(ctx).pop(true),
+                                    child: Text(
+                                        AppLocalizations.of(context)!.yes,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .button))
+                              ],
+                            ));
+                  },
+                  onDismissed: (a) async {
+                    setState(() {
+                      purchaseListManagementData!.categories.remove(category);
+                    });
 
-                var result = await CategoryWebClient()
-                    .removeCategory(category.id.toString());
+                    var result = await CategoryWebClient()
+                        .removeCategory(category.id.toString());
 
-                if (!result.success()) {
-                  await loadLists();
-                }
-              },
-              child: Container(
-                  width: double.maxFinite,
-                  padding: const EdgeInsets.all(8),
-                  child: Text(category.name,
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                          color: Color(category.color))))),
+                    if (!result.success()) {
+                      await loadLists();
+                    }
+                  },
+                  child: Container(
+                      width: double.maxFinite,
+                      padding: const EdgeInsets.all(8),
+                      child: Text(category.name,
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                              color: Color(category.color)))))),
           children: category.items!.map(buildPurchaseItem).toList()
             ..add(newItem(category)));
 
@@ -219,6 +242,17 @@ class PurchaseListManagementState extends State<PurchaseListManagement> {
       }
     });
   }
+
+  String? editingItemId;
+  bool showHandler = true;
+
+  TextEditingController editItemNameController = TextEditingController();
+
+  onEditingItem(PurchaseItem? item) => setState(() {
+        editingItemId = item?.id;
+        editItemNameController.text = item?.name ?? "";
+        showHandler = item == null;
+      });
 
   DragAndDropItem buildPurchaseItem(PurchaseItem item) => DragAndDropItem(
           child: Dismissible(
@@ -236,44 +270,79 @@ class PurchaseListManagementState extends State<PurchaseListManagement> {
             await loadLists();
           }
         },
-        child: ListTile(
-          //leading: Image.network(i.urlImage,width: 40, height: 40, fit: BoxFit.cover),
-          title: Text(item.name),
-          subtitle: Text(AppLocalizations.of(context)!.amountToBuy +
-              item.quantity.toString()),
-          trailing: Padding(
-            padding: const EdgeInsets.only(right: 24),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                IconButton(
-                    onPressed: () {
-                      setState(() {
-                        item.quantity++;
-                      });
-                      delaySendToServer(item);
-                    },
-                    icon: const Icon(Icons.arrow_upward)),
-                Padding(
-                  padding: const EdgeInsets.all(4),
-                  child: Container(
-                    width: 2,
-                    color: Colors.grey.shade300,
+        child: GestureDetector(
+          onLongPress: () => onEditingItem(item),
+          child: editingItemId == item.id!
+              ? Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      child: DefaultInput(
+                        AppLocalizations.of(context)!.purchaseCategoryItem,
+                        TextInputType.text,
+                        editItemNameController,
+                        autoFocus: true,
+                        onSubmitted: () async {
+                          var newName = editItemNameController.text;
+                          setState(() {
+                            item.name = newName;
+                          });
+                          onEditingItem(null);
+
+                          var result = await ItemWebClient()
+                              .editItemName(item.id!, newName);
+
+                          if (!result.success()) {
+                            loadLists();
+                          }
+                        },
+                      ),
+                    ),
+                    IconButton(
+                        onPressed: () => onEditingItem(null),
+                        icon: const Icon(Icons.close))
+                  ],
+                )
+              : ListTile(
+                  //leading: Image.network(i.urlImage,width: 40, height: 40, fit: BoxFit.cover),
+                  title: Text(item.name),
+                  subtitle: Text(AppLocalizations.of(context)!.amountToBuy +
+                      item.quantity.toString()),
+                  trailing: Padding(
+                    padding: const EdgeInsets.only(right: 24),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        IconButton(
+                            onPressed: () {
+                              setState(() {
+                                item.quantity++;
+                              });
+                              delaySendToServer(item);
+                            },
+                            icon: const Icon(Icons.arrow_upward)),
+                        Padding(
+                          padding: const EdgeInsets.all(4),
+                          child: Container(
+                            width: 2,
+                            color: Colors.grey.shade300,
+                          ),
+                        ),
+                        IconButton(
+                            onPressed: () {
+                              if (item.quantity > 0) {
+                                setState(() {
+                                  item.quantity--;
+                                });
+                                delaySendToServer(item);
+                              }
+                            },
+                            icon: const Icon(Icons.arrow_downward)),
+                      ],
+                    ),
                   ),
                 ),
-                IconButton(
-                    onPressed: () {
-                      if (item.quantity > 0) {
-                        setState(() {
-                          item.quantity--;
-                        });
-                        delaySendToServer(item);
-                      }
-                    },
-                    icon: const Icon(Icons.arrow_downward)),
-              ],
-            ),
-          ),
         ),
       ));
 
