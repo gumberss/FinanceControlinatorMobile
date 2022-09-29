@@ -11,6 +11,7 @@ class DefaultInput extends StatelessWidget {
   FormFieldValidator<String>? validator;
   ValueChanged<String>? onChanged;
   AutovalidateMode autoValidateMode;
+  String? hintText;
 
   DefaultInput(this.title, this.type, this.controller,
       {this.obscureText = false,
@@ -18,6 +19,7 @@ class DefaultInput extends StatelessWidget {
         this.onSubmitted,
         this.validator,
         this.onChanged,
+        this.hintText,
         this.autoValidateMode = AutovalidateMode.onUserInteraction});
 
   @override
@@ -37,6 +39,7 @@ class DefaultInput extends StatelessWidget {
           autovalidateMode: autoValidateMode,
           decoration: InputDecoration(
               labelText: title,
+              hintText: hintText ?? "",
               errorBorder: const UnderlineInputBorder(
                 borderSide: BorderSide(color: Colors.redAccent),
               )),
