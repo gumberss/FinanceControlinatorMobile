@@ -5,6 +5,7 @@ import 'package:uuid/uuid.dart';
 import '../../domain/PurchaseCategory.dart';
 import '../../domain/PurchaseList.dart';
 import '../../webclients/CategoryWebClient.dart';
+import '../initiation/PurchaseInitiation.dart';
 import 'PurchaseCategoryAdderWidget.dart';
 import 'PurchaseListManagement.dart';
 
@@ -50,8 +51,9 @@ class PurchaseListManagementScreen extends StatelessWidget {
         ),
         floatingActionButton: FloatingActionButton(
           backgroundColor: Colors.blueAccent,
-          child: Icon(Icons.add),
-          onPressed: () => {},
+          child: const Icon(Icons.arrow_forward),
+          onPressed: () => Navigator.of(context).push(MaterialPageRoute(
+              builder: (c) => PurchaseInitiation(_purchaseList))),
         ));
   }
 }

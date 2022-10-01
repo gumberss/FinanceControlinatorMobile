@@ -8,6 +8,13 @@
     "amountToBuy": "Amount to buy: ",
     "pleaseConfirm": "Please, confirm",
     "sureDeleteCategory": "Are you sure you want to delete the category?",
+    "whereAreYouBuying": "Where are you buying?",
+    "whatAreYouBuying": "What are you buying?",
+    "purchaseTitle": "Purchase title",
+    "myFavoriteMarket": "My favorite market",
+    "marketShopping": "Market shopping",
+    "weeklyShop": "Weekly shop",
+    "startBuying": "Start buying",
     "yes": "Yes",
     "no": "No"
 }

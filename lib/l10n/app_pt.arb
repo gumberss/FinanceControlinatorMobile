@@ -8,6 +8,13 @@
     "amountToBuy": "Quantidade para comprar: ",
     "pleaseConfirm": "Por favor, confirme",
     "sureDeleteCategory": "Tem certeza que quer deletar a categoria?",
+    "whereAreYouBuying": "Onde você está comprando?",
+    "whatAreYouBuying": "O que você está comprando?",
+    "purchaseTitle": "Título da compra",
+    "myFavoriteMarket": "Meu mercado favorito",
+    "marketShopping": "Compras do mercado",
+    "weeklyShop": "Compra semanal",
+    "startBuying": "Começando a comprar",
     "yes": "Sim",
     "no": "Não"
 }
