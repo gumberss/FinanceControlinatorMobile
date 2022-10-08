@@ -1,12 +1,15 @@
+import 'package:finance_controlinator_mobile/purchases/domain/shopping/ShoppingInitiation.dart';
+import 'package:finance_controlinator_mobile/purchases/webclients/shopping/ShoppingInitiationWebClient.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:finance_controlinator_mobile/components/DefaultInput.dart';
 import 'package:flutter/material.dart';
+import 'package:uuid/uuid.dart';
 
+import '../../../components/Locator.dart';
 import '../../domain/PurchaseList.dart';
 
 class PurchaseInitiation extends StatefulWidget {
   final PurchaseList _purchaseList;
-
   final _formKey;
 
   PurchaseInitiation(PurchaseList purchaseList, {Key? key})
@@ -24,6 +27,8 @@ class _PurchaseInitiationState extends State<PurchaseInitiation> {
   final TextEditingController _typeController = TextEditingController();
 
   final TextEditingController _titleController = TextEditingController();
+
+  final String shoppingInitiationId = const Uuid().v4();
 
   @override
   Widget build(BuildContext context) {
@@ -70,10 +75,29 @@ class _PurchaseInitiationState extends State<PurchaseInitiation> {
         floatingActionButton: FloatingActionButton(
           backgroundColor: Colors.blueAccent,
           child: const Icon(Icons.arrow_forward),
-          onPressed: () {
+          onPressed: () async {
             var isValidForm =
                 (widget._formKey.currentState?.validate() ?? false);
+
             if (!isValidForm) return;
+
+            var positionResult = await Locator().getPosition();
+            if (positionResult.isFailure) {
+              //todo: show error
+            } else {
+              var position = positionResult.value;
+              var shoppingInitiation = ShoppingInitiation(
+                  shoppingInitiationId,
+                  _placeController.text,
+                  _typeController.text,
+                  _titleController.text,
+                  widget._purchaseList.id,
+                  position?.latitude,
+                  position?.longitude);
+              //todo progress
+              var initResult =
+                  await ShoppingInitiationWebClient().init(shoppingInitiation);
+            }
           },
         ));
   }
