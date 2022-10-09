@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:finance_controlinator_mobile/components/HttpClient/Interceptors/AuthenticationInterceptor.dart';
+import 'package:flutter/material.dart';
 import 'HttpResponseData.dart';
 
 import 'Interceptors/logging_interceptor.dart';
@@ -47,5 +48,9 @@ Future<HttpResponseData<T?>> tryRequest<T>(Future<Response> request,
     return HttpResponseData(response.statusCode!, null);
   }
 
+  if (response.statusCode == 404) {
+    return HttpResponseData(response.statusCode!, null);
+  }
+  debugPrint(response.data?.toString());
   return onSuccess(response);
 }
