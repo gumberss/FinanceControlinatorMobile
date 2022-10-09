@@ -166,8 +166,6 @@ class PurchaseListManagementState extends State<PurchaseListManagement> {
                     color: category.color,
                     context: context,
                     onActionDispatched: (name, color) async {
-                      debugPrint(category.name);
-                      debugPrint(name);
                       category.name = name;
                       category.color = color.value;
                       var result =

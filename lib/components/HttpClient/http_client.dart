@@ -51,6 +51,5 @@ Future<HttpResponseData<T?>> tryRequest<T>(Future<Response> request,
   if (response.statusCode == 404) {
     return HttpResponseData(response.statusCode!, null);
   }
-  debugPrint(response.data?.toString());
   return onSuccess(response);
 }

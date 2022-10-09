@@ -60,7 +60,6 @@ class _ShoppingInitiationScreenState extends State<ShoppingInitiationScreen> {
     }
     return Timer.periodic(const Duration(seconds: 30), (timer) async {
       _position = await getPosition();
-      debugPrint(timer.tick.toString());
     });
   }
 
@@ -153,7 +152,6 @@ class _ShoppingInitiationScreenState extends State<ShoppingInitiationScreen> {
               position = positionResult.value;
             }
 
-            debugPrint(position?.latitude.toString());
             var shoppingInitiation = ShoppingInitiation(
                 shoppingInitiationId,
                 _placeController.text,
