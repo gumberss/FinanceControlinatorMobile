@@ -4,7 +4,9 @@ import 'package:finance_controlinator_mobile/purchases/webclients/shopping/Shopp
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:finance_controlinator_mobile/components/DefaultInput.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:uuid/uuid.dart';
+import 'dart:async';
 
 import '../../../../components/Locator.dart';
 import '../../../domain/PurchaseList.dart';
@@ -29,8 +31,48 @@ class _ShoppingInitiationScreenState extends State<ShoppingInitiationScreen> {
   final TextEditingController _titleController = TextEditingController();
   final String shoppingInitiationId = const Uuid().v4();
 
+  Future<Timer>? _positionTimerFuture;
+  Timer? _positionTimer;
+  Position? _position;
+
+  @override
+  void initState() {
+    super.initState();
+    _positionTimerFuture = refreshPositionPeriodic(refreshNowToo: true)
+        .then((timer) => _positionTimer = timer);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    debugPrint("que isso");
+    _positionTimerFuture?.then((value) => value.cancel());
+    _positionTimer?.cancel();
+  }
+
+  //https://github.com/Baseflow/flutter-geolocator/issues/320#issuecomment-908296930
+  Future<Timer> refreshPositionPeriodic({bool refreshNowToo = false}) async {
+    if (refreshNowToo) {
+      _position = await getPosition();
+    }
+    return Timer.periodic(const Duration(seconds: 30), (timer) async {
+      _position = await getPosition();
+      debugPrint(timer.tick.toString());
+    });
+  }
+
+  Future<Position?> getPosition() async {
+    var result = await Locator().getPosition();
+    if (result.isSuccess) {
+      return result.value;
+    } else {
+      return null;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    ;
     return Scaffold(
         appBar: AppBar(
           title: Text(AppLocalizations.of(context)!.startBuying +
@@ -80,30 +122,39 @@ class _ShoppingInitiationScreenState extends State<ShoppingInitiationScreen> {
 
             if (!isValidForm) return;
 
-            var positionResult = await Locator().getPosition();
-            if (positionResult.isFailure) {
-              //todo: show error
-            } else {
-              var position = positionResult.value;
-              var shoppingInitiation = ShoppingInitiation(
-                  shoppingInitiationId,
-                  _placeController.text,
-                  _typeController.text,
-                  _titleController.text,
-                  widget._purchaseList.id,
-                  position?.latitude,
-                  position?.longitude);
-              //todo progress
-              var initResult =
-                  await ShoppingInitiationWebClient().init(shoppingInitiation);
-
-              if (initResult.success()) {
-                var shopping = initResult.data!;
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (c) => ShoppingInProgressScreen(shopping)));
-              } else {
+            var position = _position;
+            if (position == null) {
+              var positionResult = await Locator().getPosition();
+              if (positionResult.isFailure) {
                 //todo: show error
+                debugPrint(positionResult.error?.message);
+                return;
               }
+
+              position = positionResult.value;
+            }
+
+            debugPrint(position?.latitude.toString());
+            var shoppingInitiation = ShoppingInitiation(
+                shoppingInitiationId,
+                _placeController.text,
+                _typeController.text,
+                _titleController.text,
+                widget._purchaseList.id,
+                position?.latitude,
+                position?.longitude);
+
+            //todo progress
+            var initResult =
+                await ShoppingInitiationWebClient().init(shoppingInitiation);
+
+            if (initResult.success()) {
+              _positionTimer?.cancel();
+              var shopping = initResult.data!;
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (c) => ShoppingInProgressScreen(shopping)));
+            } else {
+              //todo: show error
             }
           },
         ));
