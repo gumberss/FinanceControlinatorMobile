@@ -4,10 +4,14 @@ import 'package:finance_controlinator_mobile/purchases/webclients/shopping/Shopp
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:finance_controlinator_mobile/components/DefaultInput.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:uuid/uuid.dart';
+import 'dart:async';
 
+import '../../../../authentications/services/AuthorizationService.dart';
 import '../../../../components/Locator.dart';
 import '../../../domain/PurchaseList.dart';
+import '../../../webclients/shopping/ExistentShoppingWebClient.dart';
 
 class ShoppingInitiationScreen extends StatefulWidget {
   final PurchaseList _purchaseList;
@@ -27,7 +31,86 @@ class _ShoppingInitiationScreenState extends State<ShoppingInitiationScreen> {
   final TextEditingController _placeController = TextEditingController();
   final TextEditingController _typeController = TextEditingController();
   final TextEditingController _titleController = TextEditingController();
-  final String shoppingInitiationId = const Uuid().v4();
+  String shoppingInitiationId = const Uuid().v4();
+
+  Future<Timer>? _positionTimerFuture;
+  Timer? _positionTimer;
+  Position? _position;
+
+  @override
+  void initState() {
+    super.initState();
+    _positionTimerFuture = refreshPositionPeriodic(refreshNowToo: true)
+        .then((timer) => _positionTimer = timer);
+
+    loadExistentShopping();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _positionTimerFuture?.then((value) => value.cancel());
+    _positionTimer?.cancel();
+  }
+
+  //https://github.com/Baseflow/flutter-geolocator/issues/320#issuecomment-908296930
+  Future<Timer> refreshPositionPeriodic({bool refreshNowToo = false}) async {
+    if (refreshNowToo) {
+      _position = await getPosition();
+    }
+    return Timer.periodic(const Duration(seconds: 30), (timer) async {
+      _position = await getPosition();
+    });
+  }
+
+  Future<Position?> getPosition() async {
+    var result = await Locator().getPosition();
+    if (result.isSuccess) {
+      return result.value;
+    } else {
+      return null;
+    }
+  }
+
+  bool loadingData = false;
+
+  Future loadExistentShopping() async {
+    setState(() {
+      loadingData = true;
+    });
+
+    var response =
+        await ExistentShoppingWebClient().existent(widget._purchaseList.id!);
+
+    if (response.unauthorized()) {
+      AuthorizationService.redirectToSignIn(context);
+      return;
+    }
+
+    if (response.serverError()) {
+      setState(() {
+        loadingData = false;
+      });
+      //todo: toast error
+      return;
+    }
+
+    if (response.notFound()) {
+      setState(() {
+        loadingData = false;
+      });
+
+      return;
+    }
+    var shopping = response.data!;
+    setState(() {
+      loadingData = false;
+      Navigator.of(context)
+          .push(MaterialPageRoute(
+              builder: (c) => ShoppingInProgressScreen(shopping)))
+          .then((value) => Navigator.of(context).pop());
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,39 +121,16 @@ class _ShoppingInitiationScreenState extends State<ShoppingInitiationScreen> {
               widget._purchaseList.name),
         ),
         backgroundColor: Colors.grey.shade200,
-        body: Form(
-          key: widget._formKey,
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              DefaultInput(AppLocalizations.of(context)!.whereAreYouBuying,
-                  TextInputType.text, _placeController,
-                  validator: (text) => text == null || text.isEmpty
-                      ? AppLocalizations.of(context)!.mustBeFilled
-                      : null,
-                  hintText: AppLocalizations.of(context)!.myFavoriteMarket),
-              DefaultInput(
-                AppLocalizations.of(context)!.whatAreYouBuying,
-                TextInputType.text,
-                _typeController,
-                validator: (text) => text == null || text.isEmpty
-                    ? AppLocalizations.of(context)!.mustBeFilled
-                    : null,
-                hintText: AppLocalizations.of(context)!.marketShopping,
-              ),
-              DefaultInput(
-                AppLocalizations.of(context)!.purchaseTitle,
-                TextInputType.text,
-                _titleController,
-                validator: (text) => text == null || text.isEmpty
-                    ? AppLocalizations.of(context)!.mustBeFilled
-                    : null,
-                hintText: AppLocalizations.of(context)!.weeklyShop,
-              ),
-            ],
-          ),
-        ),
+        body: RefreshIndicator(
+            onRefresh: loadExistentShopping,
+            child: loadingData
+                ? const Center(child: CircularProgressIndicator())
+                : ShoppingInitiationForm(
+                    widget._formKey,
+                    _placeController,
+                    _typeController,
+                    _titleController,
+                  )),
         floatingActionButton: FloatingActionButton(
           backgroundColor: Colors.blueAccent,
           child: const Icon(Icons.arrow_forward),
@@ -80,32 +140,91 @@ class _ShoppingInitiationScreenState extends State<ShoppingInitiationScreen> {
 
             if (!isValidForm) return;
 
-            var positionResult = await Locator().getPosition();
-            if (positionResult.isFailure) {
-              //todo: show error
-            } else {
-              var position = positionResult.value;
-              var shoppingInitiation = ShoppingInitiation(
-                  shoppingInitiationId,
-                  _placeController.text,
-                  _typeController.text,
-                  _titleController.text,
-                  widget._purchaseList.id,
-                  position?.latitude,
-                  position?.longitude);
-              //todo progress
-              var initResult =
-                  await ShoppingInitiationWebClient().init(shoppingInitiation);
-
-              if (initResult.success()) {
-                var shopping = initResult.data!;
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (c) => ShoppingInProgressScreen(shopping)));
-              } else {
+            var position = _position;
+            if (position == null) {
+              var positionResult = await Locator().getPosition();
+              if (positionResult.isFailure) {
                 //todo: show error
+                debugPrint(positionResult.error?.message);
+                return;
               }
+
+              position = positionResult.value;
+            }
+
+            var shoppingInitiation = ShoppingInitiation(
+                shoppingInitiationId,
+                _placeController.text,
+                _typeController.text,
+                _titleController.text,
+                widget._purchaseList.id,
+                position?.latitude,
+                position?.longitude);
+
+            //todo progress
+            var initResult =
+                await ShoppingInitiationWebClient().init(shoppingInitiation);
+
+            if (initResult.success()) {
+              _positionTimer?.cancel();
+              var shopping = initResult.data!;
+              Navigator.of(context)
+                  .push(MaterialPageRoute(
+                      builder: (c) => ShoppingInProgressScreen(shopping)))
+                  .then((value) => Navigator.of(context).pop());
+            } else {
+              //todo: show error
             }
           },
         ));
+  }
+}
+
+class ShoppingInitiationForm extends StatelessWidget {
+  final TextEditingController _placeController;
+  final TextEditingController _typeController;
+  final TextEditingController _titleController;
+  final GlobalKey<FormState> _formKey;
+
+  const ShoppingInitiationForm(this._formKey, this._placeController,
+      this._typeController, this._titleController,
+      {Key? key})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Form(
+      key: _formKey,
+      child: Column(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          DefaultInput(AppLocalizations.of(context)!.whereAreYouBuying,
+              TextInputType.text, _placeController,
+              validator: (text) => text == null || text.isEmpty
+                  ? AppLocalizations.of(context)!.mustBeFilled
+                  : null,
+              hintText: AppLocalizations.of(context)!.myFavoriteMarket),
+          DefaultInput(
+            AppLocalizations.of(context)!.whatAreYouBuying,
+            TextInputType.text,
+            _typeController,
+            validator: (text) => text == null || text.isEmpty
+                ? AppLocalizations.of(context)!.mustBeFilled
+                : null,
+            hintText: AppLocalizations.of(context)!.marketShopping,
+          ),
+          DefaultInput(
+            AppLocalizations.of(context)!.purchaseTitle,
+            TextInputType.text,
+            _titleController,
+            validator: (text) => text == null || text.isEmpty
+                ? AppLocalizations.of(context)!.mustBeFilled
+                : null,
+            hintText: AppLocalizations.of(context)!.weeklyShop,
+          ),
+        ],
+      ),
+    );
   }
 }

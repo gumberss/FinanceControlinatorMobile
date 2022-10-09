@@ -11,6 +11,8 @@ class HttpResponseData<T> {
   }
 
   bool unauthorized() => statusCode == 401;
+  bool notFound() => statusCode == 404;
+
 
   bool serverError() => statusCode >= 500;
 
