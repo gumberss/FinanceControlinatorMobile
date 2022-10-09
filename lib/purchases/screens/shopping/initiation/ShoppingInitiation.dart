@@ -1,33 +1,32 @@
 import 'package:finance_controlinator_mobile/purchases/domain/shopping/ShoppingInitiation.dart';
+import 'package:finance_controlinator_mobile/purchases/screens/shopping/inprogress/ShoppingInProgressScreen.dart';
 import 'package:finance_controlinator_mobile/purchases/webclients/shopping/ShoppingInitiationWebClient.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:finance_controlinator_mobile/components/DefaultInput.dart';
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 
-import '../../../components/Locator.dart';
-import '../../domain/PurchaseList.dart';
+import '../../../../components/Locator.dart';
+import '../../../domain/PurchaseList.dart';
 
-class PurchaseInitiation extends StatefulWidget {
+class ShoppingInitiationScreen extends StatefulWidget {
   final PurchaseList _purchaseList;
   final _formKey;
 
-  PurchaseInitiation(PurchaseList purchaseList, {Key? key})
+  ShoppingInitiationScreen(PurchaseList purchaseList, {Key? key})
       : _purchaseList = purchaseList,
         _formKey = GlobalKey<FormState>(),
         super(key: key);
 
   @override
-  State<PurchaseInitiation> createState() => _PurchaseInitiationState();
+  State<ShoppingInitiationScreen> createState() =>
+      _ShoppingInitiationScreenState();
 }
 
-class _PurchaseInitiationState extends State<PurchaseInitiation> {
+class _ShoppingInitiationScreenState extends State<ShoppingInitiationScreen> {
   final TextEditingController _placeController = TextEditingController();
-
   final TextEditingController _typeController = TextEditingController();
-
   final TextEditingController _titleController = TextEditingController();
-
   final String shoppingInitiationId = const Uuid().v4();
 
   @override
@@ -97,6 +96,14 @@ class _PurchaseInitiationState extends State<PurchaseInitiation> {
               //todo progress
               var initResult =
                   await ShoppingInitiationWebClient().init(shoppingInitiation);
+
+              if (initResult.success()) {
+                var shopping = initResult.data!;
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (c) => ShoppingInProgressScreen(shopping)));
+              } else {
+                //todo: show error
+              }
             }
           },
         ));
