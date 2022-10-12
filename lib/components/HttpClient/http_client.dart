@@ -32,7 +32,8 @@ Future<HttpResponseData<T?>> tryRequest<T>(Future<Response> request,
   final Response response;
   try {
     response = await request;
-  } on Exception {
+  } on Exception catch (e){
+    debugPrint(e.toString());
     return HttpResponseData(500, null);
   }
   if (response.statusCode == 500) {

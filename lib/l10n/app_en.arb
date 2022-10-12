@@ -16,6 +16,7 @@
     "weeklyShop": "Weekly shop",
     "startBuying": "Start buying",
     "mustBeFilled": "Must be filled",
+    "dateFormat": "MM-dd-yyyy",
     "yes": "Yes",
     "no": "No"
 }

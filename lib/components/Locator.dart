@@ -1,4 +1,5 @@
 import 'package:finance_controlinator_mobile/components/BusinessException.dart';
+import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'Result.dart';
 
@@ -8,11 +9,12 @@ class Locator {
     LocationPermission permission;
 
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    
     if (!serviceEnabled) {
       return Result.fromError(BusinessException("[[SERVICE_NOT_ENABLED]]"));
     }
-
     permission = await Geolocator.checkPermission();
+
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {

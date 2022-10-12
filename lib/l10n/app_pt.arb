@@ -15,7 +15,8 @@
     "marketShopping": "Compras do mercado",
     "weeklyShop": "Compra semanal",
     "startBuying": "Começando a comprar",
-     "mustBeFilled": "Deve ser preenchido",
+    "mustBeFilled": "Deve ser preenchido",
+    "dateFormat": "dd-MM-yyyy",
     "yes": "Sim",
     "no": "Não"
 }
