@@ -1,10 +1,12 @@
 import 'package:finance_controlinator_mobile/purchases/domain/shopping/ShoppingInitiation.dart';
+import 'package:finance_controlinator_mobile/purchases/domain/shopping/ShoppingInitiationDataRequest.dart';
 import 'package:finance_controlinator_mobile/purchases/screens/shopping/inprogress/ShoppingInProgressScreen.dart';
 import 'package:finance_controlinator_mobile/purchases/webclients/shopping/ShoppingInitiationWebClient.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:finance_controlinator_mobile/components/DefaultInput.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
 import 'dart:async';
 
@@ -96,12 +98,34 @@ class _ShoppingInitiationScreenState extends State<ShoppingInitiationScreen> {
     }
 
     if (response.notFound()) {
+      await _positionTimerFuture;
+      var shoppingInitRequestData = ShoppingInitiationDataRequest(
+          widget._purchaseList.id, _position?.latitude, _position?.longitude);
+
+      var initiationDatResult =
+          await ShoppingInitiationWebClient().initData(shoppingInitRequestData);
+
+      if (initiationDatResult.notFound()) {
+        setState(() {
+          loadingData = false;
+        });
+        return;
+      }
+
+      var place = initiationDatResult.data?.place;
+      var type = initiationDatResult.data?.type;
+      var now = DateFormat(AppLocalizations.of(context)!.dateFormat)
+          .format(DateTime.now());
+
       setState(() {
         loadingData = false;
+        _placeController.text = place ?? "";
+        _typeController.text = type ?? "";
+        _titleController.text = "$place - $type - $now";
       });
-
       return;
     }
+
     var shopping = response.data!;
     setState(() {
       loadingData = false;
@@ -130,7 +154,8 @@ class _ShoppingInitiationScreenState extends State<ShoppingInitiationScreen> {
                     _placeController,
                     _typeController,
                     _titleController,
-                  )),
+                    _position?.latitude.toString(),
+                    _position?.longitude.toString())),
         floatingActionButton: FloatingActionButton(
           backgroundColor: Colors.blueAccent,
           child: const Icon(Icons.arrow_forward),
@@ -184,10 +209,17 @@ class ShoppingInitiationForm extends StatelessWidget {
   final TextEditingController _placeController;
   final TextEditingController _typeController;
   final TextEditingController _titleController;
+  final String? latitude;
+  final String? longitude;
   final GlobalKey<FormState> _formKey;
 
-  const ShoppingInitiationForm(this._formKey, this._placeController,
-      this._typeController, this._titleController,
+  const ShoppingInitiationForm(
+      this._formKey,
+      this._placeController,
+      this._typeController,
+      this._titleController,
+      this.latitude,
+      this.longitude,
       {Key? key})
       : super(key: key);
 
@@ -198,6 +230,7 @@ class ShoppingInitiationForm extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           DefaultInput(AppLocalizations.of(context)!.whereAreYouBuying,
               TextInputType.text, _placeController,
@@ -223,6 +256,14 @@ class ShoppingInitiationForm extends StatelessWidget {
                 : null,
             hintText: AppLocalizations.of(context)!.weeklyShop,
           ),
+          Padding(
+            padding: const EdgeInsets.only(top: 16),
+            child: Text("Latitude: $latitude"),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 16),
+            child: Text("Longitude: $longitude"),
+          )
         ],
       ),
     );
