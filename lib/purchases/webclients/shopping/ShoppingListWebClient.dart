@@ -6,7 +6,7 @@ import 'package:finance_controlinator_mobile/components/HttpClient/http_client.d
 import 'package:finance_controlinator_mobile/purchases/domain/shopping/ShoppingList.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-import '../../domain/shopping/cart/events/OrderCategoryEvent.dart';
+import '../../domain/shopping/cart/events/ReorderCategoryEvent.dart';
 
 class ShoppingListWebClient {
   String baseUrl =

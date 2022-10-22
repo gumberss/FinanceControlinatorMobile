@@ -1,16 +1,17 @@
-class OrderCategoryEvent {
-  String eventType;
+import 'package:finance_controlinator_mobile/purchases/domain/shopping/cart/events/EventTypes.dart';
+
+class ReorderCategoryEvent {
+  String eventType = EventTypes.REORDER_CATEGORY;
   String shoppingId;
   String categoryId;
   int oldPosition;
   int newPosition;
 
-  OrderCategoryEvent(this.eventType, this.shoppingId, this.categoryId,
+  ReorderCategoryEvent(this.shoppingId, this.categoryId,
       this.oldPosition, this.newPosition);
 
-  OrderCategoryEvent.fromJson(Map<String, dynamic> json)
-      : eventType = json['eventType'],
-        shoppingId = json['shoppingId'],
+  ReorderCategoryEvent.fromJson(Map<String, dynamic> json)
+      : shoppingId = json['shoppingId'],
         categoryId = json['categoryId'],
         oldPosition = json['oldPosition'],
         newPosition = json['newPosition'];
