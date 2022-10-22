@@ -7,6 +7,9 @@ import '../../../domain/shopping/Shopping.dart';
 import '../../../domain/shopping/ShoppingCategory.dart';
 import '../../../domain/shopping/ShoppingItem.dart';
 import '../../../domain/shopping/ShoppingList.dart';
+import '../../../domain/shopping/cart/events/EventTypes.dart';
+import '../../../domain/shopping/cart/events/OrderCategoryEvent.dart';
+import '../../../webclients/shopping/CartEventWebClient.dart';
 import '../../../webclients/shopping/ShoppingListWebClient.dart';
 
 class ShoppingInProgressScreen extends StatelessWidget {
@@ -129,6 +132,7 @@ class _ShoppingListState extends State<ShoppingListView> {
   }
 
   void onListReorder(int oldListIndex, int newListIndex) async {
+    debugPrint("oie");
     var category = shoppingList!.categories[oldListIndex];
 
     setState(() {
@@ -136,13 +140,13 @@ class _ShoppingListState extends State<ShoppingListView> {
       shoppingList!.categories.insert(newListIndex, movedList);
     });
 
-    /*
-  *   var result = await CategoryWebClient()
-        .changeCategoryOrder(category.id!, newListIndex);
+    var result = await CartEventWebClient().sendOrderCategoryEvent(
+        OrderCategoryEvent(EventTypes.ORDER_CATEGORY, shoppingList!.shoppingId,
+            category.id!, oldListIndex, newListIndex));
 
     if (!result.success()) {
-      await loadLists();
-    }*/
+      await loadShoppingList();
+    }
   }
 
   List<DragAndDropList> buildLists(List<ShoppingCategory> categories) =>

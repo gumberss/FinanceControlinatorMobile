@@ -3,15 +3,14 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:finance_controlinator_mobile/components/HttpClient/HttpResponseData.dart';
 import 'package:finance_controlinator_mobile/components/HttpClient/http_client.dart';
-import 'package:finance_controlinator_mobile/purchases/domain/shopping/ShoppingList.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import '../../domain/shopping/cart/events/OrderCategoryEvent.dart';
 
-class ShoppingListWebClient {
+class CartEventWebClient {
   String baseUrl =
       dotenv.env['FINANCE_CONTROLINATOR_API_URL_PURCHASE_LIST'].toString();
-  String basePath = "/api/shopping/list";
+  String basePath = "/api/shopping/cart";
 
   late Uri baseUri;
 
@@ -19,15 +18,18 @@ class ShoppingListWebClient {
     'Content-Type': 'application/json; charset=UTF-8',
   });
 
-  ShoppingListWebClient() {
+  CartEventWebClient() {
     baseUri = Uri.http(baseUrl, basePath);
   }
 
-  Future<HttpResponseData<ShoppingList?>> getById(String shoppingId) async {
+  Future<HttpResponseData<bool?>> sendOrderCategoryEvent(
+          OrderCategoryEvent categoryEvent) async =>
+      _sendEvent(categoryEvent.toJson());
+
+  Future<HttpResponseData<bool?>> _sendEvent(Map<String, dynamic> event) async {
     return await tryRequest(
-        client.getUri(Uri.http(baseUrl, basePath + "/$shoppingId"),
-            options: defaultOptions),
-        (response) => HttpResponseData(
-            response.statusCode!, ShoppingList.fromJson(response.data)));
+        client.postUri(Uri.http(baseUrl, basePath + "/events"),
+            options: defaultOptions, data: event),
+        (response) => HttpResponseData(response.statusCode!, true));
   }
 }
