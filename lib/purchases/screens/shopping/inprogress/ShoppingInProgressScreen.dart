@@ -141,8 +141,8 @@ class _ShoppingListState extends State<ShoppingListView> {
     });
 
     var result = await CartEventWebClient().sendReorderCategoryEvent(
-        ReorderCategoryEvent(shoppingList!.shoppingId, category.id!,
-            oldListIndex, newListIndex));
+        ReorderCategoryEvent(
+            shoppingList!.shoppingId, category.id!, newListIndex));
 
     if (!result.success()) {
       await loadShoppingList();
