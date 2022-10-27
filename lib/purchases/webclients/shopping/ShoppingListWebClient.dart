@@ -3,13 +3,10 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:finance_controlinator_mobile/components/HttpClient/HttpResponseData.dart';
 import 'package:finance_controlinator_mobile/components/HttpClient/http_client.dart';
-import 'package:finance_controlinator_mobile/purchases/domain/shopping/Shopping.dart';
-import 'package:finance_controlinator_mobile/purchases/domain/shopping/ShoppingInitiation.dart';
-import 'package:finance_controlinator_mobile/purchases/domain/shopping/ShoppingInitiationDataRequest.dart';
 import 'package:finance_controlinator_mobile/purchases/domain/shopping/ShoppingList.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-import '../../domain/shopping/ShoppingInitiationDataResponse.dart';
+import '../../domain/shopping/cart/events/ReorderCategoryEvent.dart';
 
 class ShoppingListWebClient {
   String baseUrl =
@@ -22,7 +19,7 @@ class ShoppingListWebClient {
     'Content-Type': 'application/json; charset=UTF-8',
   });
 
-  ItemWebClient() {
+  ShoppingListWebClient() {
     baseUri = Uri.http(baseUrl, basePath);
   }
 

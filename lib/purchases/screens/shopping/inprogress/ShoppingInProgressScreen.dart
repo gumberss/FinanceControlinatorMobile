@@ -1,4 +1,5 @@
 import 'package:drag_and_drop_lists/drag_and_drop_lists.dart';
+import 'package:finance_controlinator_mobile/purchases/domain/shopping/cart/events/ReorderItemEvent.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -7,6 +8,9 @@ import '../../../domain/shopping/Shopping.dart';
 import '../../../domain/shopping/ShoppingCategory.dart';
 import '../../../domain/shopping/ShoppingItem.dart';
 import '../../../domain/shopping/ShoppingList.dart';
+import '../../../domain/shopping/cart/events/EventTypes.dart';
+import '../../../domain/shopping/cart/events/ReorderCategoryEvent.dart';
+import '../../../webclients/shopping/CartEventWebClient.dart';
 import '../../../webclients/shopping/ShoppingListWebClient.dart';
 
 class ShoppingInProgressScreen extends StatelessWidget {
@@ -119,13 +123,13 @@ class _ShoppingListState extends State<ShoppingListView> {
       newListItems!.insert(newItemIndex, movedItem);
     });
 
-    /*
-  *   var result = await ItemWebClient()
-        .changeItemOrder(item.id!, newCategory.id!, newItemIndex);
+    var result = await CartEventWebClient().sendReorderItemEvent(
+        ReorderItemEvent(
+            shoppingList!.shoppingId, item.id!, newCategory.id!, newItemIndex));
 
     if (!result.success()) {
-      await loadLists();
-    }*/
+      await loadShoppingList();
+    }
   }
 
   void onListReorder(int oldListIndex, int newListIndex) async {
@@ -136,13 +140,13 @@ class _ShoppingListState extends State<ShoppingListView> {
       shoppingList!.categories.insert(newListIndex, movedList);
     });
 
-    /*
-  *   var result = await CategoryWebClient()
-        .changeCategoryOrder(category.id!, newListIndex);
+    var result = await CartEventWebClient().sendReorderCategoryEvent(
+        ReorderCategoryEvent(shoppingList!.shoppingId, category.id!,
+            oldListIndex, newListIndex));
 
     if (!result.success()) {
-      await loadLists();
-    }*/
+      await loadShoppingList();
+    }
   }
 
   List<DragAndDropList> buildLists(List<ShoppingCategory> categories) =>
