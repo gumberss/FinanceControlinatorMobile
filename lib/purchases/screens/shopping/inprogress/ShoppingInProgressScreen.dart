@@ -1,16 +1,13 @@
 import 'package:drag_and_drop_lists/drag_and_drop_lists.dart';
 import 'package:finance_controlinator_mobile/purchases/domain/shopping/cart/events/ReorderItemEvent.dart';
+import 'package:finance_controlinator_mobile/purchases/screens/shopping/inprogress/ShoppingInProgressItemWidget.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../../authentications/services/AuthorizationService.dart';
-import '../../../../components/DefaultDialog.dart';
-import '../../../../components/DefaultInput.dart';
 import '../../../domain/shopping/Shopping.dart';
 import '../../../domain/shopping/ShoppingCategory.dart';
 import '../../../domain/shopping/ShoppingItem.dart';
 import '../../../domain/shopping/ShoppingList.dart';
-import '../../../domain/shopping/cart/events/EventTypes.dart';
 import '../../../domain/shopping/cart/events/ReorderCategoryEvent.dart';
 import '../../../webclients/shopping/CartEventWebClient.dart';
 import '../../../webclients/shopping/ShoppingListWebClient.dart';
@@ -151,169 +148,11 @@ class _ShoppingListState extends State<ShoppingListView> {
     }
   }
 
-  void showDialog() {
-    DefaultDialog().showDialog(
-        context,
-        addCategoryWidgets(
-          context,
-          AppLocalizations.of(context)!.purchaseCategoryName,
-        ),
-        height: 260,
-        mainAlignment: MainAxisAlignment.spaceBetween);
-  }
-
-  TextEditingController _itemValueController = TextEditingController();
-  TextEditingController _totalValueController = TextEditingController();
-
-  List<Widget> addCategoryWidgets(
-    BuildContext context,
-    String label,
-  ) {
-    return [
-      Padding(
-        padding: const EdgeInsets.only(top: 16, right: 16, left: 16),
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(top: 4, bottom: 4),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text("Banana", style: TextStyle(fontSize: 24)),
-                      Text("Quantity in the cart: 10",
-                          style:
-                              TextStyle(fontSize: 16, color: Colors.grey[700])),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      IconButton(
-                          onPressed: () {},
-                          icon: const Icon(Icons.arrow_upward)),
-                      Padding(
-                        padding: const EdgeInsets.all(4),
-                        child: Container(
-                          width: 2,
-                          height: 20,
-                          color: Colors.grey.shade300,
-                        ),
-                      ),
-                      IconButton(
-                          onPressed: () {},
-                          icon: const Icon(Icons.arrow_downward)),
-                    ],
-                  )
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 4, bottom: 4),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                      child: Row(
-                    children: [
-                      Expanded(
-                          child: DefaultInput(
-                        "Item Value",
-                        TextInputType.text,
-                        _itemValueController,
-                        padding: EdgeInsets.zero,
-                        fontSize: 14,
-                      )),
-                      IconButton(
-                          onPressed: () {}, icon: const Icon(Icons.remove)),
-                      Padding(
-                        padding: const EdgeInsets.all(4),
-                        child: Container(
-                          width: 2,
-                          height: 20,
-                          color: Colors.grey.shade300,
-                        ),
-                      ),
-                      IconButton(onPressed: () {}, icon: const Icon(Icons.add)),
-                    ],
-                  ))
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 4, bottom: 4),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                      child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Expanded(
-                          child: DefaultInput(
-                        "Total Value",
-                        TextInputType.text,
-                        _totalValueController,
-                        padding: EdgeInsets.zero,
-                        fontSize: 14,
-                      )),
-                      IconButton(
-                          onPressed: () {}, icon: const Icon(Icons.remove)),
-                      Padding(
-                        padding: const EdgeInsets.all(4),
-                        child: Container(
-                          width: 2,
-                          height: 20,
-                          color: Colors.grey.shade300,
-                        ),
-                      ),
-                      IconButton(onPressed: () {}, icon: const Icon(Icons.add)),
-                    ],
-                  ))
-                ],
-              ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                OutlinedButton(
-                  child: Text(AppLocalizations.of(context)!.create),
-                  onPressed: () {},
-                )
-              ],
-            )
-          ],
-        ),
-      )
-    ];
-  }
-
   List<DragAndDropList> buildLists(List<ShoppingCategory> categories) =>
       categories.map((category) => buildCategoryList(category)).toList();
 
   DragAndDropItem buildShoppingItem(ShoppingItem item) => DragAndDropItem(
-          child: ListTile(
-        //leading: Image.network(i.urlImage,width: 40, height: 40, fit: BoxFit.cover),
-        title: Text(item.name),
-        subtitle: Text(AppLocalizations.of(context)!.amountToBuy +
-            item.quantity.toString()),
-        trailing: Padding(
-          padding: const EdgeInsets.only(right: 24),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              IconButton(
-                  onPressed: () {
-                    showDialog();
-                  },
-                  icon: const Icon(Icons.check)),
-            ],
-          ),
-        ),
-      ));
+          child: ShoppingInProgressItemWidget(item));
 
   DragAndDropList buildCategoryList(ShoppingCategory category) =>
       DragAndDropList(
