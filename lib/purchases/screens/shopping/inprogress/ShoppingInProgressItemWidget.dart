@@ -22,11 +22,20 @@ class _ShoppingInProgressItemWidgetState
     extends State<ShoppingInProgressItemWidget> {
   @override
   Widget build(BuildContext context) {
+    var remainingQuantity = (widget.item.quantity - widget.item.quantityInCart);
     return ListTile(
       //leading: Image.network(i.urlImage,width: 40, height: 40, fit: BoxFit.cover),
       title: Text(widget.item.name),
-      subtitle: Text(AppLocalizations.of(context)!.amountToBuy +
-          (widget.item.quantity - widget.item.quantityInCart).toString()),
+      subtitle: Text(
+        AppLocalizations.of(context)!.amountToBuy +
+            (widget.item.quantity - widget.item.quantityInCart).toString(),
+        style: TextStyle(
+            color: remainingQuantity > 0
+                ? Colors.deepOrangeAccent
+                : remainingQuantity == 0
+                    ? Colors.green
+                    : Colors.blueAccent),
+      ),
       trailing: Padding(
         padding: const EdgeInsets.only(right: 24),
         child: Row(
@@ -57,10 +66,8 @@ class _ShoppingInProgressItemWidgetState
   Future<ItemChangedData?> showDialog(BuildContext context) async {
     return await DefaultDialog().showDialogScreen<ItemChangedData>(
         context,
-        ShoppingInProgressItemChangeModal(ItemChangedData(
-            widget.item.quantity,
-            widget.item.quantityInCart,
-            widget.item.price)),
+        ShoppingInProgressItemChangeModal(ItemChangedData(widget.item.quantity,
+            widget.item.quantityInCart, widget.item.price)),
         height: 260,
         mainAlignment: MainAxisAlignment.spaceBetween);
   }
