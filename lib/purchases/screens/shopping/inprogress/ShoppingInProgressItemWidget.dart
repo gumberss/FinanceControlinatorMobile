@@ -26,7 +26,7 @@ class _ShoppingInProgressItemWidgetState
       //leading: Image.network(i.urlImage,width: 40, height: 40, fit: BoxFit.cover),
       title: Text(widget.item.name),
       subtitle: Text(AppLocalizations.of(context)!.amountToBuy +
-          widget.item.quantity.toString()),
+          (widget.item.quantity - widget.item.quantityInCart).toString()),
       trailing: Padding(
         padding: const EdgeInsets.only(right: 24),
         child: Row(
@@ -34,12 +34,16 @@ class _ShoppingInProgressItemWidgetState
           children: [
             IconButton(
                 onPressed: () {
-                  showDialog(context)
-                  .then((value){
-                    if(value == null) return;
-                    setState((){
-                      widget.item.quantity = value.quantityInTheCart;
+                  showDialog(context).then((value) {
+                    if (value == null) return;
+                    setState(() {
+                      var oldQuantityInCart = widget.item.quantityInCart;
+                      var newQuantityInCart = value.quantityInTheCart;
+                      widget.item.quantityInCart = newQuantityInCart;
                       widget.item.price = value.itemPrice;
+
+                      //send event
+                      var amountChanged = newQuantityInCart - oldQuantityInCart;
                     });
                   });
                 },
@@ -52,7 +56,12 @@ class _ShoppingInProgressItemWidgetState
 
   Future<ItemChangedData?> showDialog(BuildContext context) async {
     return await DefaultDialog().showDialogScreen<ItemChangedData>(
-        context, ShoppingInProgressItemChangeModal(ItemChangedData(widget.item.quantity, widget.item.price)),
-        height: 260, mainAlignment: MainAxisAlignment.spaceBetween);
+        context,
+        ShoppingInProgressItemChangeModal(ItemChangedData(
+            widget.item.quantity,
+            widget.item.quantityInCart,
+            widget.item.price)),
+        height: 260,
+        mainAlignment: MainAxisAlignment.spaceBetween);
   }
 }

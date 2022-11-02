@@ -21,7 +21,6 @@ class _ShoppingInProgressItemChangeModalState
     extends State<ShoppingInProgressItemChangeModal> {
   @override
   Widget build(BuildContext context) {
-
     if (widget.itemData.itemPrice != 0) {
       widget._itemPriceController.text = widget.itemData.itemPrice.toString();
       widget._totalPriceController.text =
@@ -46,7 +45,7 @@ class _ShoppingInProgressItemChangeModalState
                       children: [
                         const Text("Banana", style: TextStyle(fontSize: 24)),
                         Text(
-                            "Quantity in the cart: ${widget.itemData.quantityInTheCart}",
+                            "Expected: ${widget.itemData.expectedQuantity}    In the cart: ${widget.itemData.quantityInTheCart}",
                             style: TextStyle(
                                 fontSize: 16, color: Colors.grey[700])),
                       ],
@@ -95,7 +94,7 @@ class _ShoppingInProgressItemChangeModalState
                           "Item Price",
                           const TextInputType.numberWithOptions(
                               decimal: true, signed: false),
-                              widget._itemPriceController,
+                          widget._itemPriceController,
                           padding: EdgeInsets.zero,
                           hintText: NumberFormat().format(1.50),
                           fontSize: 14,
@@ -106,8 +105,6 @@ class _ShoppingInProgressItemChangeModalState
                               widget._totalPriceController.text = (itemPrice *
                                       widget.itemData.quantityInTheCart)
                                   .toString();
-
-
                             } on Exception catch (e) {
                               widget._totalPriceController.text = "0";
                             }
@@ -141,19 +138,22 @@ class _ShoppingInProgressItemChangeModalState
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         Expanded(
-                            child: DefaultInput("Total Price",
-                                TextInputType.text, widget._totalPriceController,
-                                padding: EdgeInsets.zero,
-                                fontSize: 14, onChanged: (text) {
-                          try {
-                            var totalPrice = NumberFormat().parse(text);
-                            widget._itemPriceController.text =
-                                (totalPrice / widget.itemData.quantityInTheCart)
-                                    .toString();
-
-                          } on Exception catch (_) {}
-                        },
-                                hintText: NumberFormat().format(3.00),)),
+                            child: DefaultInput(
+                          "Total Price",
+                          TextInputType.text,
+                          widget._totalPriceController,
+                          padding: EdgeInsets.zero,
+                          fontSize: 14,
+                          onChanged: (text) {
+                            try {
+                              var totalPrice = NumberFormat().parse(text);
+                              widget._itemPriceController.text = (totalPrice /
+                                      widget.itemData.quantityInTheCart)
+                                  .toString();
+                            } on Exception catch (_) {}
+                          },
+                          hintText: NumberFormat().format(3.00),
+                        )),
                         IconButton(
                             onPressed: () {}, icon: const Icon(Icons.add)),
                         Padding(
@@ -182,7 +182,6 @@ class _ShoppingInProgressItemChangeModalState
                       widget.itemData.itemPrice = itemPrice;
 
                       Navigator.pop(context, widget.itemData);
-
                     },
                   )
                 ],
@@ -197,7 +196,9 @@ class _ShoppingInProgressItemChangeModalState
 
 class ItemChangedData {
   double itemPrice;
+  int expectedQuantity;
   int quantityInTheCart;
 
-  ItemChangedData(this.quantityInTheCart, this.itemPrice);
+  ItemChangedData(
+      this.expectedQuantity, this.quantityInTheCart, this.itemPrice);
 }

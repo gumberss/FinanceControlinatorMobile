@@ -3,10 +3,13 @@ class ShoppingItem {
   String name;
   String categoryId;
   int quantity;
+  int quantityInCart;
   int? orderPosition;
   double price;
 
-  ShoppingItem(this.id, this.name, this.categoryId, this.price) : quantity = 0;
+  ShoppingItem(this.id, this.name, this.categoryId, this.price)
+      : quantity = 0,
+        quantityInCart = 0;
 
   ShoppingItem.fromJson(Map<String, dynamic> json)
       : id = json['id'],
@@ -14,6 +17,7 @@ class ShoppingItem {
         categoryId = json['categoryId'],
         quantity = json['quantity'] ?? 0,
         orderPosition = json['orderPosition'] ?? 0,
+        quantityInCart = json['quantityInCart'] ?? 0,
         price = json['price'] ?? 0;
 
   Map<String, dynamic> toJson() => {
@@ -23,5 +27,6 @@ class ShoppingItem {
         'quantity': quantity,
         'orderPosition': orderPosition,
         'price': price,
+        'quantityInCart': quantityInCart
       };
 }
