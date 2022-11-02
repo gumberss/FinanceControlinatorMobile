@@ -3,32 +3,32 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
 
-import '../../../domain/shopping/ShoppingItem.dart';
-import '../../../../components/DefaultDialog.dart';
 import '../../../../components/DefaultInput.dart';
 
 class ShoppingInProgressItemChangeModal extends StatefulWidget {
+  ItemChangedData itemData;
+  TextEditingController _itemPriceController = TextEditingController();
+  TextEditingController _totalPriceController = TextEditingController();
 
-  ShoppingItem item;
-
-  ShoppingInProgressItemChangeModal(this.item);
+  ShoppingInProgressItemChangeModal(this.itemData);
 
   @override
   State<ShoppingInProgressItemChangeModal> createState() =>
       _ShoppingInProgressItemChangeModalState();
 }
 
-TextEditingController _itemPriceController = TextEditingController();
-TextEditingController _totalPriceController = TextEditingController();
-
-int _quantityInTheCart = 1;
-
 class _ShoppingInProgressItemChangeModalState
     extends State<ShoppingInProgressItemChangeModal> {
   @override
   Widget build(BuildContext context) {
-    _itemPriceController.text = "0";
-    _totalPriceController.text = "0";
+
+    if (widget.itemData.itemPrice != 0) {
+      widget._itemPriceController.text = widget.itemData.itemPrice.toString();
+      widget._totalPriceController.text =
+          (widget.itemData.itemPrice * widget.itemData.quantityInTheCart)
+              .toString();
+    }
+
     return Column(
       children: [
         Padding(
@@ -45,7 +45,8 @@ class _ShoppingInProgressItemChangeModalState
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Text("Banana", style: TextStyle(fontSize: 24)),
-                        Text("Quantity in the cart: $_quantityInTheCart",
+                        Text(
+                            "Quantity in the cart: ${widget.itemData.quantityInTheCart}",
                             style: TextStyle(
                                 fontSize: 16, color: Colors.grey[700])),
                       ],
@@ -54,9 +55,8 @@ class _ShoppingInProgressItemChangeModalState
                       children: [
                         IconButton(
                             onPressed: () {
-                              debugPrint("oi $_quantityInTheCart");
                               setState(() {
-                                _quantityInTheCart++;
+                                widget.itemData.quantityInTheCart++;
                               });
                             },
                             icon: const Icon(Icons.arrow_upward)),
@@ -70,9 +70,9 @@ class _ShoppingInProgressItemChangeModalState
                         ),
                         IconButton(
                             onPressed: () {
-                              if (_quantityInTheCart > widget.item.quantity) {
+                              if (widget.itemData.quantityInTheCart > 0) {
                                 setState(() {
-                                  _quantityInTheCart--;
+                                  widget.itemData.quantityInTheCart--;
                                 });
                               }
                             },
@@ -95,16 +95,21 @@ class _ShoppingInProgressItemChangeModalState
                           "Item Price",
                           const TextInputType.numberWithOptions(
                               decimal: true, signed: false),
-                          _itemPriceController,
+                              widget._itemPriceController,
                           padding: EdgeInsets.zero,
+                          hintText: NumberFormat().format(1.50),
                           fontSize: 14,
                           onChanged: (text) {
                             try {
                               var itemPrice = NumberFormat().parse(text);
-                              _totalPriceController.text =
-                                  (itemPrice * _quantityInTheCart).toString();
+
+                              widget._totalPriceController.text = (itemPrice *
+                                      widget.itemData.quantityInTheCart)
+                                  .toString();
+
+
                             } on Exception catch (e) {
-                              _totalPriceController.text = "0";
+                              widget._totalPriceController.text = "0";
                             }
                           },
                         )),
@@ -137,15 +142,18 @@ class _ShoppingInProgressItemChangeModalState
                       children: [
                         Expanded(
                             child: DefaultInput("Total Price",
-                                TextInputType.text, _totalPriceController,
+                                TextInputType.text, widget._totalPriceController,
                                 padding: EdgeInsets.zero,
                                 fontSize: 14, onChanged: (text) {
                           try {
                             var totalPrice = NumberFormat().parse(text);
-                            _itemPriceController.text =
-                                (totalPrice / _quantityInTheCart).toString();
+                            widget._itemPriceController.text =
+                                (totalPrice / widget.itemData.quantityInTheCart)
+                                    .toString();
+
                           } on Exception catch (_) {}
-                        })),
+                        },
+                                hintText: NumberFormat().format(3.00),)),
                         IconButton(
                             onPressed: () {}, icon: const Icon(Icons.add)),
                         Padding(
@@ -170,9 +178,11 @@ class _ShoppingInProgressItemChangeModalState
                     child: Text(AppLocalizations.of(context)!.create),
                     onPressed: () {
                       double itemPrice = NumberFormat()
-                          .parse(_itemPriceController.text) as double;
-                      Navigator.pop(context,
-                          ItemChangedData(_quantityInTheCart, itemPrice));
+                          .parse(widget._itemPriceController.text) as double;
+                      widget.itemData.itemPrice = itemPrice;
+
+                      Navigator.pop(context, widget.itemData);
+
                     },
                   )
                 ],

@@ -38,7 +38,8 @@ class _ShoppingInProgressItemWidgetState
                   .then((value){
                     if(value == null) return;
                     setState((){
-                      widget.item.quantity -= value.quantityInTheCart;
+                      widget.item.quantity = value.quantityInTheCart;
+                      widget.item.price = value.itemPrice;
                     });
                   });
                 },
@@ -51,7 +52,7 @@ class _ShoppingInProgressItemWidgetState
 
   Future<ItemChangedData?> showDialog(BuildContext context) async {
     return await DefaultDialog().showDialogScreen<ItemChangedData>(
-        context, ShoppingInProgressItemChangeModal(widget.item),
+        context, ShoppingInProgressItemChangeModal(ItemChangedData(widget.item.quantity, widget.item.price)),
         height: 260, mainAlignment: MainAxisAlignment.spaceBetween);
   }
 }
