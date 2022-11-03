@@ -1,3 +1,5 @@
+import 'package:finance_controlinator_mobile/purchases/domain/shopping/cart/events/ChangeItemEvent.dart';
+import 'package:finance_controlinator_mobile/purchases/webclients/shopping/CartEventWebClient.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -10,8 +12,12 @@ import 'ShoppingInProgressItemChangeModal.dart';
 
 class ShoppingInProgressItemWidget extends StatefulWidget {
   ShoppingItem item;
+  String shoppingId;
+  Function onError;
 
-  ShoppingInProgressItemWidget(this.item, {Key? key}) : super(key: key);
+  ShoppingInProgressItemWidget(this.shoppingId, this.item, this.onError,
+      {Key? key})
+      : super(key: key);
 
   @override
   State<ShoppingInProgressItemWidget> createState() =>
@@ -43,17 +49,24 @@ class _ShoppingInProgressItemWidgetState
           children: [
             IconButton(
                 onPressed: () {
-                  showDialog(context).then((value) {
+                  showDialog(context).then((value) async {
                     if (value == null) return;
+                    var oldQuantityInCart = widget.item.quantityInCart;
+                    var newQuantityInCart = value.quantityInTheCart;
                     setState(() {
-                      var oldQuantityInCart = widget.item.quantityInCart;
-                      var newQuantityInCart = value.quantityInTheCart;
                       widget.item.quantityInCart = newQuantityInCart;
                       widget.item.price = value.itemPrice;
-
-                      //send event
-                      var amountChanged = newQuantityInCart - oldQuantityInCart;
                     });
+                    var amountChanged = newQuantityInCart - oldQuantityInCart;
+                    var changeItemEvent = ChangeItemEvent(widget.shoppingId,
+                        widget.item.id!, value.itemPrice, amountChanged);
+
+                    var result = await CartEventWebClient()
+                        .sendChangeItemEvent(changeItemEvent);
+
+                    if (!result.success()) {
+                      widget.onError();
+                    }
                   });
                 },
                 icon: const Icon(Icons.check)),

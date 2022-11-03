@@ -6,6 +6,7 @@ import 'package:finance_controlinator_mobile/components/HttpClient/http_client.d
 import 'package:finance_controlinator_mobile/purchases/domain/shopping/cart/events/ReorderItemEvent.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
+import '../../domain/shopping/cart/events/ChangeItemEvent.dart';
 import '../../domain/shopping/cart/events/ReorderCategoryEvent.dart';
 
 class CartEventWebClient {
@@ -30,6 +31,10 @@ class CartEventWebClient {
   Future<HttpResponseData<bool?>> sendReorderCategoryEvent(
           ReorderCategoryEvent categoryEvent) async =>
       _sendEvent(categoryEvent.toJson());
+
+  Future<HttpResponseData<bool?>> sendChangeItemEvent(
+      ChangeItemEvent itemEvent) async =>
+      _sendEvent(itemEvent.toJson());
 
   Future<HttpResponseData<bool?>> _sendEvent(Map<String, dynamic> event) async {
     return await tryRequest(

@@ -152,7 +152,7 @@ class _ShoppingListState extends State<ShoppingListView> {
       categories.map((category) => buildCategoryList(category)).toList();
 
   DragAndDropItem buildShoppingItem(ShoppingItem item) => DragAndDropItem(
-          child: ShoppingInProgressItemWidget(item));
+      child: ShoppingInProgressItemWidget(shoppingList!.shoppingId, item, loadShoppingList));
 
   DragAndDropList buildCategoryList(ShoppingCategory category) =>
       DragAndDropList(

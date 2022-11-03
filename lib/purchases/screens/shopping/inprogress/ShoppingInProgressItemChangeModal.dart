@@ -57,6 +57,16 @@ class _ShoppingInProgressItemChangeModalState
                               setState(() {
                                 widget.itemData.quantityInTheCart++;
                               });
+
+                              try {
+                                var itemPrice = NumberFormat().parse(widget._itemPriceController.text);
+
+                                widget._totalPriceController.text = (itemPrice *
+                                    widget.itemData.quantityInTheCart)
+                                    .toString();
+                              } on Exception catch (e) {
+                                widget._totalPriceController.text = "0";
+                              }
                             },
                             icon: const Icon(Icons.arrow_upward)),
                         Padding(
@@ -73,6 +83,16 @@ class _ShoppingInProgressItemChangeModalState
                                 setState(() {
                                   widget.itemData.quantityInTheCart--;
                                 });
+
+                                try {
+                                  var itemPrice = NumberFormat().parse(widget._itemPriceController.text);
+
+                                  widget._totalPriceController.text = (itemPrice *
+                                      widget.itemData.quantityInTheCart)
+                                      .toString();
+                                } on Exception catch (e) {
+                                  widget._totalPriceController.text = "0";
+                                }
                               }
                             },
                             icon: const Icon(Icons.arrow_downward)),
