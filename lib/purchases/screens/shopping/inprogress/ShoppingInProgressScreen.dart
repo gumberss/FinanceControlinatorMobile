@@ -1,14 +1,13 @@
 import 'package:drag_and_drop_lists/drag_and_drop_lists.dart';
 import 'package:finance_controlinator_mobile/purchases/domain/shopping/cart/events/ReorderItemEvent.dart';
+import 'package:finance_controlinator_mobile/purchases/screens/shopping/inprogress/ShoppingInProgressItemWidget.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../../authentications/services/AuthorizationService.dart';
 import '../../../domain/shopping/Shopping.dart';
 import '../../../domain/shopping/ShoppingCategory.dart';
 import '../../../domain/shopping/ShoppingItem.dart';
 import '../../../domain/shopping/ShoppingList.dart';
-import '../../../domain/shopping/cart/events/EventTypes.dart';
 import '../../../domain/shopping/cart/events/ReorderCategoryEvent.dart';
 import '../../../webclients/shopping/CartEventWebClient.dart';
 import '../../../webclients/shopping/ShoppingListWebClient.dart';
@@ -141,8 +140,8 @@ class _ShoppingListState extends State<ShoppingListView> {
     });
 
     var result = await CartEventWebClient().sendReorderCategoryEvent(
-        ReorderCategoryEvent(shoppingList!.shoppingId, category.id!,
-            oldListIndex, newListIndex));
+        ReorderCategoryEvent(
+            shoppingList!.shoppingId, category.id!, newListIndex));
 
     if (!result.success()) {
       await loadShoppingList();
@@ -153,25 +152,7 @@ class _ShoppingListState extends State<ShoppingListView> {
       categories.map((category) => buildCategoryList(category)).toList();
 
   DragAndDropItem buildShoppingItem(ShoppingItem item) => DragAndDropItem(
-          child: ListTile(
-        //leading: Image.network(i.urlImage,width: 40, height: 40, fit: BoxFit.cover),
-        title: Text(item.name),
-        subtitle: Text(AppLocalizations.of(context)!.amountToBuy +
-            item.quantity.toString()),
-        trailing: Padding(
-          padding: const EdgeInsets.only(right: 24),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              IconButton(
-                  onPressed: () {
-                    setState(() {});
-                  },
-                  icon: const Icon(Icons.check)),
-            ],
-          ),
-        ),
-      ));
+      child: ShoppingInProgressItemWidget(shoppingList!.shoppingId, item, loadShoppingList));
 
   DragAndDropList buildCategoryList(ShoppingCategory category) =>
       DragAndDropList(
