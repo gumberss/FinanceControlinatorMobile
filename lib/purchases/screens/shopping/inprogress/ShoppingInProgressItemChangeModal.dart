@@ -4,6 +4,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../components/DefaultInput.dart';
+import '../../../domain/services/ColorService.dart';
 
 class ShoppingInProgressItemChangeModal extends StatefulWidget {
   ItemChangedData itemData;
@@ -47,7 +48,7 @@ class _ShoppingInProgressItemChangeModalState
                         Text(
                             "Expected: ${widget.itemData.expectedQuantity}    In the cart: ${widget.itemData.quantityInTheCart}",
                             style: TextStyle(
-                                fontSize: 16, color: Colors.grey[700])),
+                                fontSize: 16, color: ColorService.colorByRemainingQuantity(widget.itemData.expectedQuantity - widget.itemData.quantityInTheCart))),
                       ],
                     ),
                     Row(
@@ -59,10 +60,11 @@ class _ShoppingInProgressItemChangeModalState
                               });
 
                               try {
-                                var itemPrice = NumberFormat().parse(widget._itemPriceController.text);
+                                var itemPrice = NumberFormat()
+                                    .parse(widget._itemPriceController.text);
 
                                 widget._totalPriceController.text = (itemPrice *
-                                    widget.itemData.quantityInTheCart)
+                                        widget.itemData.quantityInTheCart)
                                     .toString();
                               } on Exception catch (e) {
                                 widget._totalPriceController.text = "0";
@@ -85,11 +87,13 @@ class _ShoppingInProgressItemChangeModalState
                                 });
 
                                 try {
-                                  var itemPrice = NumberFormat().parse(widget._itemPriceController.text);
+                                  var itemPrice = NumberFormat()
+                                      .parse(widget._itemPriceController.text);
 
-                                  widget._totalPriceController.text = (itemPrice *
-                                      widget.itemData.quantityInTheCart)
-                                      .toString();
+                                  widget._totalPriceController.text =
+                                      (itemPrice *
+                                              widget.itemData.quantityInTheCart)
+                                          .toString();
                                 } on Exception catch (e) {
                                   widget._totalPriceController.text = "0";
                                 }
@@ -129,19 +133,7 @@ class _ShoppingInProgressItemChangeModalState
                               widget._totalPriceController.text = "0";
                             }
                           },
-                        )),
-                        IconButton(
-                            onPressed: () {}, icon: const Icon(Icons.add)),
-                        Padding(
-                          padding: const EdgeInsets.all(4),
-                          child: Container(
-                            width: 2,
-                            height: 20,
-                            color: Colors.grey.shade300,
-                          ),
-                        ),
-                        IconButton(
-                            onPressed: () {}, icon: const Icon(Icons.remove)),
+                        ))
                       ],
                     ))
                   ],
@@ -173,19 +165,7 @@ class _ShoppingInProgressItemChangeModalState
                             } on Exception catch (_) {}
                           },
                           hintText: NumberFormat().format(3.00),
-                        )),
-                        IconButton(
-                            onPressed: () {}, icon: const Icon(Icons.add)),
-                        Padding(
-                          padding: const EdgeInsets.all(4),
-                          child: Container(
-                            width: 2,
-                            height: 20,
-                            color: Colors.grey.shade300,
-                          ),
-                        ),
-                        IconButton(
-                            onPressed: () {}, icon: const Icon(Icons.remove)),
+                        ))
                       ],
                     ))
                   ],
