@@ -1,4 +1,5 @@
 import 'package:finance_controlinator_mobile/purchases/domain/shopping/cart/events/ChangeItemEvent.dart';
+import 'package:finance_controlinator_mobile/purchases/domain/services/ColorService.dart';
 import 'package:finance_controlinator_mobile/purchases/webclients/shopping/CartEventWebClient.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -36,11 +37,7 @@ class _ShoppingInProgressItemWidgetState
         AppLocalizations.of(context)!.amountToBuy +
             (widget.item.quantity - widget.item.quantityInCart).toString(),
         style: TextStyle(
-            color: remainingQuantity > 0
-                ? Colors.deepOrangeAccent
-                : remainingQuantity == 0
-                    ? Colors.green
-                    : Colors.blueAccent),
+            color: ColorService.colorByRemainingQuantity(remainingQuantity)),
       ),
       trailing: Padding(
         padding: const EdgeInsets.only(right: 24),
