@@ -44,11 +44,15 @@ class _ShoppingInProgressItemChangeModalState
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text("Banana", style: TextStyle(fontSize: 24)),
+                        Text(widget.itemData.itemName,
+                            style: TextStyle(fontSize: 24)),
                         Text(
-                            "Expected: ${widget.itemData.expectedQuantity}    In the cart: ${widget.itemData.quantityInTheCart}",
+                            "${AppLocalizations.of(context)!.expected}: ${widget.itemData.expectedQuantity}    ${AppLocalizations.of(context)!.inTheCart}: ${widget.itemData.quantityInTheCart}",
                             style: TextStyle(
-                                fontSize: 16, color: ColorService.colorByRemainingQuantity(widget.itemData.expectedQuantity - widget.itemData.quantityInTheCart))),
+                                fontSize: 16,
+                                color: ColorService.colorByRemainingQuantity(
+                                    widget.itemData.expectedQuantity -
+                                        widget.itemData.quantityInTheCart))),
                       ],
                     ),
                     Row(
@@ -115,7 +119,7 @@ class _ShoppingInProgressItemChangeModalState
                       children: [
                         Expanded(
                             child: DefaultInput(
-                          "Item Price",
+                              AppLocalizations.of(context)!.itemPrice,
                           const TextInputType.numberWithOptions(
                               decimal: true, signed: false),
                           widget._itemPriceController,
@@ -151,7 +155,7 @@ class _ShoppingInProgressItemChangeModalState
                       children: [
                         Expanded(
                             child: DefaultInput(
-                          "Total Price",
+                              AppLocalizations.of(context)!.totalPrice,
                           TextInputType.text,
                           widget._totalPriceController,
                           padding: EdgeInsets.zero,
@@ -198,7 +202,8 @@ class ItemChangedData {
   double itemPrice;
   int expectedQuantity;
   int quantityInTheCart;
+  String itemName;
 
-  ItemChangedData(
-      this.expectedQuantity, this.quantityInTheCart, this.itemPrice);
+  ItemChangedData(this.itemName, this.expectedQuantity, this.quantityInTheCart,
+      this.itemPrice);
 }

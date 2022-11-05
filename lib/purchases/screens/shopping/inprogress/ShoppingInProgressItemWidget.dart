@@ -76,7 +76,7 @@ class _ShoppingInProgressItemWidgetState
   Future<ItemChangedData?> showDialog(BuildContext context) async {
     return await DefaultDialog().showDialogScreen<ItemChangedData>(
         context,
-        ShoppingInProgressItemChangeModal(ItemChangedData(widget.item.quantity,
+        ShoppingInProgressItemChangeModal(ItemChangedData(widget.item.name, widget.item.quantity,
             widget.item.quantityInCart, widget.item.price)),
         height: 260,
         mainAlignment: MainAxisAlignment.spaceBetween);
