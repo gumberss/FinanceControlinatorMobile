@@ -18,5 +18,10 @@
     "mustBeFilled": "Deve ser preenchido",
     "dateFormat": "dd-MM-yyyy",
     "yes": "Sim",
-    "no": "Não"
+    "no": "Não",
+    "expected": "Esperado",
+    "inTheCart": "No carrinho",
+    "itemPrice": "Preço do item",
+    "totalPrice": "Preço total"
+
 }
