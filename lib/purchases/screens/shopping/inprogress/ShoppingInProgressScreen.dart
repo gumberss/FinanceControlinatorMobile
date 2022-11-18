@@ -1,4 +1,5 @@
 import 'package:drag_and_drop_lists/drag_and_drop_lists.dart';
+import 'package:finance_controlinator_mobile/components/Immutable.dart';
 import 'package:finance_controlinator_mobile/purchases/domain/shopping/cart/events/ReorderItemEvent.dart';
 import 'package:finance_controlinator_mobile/purchases/screens/shopping/inprogress/ShoppingInProgressItemWidget.dart';
 import 'package:flutter/material.dart';
@@ -92,7 +93,8 @@ class _ShoppingListState extends State<ShoppingListView> {
                     color: Theme.of(context).canvasColor,
                     borderRadius: BorderRadius.circular(10)),
                 children: shoppingList != null
-                    ? buildLists(shoppingList!.categories)
+                    ? buildLists(shoppingList!.categories
+                        .sortedBy((e) => e.orderPosition!))
                     : <DragAndDropList>[],
                 itemDivider: Divider(
                     thickness: 2, height: 2, color: Colors.grey.shade200),
@@ -152,7 +154,8 @@ class _ShoppingListState extends State<ShoppingListView> {
       categories.map((category) => buildCategoryList(category)).toList();
 
   DragAndDropItem buildShoppingItem(ShoppingItem item) => DragAndDropItem(
-      child: ShoppingInProgressItemWidget(shoppingList!.shoppingId, item, loadShoppingList));
+      child: ShoppingInProgressItemWidget(
+          shoppingList!.shoppingId, item, loadShoppingList));
 
   DragAndDropList buildCategoryList(ShoppingCategory category) =>
       DragAndDropList(
@@ -165,7 +168,10 @@ class _ShoppingListState extends State<ShoppingListView> {
                           fontWeight: FontWeight.bold,
                           fontSize: 16,
                           color: Color(category.color))))),
-          children: category.items!.map(buildShoppingItem).toList());
+          children: category.items!
+              .sortedBy((e) => e.orderPosition!)
+              .map(buildShoppingItem)
+              .toList());
 
   DragHandle buildDragHandle({bool isList = false}) {
     final verticalAlignment = isList
