@@ -93,8 +93,7 @@ class _ShoppingListState extends State<ShoppingListView> {
                     color: Theme.of(context).canvasColor,
                     borderRadius: BorderRadius.circular(10)),
                 children: shoppingList != null
-                    ? buildLists(shoppingList!.categories
-                        .sortedBy((e) => e.orderPosition!))
+                    ? buildLists(shoppingList!.categories)
                     : <DragAndDropList>[],
                 itemDivider: Divider(
                     thickness: 2, height: 2, color: Colors.grey.shade200),
@@ -110,8 +109,8 @@ class _ShoppingListState extends State<ShoppingListView> {
               ));
   }
 
-  void onItemReorder(int oldItemIndex, int oldListIndex, int newItemIndex,
-      int newListIndex) async {
+  Future<void> onItemReorder(int oldItemIndex, int oldListIndex,
+      int newItemIndex, int newListIndex) async {
     var newCategory = shoppingList!.categories[newListIndex];
 
     final item = shoppingList!.categories[oldListIndex].items![oldItemIndex];
@@ -133,7 +132,7 @@ class _ShoppingListState extends State<ShoppingListView> {
     }
   }
 
-  void onListReorder(int oldListIndex, int newListIndex) async {
+  Future<void> onListReorder(int oldListIndex, int newListIndex) async {
     var category = shoppingList!.categories[oldListIndex];
 
     setState(() {
@@ -169,7 +168,6 @@ class _ShoppingListState extends State<ShoppingListView> {
                           fontSize: 16,
                           color: Color(category.color))))),
           children: category.items!
-              .sortedBy((e) => e.orderPosition!)
               .map(buildShoppingItem)
               .toList());
 

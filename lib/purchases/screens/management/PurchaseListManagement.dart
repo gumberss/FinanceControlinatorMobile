@@ -360,7 +360,6 @@ class PurchaseListManagementState extends State<PurchaseListManagement> {
     if (itemPlacedAfterNewItemButton(newListIndex, newItemIndex)) {
       newItemIndex--;
     }
-
     setState(() {
       final oldListItems =
           purchaseListManagementData!.categories[oldListIndex].items;
