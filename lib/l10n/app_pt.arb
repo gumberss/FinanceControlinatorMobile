@@ -22,6 +22,10 @@
     "expected": "Esperado",
     "inTheCart": "No carrinho",
     "itemPrice": "Preço do item",
-    "totalPrice": "Preço total"
-
+    "totalPrice": "Preço total",
+    "summary": "Resumo",
+    "place": "Lugar",
+    "title": "Título",
+    "shoppingType": "Tipo da compra",
+    "totalCost": "Custo total"
 }

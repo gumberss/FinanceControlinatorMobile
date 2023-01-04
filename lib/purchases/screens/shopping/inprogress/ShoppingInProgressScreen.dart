@@ -2,6 +2,7 @@ import 'package:drag_and_drop_lists/drag_and_drop_lists.dart';
 import 'package:finance_controlinator_mobile/components/Immutable.dart';
 import 'package:finance_controlinator_mobile/purchases/domain/shopping/cart/events/ReorderItemEvent.dart';
 import 'package:finance_controlinator_mobile/purchases/screens/shopping/inprogress/ShoppingInProgressItemWidget.dart';
+import 'package:finance_controlinator_mobile/purchases/screens/shopping/summary/ShoppingSummaryScreen.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../authentications/services/AuthorizationService.dart';
@@ -14,7 +15,6 @@ import '../../../webclients/shopping/CartEventWebClient.dart';
 import '../../../webclients/shopping/ShoppingListWebClient.dart';
 
 class ShoppingInProgressScreen extends StatelessWidget {
-  final _formKey = GlobalKey<FormState>();
   final Shopping _shopping;
 
   ShoppingInProgressScreen(this._shopping, {Key? key}) : super(key: key);
@@ -30,7 +30,8 @@ class ShoppingInProgressScreen extends StatelessWidget {
         floatingActionButton: FloatingActionButton(
           backgroundColor: Colors.blueAccent,
           child: const Icon(Icons.arrow_forward),
-          onPressed: () async {},
+          onPressed: () => Navigator.of(context).push(MaterialPageRoute(
+              builder: (c) => ShoppingSummaryScreen(_shopping))),
         ));
   }
 }
@@ -167,9 +168,7 @@ class _ShoppingListState extends State<ShoppingListView> {
                           fontWeight: FontWeight.bold,
                           fontSize: 16,
                           color: Color(category.color))))),
-          children: category.items!
-              .map(buildShoppingItem)
-              .toList());
+          children: category.items!.map(buildShoppingItem).toList());
 
   DragHandle buildDragHandle({bool isList = false}) {
     final verticalAlignment = isList

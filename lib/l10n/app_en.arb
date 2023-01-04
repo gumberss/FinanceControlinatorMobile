@@ -22,6 +22,10 @@
     "expected": "Expected",
     "inTheCart": "In the cart",
     "itemPrice": "Item price",
-    "totalPrice": "Total price"
-
+    "totalPrice": "Total price",
+    "summary": "Summary",
+    "place": "Place",
+    "title": "Title",
+    "shoppingType": "Shopping type",
+    "totalCost": "Total cost"
 }
