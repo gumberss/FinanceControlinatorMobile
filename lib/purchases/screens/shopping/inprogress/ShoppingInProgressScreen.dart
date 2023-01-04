@@ -16,6 +16,7 @@ import '../../../webclients/shopping/ShoppingListWebClient.dart';
 
 class ShoppingInProgressScreen extends StatelessWidget {
   final Shopping _shopping;
+  final _shoppingListKey = GlobalKey<_ShoppingListState>();
 
   ShoppingInProgressScreen(this._shopping, {Key? key}) : super(key: key);
 
@@ -26,12 +27,12 @@ class ShoppingInProgressScreen extends StatelessWidget {
           title: Text(_shopping.title),
         ),
         backgroundColor: Colors.grey.shade200,
-        body: ShoppingListView(_shopping.id),
+        body: ShoppingListView(_shopping.id, _shoppingListKey),
         floatingActionButton: FloatingActionButton(
           backgroundColor: Colors.blueAccent,
           child: const Icon(Icons.arrow_forward),
           onPressed: () => Navigator.of(context).push(MaterialPageRoute(
-              builder: (c) => ShoppingSummaryScreen(_shopping))),
+              builder: (c) => ShoppingSummaryScreen(_shopping,_shoppingListKey.currentState?.shoppingList))),
         ));
   }
 }
@@ -39,7 +40,7 @@ class ShoppingInProgressScreen extends StatelessWidget {
 class ShoppingListView extends StatefulWidget {
   String shoppingListId;
 
-  ShoppingListView(this.shoppingListId);
+  ShoppingListView(this.shoppingListId, Key? key) : super(key: key);
 
   @override
   State<ShoppingListView> createState() => _ShoppingListState();
@@ -49,6 +50,7 @@ class _ShoppingListState extends State<ShoppingListView> {
   ShoppingList? shoppingList;
 
   bool loadingData = true;
+
 
   @override
   void initState() {
