@@ -7,9 +7,12 @@ import 'package:uuid/uuid.dart';
 
 class ShoppingSummaryScreen extends StatelessWidget {
   final Shopping _shopping;
+  final ShoppingList? _shoppingList;
 
-  ShoppingSummaryScreen(Shopping shopping, {Key? key})
+  ShoppingSummaryScreen(Shopping shopping, ShoppingList? shoppingList,
+      {Key? key})
       : _shopping = shopping,
+        _shoppingList = shoppingList,
         super(key: key);
 
   Widget buildTextWidget(BuildContext context, String title, String value) {
@@ -46,15 +49,20 @@ class ShoppingSummaryScreen extends StatelessWidget {
                 children: [
                   buildTextWidget(context, AppLocalizations.of(context)!.place,
                       _shopping.place),
-
-                  buildTextWidget(context, AppLocalizations.of(context)!.shoppingType,
+                  buildTextWidget(
+                      context,
+                      AppLocalizations.of(context)!.shoppingType,
                       _shopping.type),
-
                   buildTextWidget(context, AppLocalizations.of(context)!.title,
                       _shopping.title),
-
-                  buildTextWidget(context, AppLocalizations.of(context)!.totalCost,
-                      NumberFormat.currency().format(100000.21)),
+                  if (_shoppingList != null)
+                    buildTextWidget(
+                        context,
+                        AppLocalizations.of(context)!.totalCost,
+                        NumberFormat.currency().format(_shoppingList!.categories
+                            .expand((element) => element.items!)
+                            .map((e) => e.price)
+                            .reduce((value, e) => value += e))),
                 ],
               )
             ],
