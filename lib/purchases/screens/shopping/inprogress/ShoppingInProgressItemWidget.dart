@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
+import 'package:uuid/uuid.dart';
 
 import '../../../domain/shopping/ShoppingItem.dart';
 import '../../../../components/DefaultDialog.dart';
@@ -55,7 +56,7 @@ class _ShoppingInProgressItemWidgetState
                       widget.item.price = value.itemPrice;
                     });
                     var amountChanged = newQuantityInCart - oldQuantityInCart;
-                    var changeItemEvent = ChangeItemEvent(widget.shoppingId,
+                    var changeItemEvent = ChangeItemEvent(Uuid().v4(), widget.shoppingId,
                         widget.item.id!, value.itemPrice, amountChanged);
 
                     var result = await CartEventWebClient()

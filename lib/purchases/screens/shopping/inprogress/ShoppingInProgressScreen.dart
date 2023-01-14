@@ -4,6 +4,7 @@ import 'package:finance_controlinator_mobile/purchases/domain/shopping/cart/even
 import 'package:finance_controlinator_mobile/purchases/screens/shopping/inprogress/ShoppingInProgressItemWidget.dart';
 import 'package:finance_controlinator_mobile/purchases/screens/shopping/summary/ShoppingSummaryScreen.dart';
 import 'package:flutter/material.dart';
+import 'package:uuid/uuid.dart';
 
 import '../../../../authentications/services/AuthorizationService.dart';
 import '../../../domain/shopping/Shopping.dart';
@@ -32,7 +33,8 @@ class ShoppingInProgressScreen extends StatelessWidget {
           backgroundColor: Colors.blueAccent,
           child: const Icon(Icons.arrow_forward),
           onPressed: () => Navigator.of(context).push(MaterialPageRoute(
-              builder: (c) => ShoppingSummaryScreen(_shopping,_shoppingListKey.currentState?.shoppingList))),
+              builder: (c) => ShoppingSummaryScreen(
+                  _shopping, _shoppingListKey.currentState?.shoppingList))),
         ));
   }
 }
@@ -50,7 +52,6 @@ class _ShoppingListState extends State<ShoppingListView> {
   ShoppingList? shoppingList;
 
   bool loadingData = true;
-
 
   @override
   void initState() {
@@ -127,8 +128,8 @@ class _ShoppingListState extends State<ShoppingListView> {
     });
 
     var result = await CartEventWebClient().sendReorderItemEvent(
-        ReorderItemEvent(
-            shoppingList!.shoppingId, item.id!, newCategory.id!, newItemIndex));
+        ReorderItemEvent(Uuid().v4(), shoppingList!.shoppingId, item.id!,
+            newCategory.id!, newItemIndex));
 
     if (!result.success()) {
       await loadShoppingList();
@@ -145,7 +146,7 @@ class _ShoppingListState extends State<ShoppingListView> {
 
     var result = await CartEventWebClient().sendReorderCategoryEvent(
         ReorderCategoryEvent(
-            shoppingList!.shoppingId, category.id!, newListIndex));
+            Uuid().v4(), shoppingList!.shoppingId, category.id!, newListIndex));
 
     if (!result.success()) {
       await loadShoppingList();
