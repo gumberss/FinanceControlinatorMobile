@@ -1,4 +1,5 @@
 import 'package:finance_controlinator_mobile/purchases/domain/shopping/Shopping.dart';
+import 'package:finance_controlinator_mobile/purchases/webclients/shopping/ShoppingFinalizationWebClient.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:finance_controlinator_mobile/purchases/domain/shopping/ShoppingList.dart';
 import 'package:flutter/material.dart';
@@ -71,6 +72,8 @@ class ShoppingSummaryScreen extends StatelessWidget {
         floatingActionButton: FloatingActionButton(
             backgroundColor: Colors.blueAccent,
             child: const Icon(Icons.arrow_forward),
-            onPressed: () {}));
+            onPressed: () {
+              ShoppingFinalizationWebClient().finish(_shopping.id);
+            }));
   }
 }
