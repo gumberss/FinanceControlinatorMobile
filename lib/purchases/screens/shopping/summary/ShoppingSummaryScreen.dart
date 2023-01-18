@@ -1,10 +1,14 @@
 import 'package:finance_controlinator_mobile/purchases/domain/shopping/Shopping.dart';
 import 'package:finance_controlinator_mobile/purchases/webclients/shopping/ShoppingFinalizationWebClient.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:finance_controlinator_mobile/purchases/domain/shopping/ShoppingList.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
+
+import '../../management/PurchaseListManagementScreen.dart';
+import '../initiation/ShoppingInitiation.dart';
 
 class ShoppingSummaryScreen extends StatelessWidget {
   final Shopping _shopping;
@@ -62,7 +66,7 @@ class ShoppingSummaryScreen extends StatelessWidget {
                         AppLocalizations.of(context)!.totalCost,
                         NumberFormat.currency().format(_shoppingList!.categories
                             .expand((element) => element.items!)
-                            .map((e) => e.price)
+                            .map((e) => e.price * e.quantityInCart)
                             .reduce((value, e) => value += e))),
                 ],
               )
@@ -72,8 +76,17 @@ class ShoppingSummaryScreen extends StatelessWidget {
         floatingActionButton: FloatingActionButton(
             backgroundColor: Colors.blueAccent,
             child: const Icon(Icons.arrow_forward),
-            onPressed: () {
-              ShoppingFinalizationWebClient().finish(_shopping.id);
+            onPressed: () async {
+              var result =
+                  await ShoppingFinalizationWebClient().finish(_shopping.id);
+
+              if (result.success()) {
+                Navigator.of(context).popUntil(
+                    ModalRoute.withName(ShoppingInitiationScreen.name));
+
+              } else {
+                //show error
+              }
             }));
   }
 }

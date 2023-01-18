@@ -20,60 +20,61 @@ class PurchaseListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        height: 80,
-        width: double.infinity,
-        decoration: BoxDecoration(
-            color: Colors.lightGreen.shade100,
-            borderRadius: BorderRadius.circular(8),
-            boxShadow: [
-              BoxShadow(
-                  color: Colors.grey.withOpacity(.6),
-                  spreadRadius: 1,
-                  blurRadius: 2,
-                  offset: const Offset(2, 2))
-            ]),
-        margin: const EdgeInsets.only(top: 8, bottom: 8, left: 4, right: 4),
-        child: InkWell(
-         child: Slidable(
-           startActionPane: slideLeftBackground(context),
-           endActionPane: slideRightBackground(context),
-           key: Key(_purchaseList.name),
-           child: Row(
-             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-             children: [
-               Expanded(
-                 flex: 6,
-                 child: Column(
-                   crossAxisAlignment: CrossAxisAlignment.start,
-                   mainAxisAlignment: MainAxisAlignment.center,
-                   children: [
-                     Padding(
-                       padding: EdgeInsets.only(left: 10),
-                       child: Text(
-                         _purchaseList.name,
-                         overflow: TextOverflow.ellipsis,
-                         maxLines: 2,
-                         style: const TextStyle(
-                             fontWeight: FontWeight.bold, fontSize: 18),
-                       ),
-                     )
-                   ],
-                 ),
-               ),
-               _purchaseList.inProgress
-                   ? const Padding(
-                   padding: EdgeInsets.only(left: 20),
-                   child: Icon(
-                     Icons.shopping_cart,
-                     color: Colors.blueAccent,
-                   ))
-                   : const SizedBox.shrink(),
-             ],
-           ),
-         ), onTap: () =>  Navigator.of(context)
-            .push(MaterialPageRoute(builder: (c) => PurchaseListManagementScreen(_purchaseList)))),
-
-        );
+      height: 80,
+      width: double.infinity,
+      decoration: BoxDecoration(
+          color: Colors.lightGreen.shade100,
+          borderRadius: BorderRadius.circular(8),
+          boxShadow: [
+            BoxShadow(
+                color: Colors.grey.withOpacity(.6),
+                spreadRadius: 1,
+                blurRadius: 2,
+                offset: const Offset(2, 2))
+          ]),
+      margin: const EdgeInsets.only(top: 8, bottom: 8, left: 4, right: 4),
+      child: InkWell(
+          child: Slidable(
+            startActionPane: slideLeftBackground(context),
+            endActionPane: slideRightBackground(context),
+            key: Key(_purchaseList.name),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  flex: 6,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(left: 10),
+                        child: Text(
+                          _purchaseList.name,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 2,
+                          style: const TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 18),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+                _purchaseList.inProgress
+                    ? const Padding(
+                        padding: EdgeInsets.only(left: 20),
+                        child: Icon(
+                          Icons.shopping_cart,
+                          color: Colors.blueAccent,
+                        ))
+                    : const SizedBox.shrink(),
+              ],
+            ),
+          ),
+          onTap: () => Navigator.of(context).push(MaterialPageRoute(
+              settings: RouteSettings(name: PurchaseListManagementScreen.name),
+              builder: (c) => PurchaseListManagementScreen(_purchaseList)))),
+    );
   }
 
   ActionPane slideLeftBackground(BuildContext context) {
@@ -99,7 +100,8 @@ class PurchaseListItem extends StatelessWidget {
       children: [
         SlidableAction(
           onPressed: (ctx) {
-            DefaultDialog().showDialog(context, EditPurchaseListDialog(context, _purchaseList));
+            DefaultDialog().showDialog(
+                context, EditPurchaseListDialog(context, _purchaseList));
           },
           backgroundColor: Colors.greenAccent,
           foregroundColor: Colors.white,
@@ -115,7 +117,8 @@ class PurchaseListItem extends StatelessWidget {
     );
   }
 
-  TextEditingController editPurchaseListNameController = TextEditingController();
+  TextEditingController editPurchaseListNameController =
+      TextEditingController();
 
   List<Widget> EditPurchaseListDialog(
       BuildContext context, PurchaseList purchaseList) {
@@ -126,8 +129,7 @@ class PurchaseListItem extends StatelessWidget {
         editPurchaseListNameController, () async {
       if (purchaseList.name != editPurchaseListNameController.text) {
         purchaseList.name = editPurchaseListNameController.text;
-        await PurchaseListWebClient()
-            .edit(purchaseList);
+        await PurchaseListWebClient().edit(purchaseList);
         _onChangeHappen();
       }
     });
