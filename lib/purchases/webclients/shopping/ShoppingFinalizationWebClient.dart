@@ -25,7 +25,7 @@ class ShoppingFinalizationWebClient {
     return await tryRequest(
         client.postUri(Uri.http(baseUrl, basePath + "/$shoppingId"),
             options: defaultOptions),
-        (response) => HttpResponseData(
-            response.statusCode!, ShoppingList.fromJson(response.data)));
+        (response) => HttpResponseData(response.statusCode!,
+            ShoppingList.fromShoppingJson(response.data)));
   }
 }
