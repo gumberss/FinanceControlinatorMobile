@@ -16,6 +16,7 @@ import '../../../domain/PurchaseList.dart';
 import '../../../webclients/shopping/ExistentShoppingWebClient.dart';
 
 class ShoppingInitiationScreen extends StatefulWidget {
+  static const String name = "ShoppingInitiationScreen";
   final PurchaseList _purchaseList;
   final _formKey;
 

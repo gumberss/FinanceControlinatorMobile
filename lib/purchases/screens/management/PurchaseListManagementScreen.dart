@@ -10,7 +10,9 @@ import 'PurchaseCategoryAdderWidget.dart';
 import 'PurchaseListManagement.dart';
 
 class PurchaseListManagementScreen extends StatelessWidget {
-  final PurchaseList _purchaseList;
+  static String name = "PurchaseListManagementScreen";
+
+  PurchaseList _purchaseList;
   final purchaseListManagementStateKey =
       GlobalKey<PurchaseListManagementState>();
 
@@ -24,36 +26,59 @@ class PurchaseListManagementScreen extends StatelessWidget {
         appBar: AppBar(
           title: Text(_purchaseList.name),
           actions: [
-            PurchaseCategoryAdderWidget(
-                onActionDispatched: (name, color) async {
-              var result = await CategoryWebClient().addCategory(
-                  PurchaseCategory(
-                      Uuid().v4(), name, _purchaseList.id!, color.value));
-              if (result.success()) {
-                purchaseListManagementStateKey.currentState?.loadLists();
-              }
-
-              return result.success();
-            })
+            addCategoryButton(_purchaseList,
+                purchaseListManagementStateKey.currentState?.loadLists)
           ],
         ),
         backgroundColor: Colors.grey.shade200,
-        body: Column(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Expanded(
-              flex: 1,
-              child: PurchaseListManagement(_purchaseList,
-                  key: purchaseListManagementStateKey),
-            ),
-          ],
+        body: purchaseListManagementContainer(_purchaseList),
+        floatingActionButton: initShoppingButton(context, _purchaseList));
+  }
+
+  Widget addCategoryButton(PurchaseList list, Function? loadLists) {
+    return PurchaseCategoryAdderWidget(onActionDispatched: (name, color) async {
+      var result = await CategoryWebClient().addCategory(
+          PurchaseCategory(Uuid().v4(), name, list.id!, color.value));
+      if (result.success()) {
+        loadLists!();
+      }
+
+      return result.success();
+    });
+  }
+
+  Widget purchaseListManagementContainer(PurchaseList list) {
+    return Column(
+      mainAxisSize: MainAxisSize.max,
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Expanded(
+          flex: 1,
+          child:
+              PurchaseListManagement(list, key: purchaseListManagementStateKey),
         ),
-        floatingActionButton: FloatingActionButton(
-          backgroundColor: Colors.blueAccent,
-          child: const Icon(Icons.arrow_forward),
-          onPressed: () => Navigator.of(context).push(MaterialPageRoute(
-              builder: (c) => ShoppingInitiationScreen(_purchaseList))),
+      ],
+    );
+  }
+
+  FloatingActionButton initShoppingButton(
+      BuildContext context, PurchaseList list) {
+    return FloatingActionButton(
+      backgroundColor: Colors.blueAccent,
+      child: const Icon(Icons.arrow_forward),
+      onPressed: () => Navigator.of(context).push(MaterialPageRoute(
+          settings: RouteSettings(name: ShoppingInitiationScreen.name),
+          builder: (c) => ShoppingInitiationScreen(list))),
+    );
+  }
+
+  Scaffold loadingScaffold() {
+    return Scaffold(
+        appBar: AppBar(
+          title: const Text("Loading"),
+        ),
+        body: const Center(
+          child: CircularProgressIndicator(),
         ));
   }
 }
