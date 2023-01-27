@@ -23,8 +23,9 @@ class PurchaseListItem extends StatelessWidget {
       height: 80,
       width: double.infinity,
       decoration: BoxDecoration(
-          color: Colors.lightGreen.shade100,
-          borderRadius: BorderRadius.circular(8),
+          color: Colors.white,
+          borderRadius: BorderRadius.all(Radius.circular(8)),
+          border: Border.all(color: Colors.grey.withOpacity(.7), width: 2),
           boxShadow: [
             BoxShadow(
                 color: Colors.grey.withOpacity(.6),
@@ -32,7 +33,7 @@ class PurchaseListItem extends StatelessWidget {
                 blurRadius: 2,
                 offset: const Offset(2, 2))
           ]),
-      margin: const EdgeInsets.only(top: 8, bottom: 8, left: 4, right: 4),
+      margin: const EdgeInsets.only(top: 6, bottom: 6, left: 4, right: 4),
       child: InkWell(
           child: Slidable(
             startActionPane: slideLeftBackground(context),

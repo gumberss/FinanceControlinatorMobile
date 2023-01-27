@@ -27,7 +27,7 @@ class PurchaseListManagementScreen extends StatelessWidget {
           title: Text(_purchaseList.name),
           actions: [
             addCategoryButton(_purchaseList,
-                purchaseListManagementStateKey.currentState?.loadLists)
+                () => purchaseListManagementStateKey.currentState?.loadLists())
           ],
         ),
         backgroundColor: Colors.grey.shade200,

@@ -83,7 +83,6 @@ class ShoppingSummaryScreen extends StatelessWidget {
               if (result.success()) {
                 Navigator.of(context).popUntil(
                     ModalRoute.withName(ShoppingInitiationScreen.name));
-
               } else {
                 //show error
               }
