@@ -65,6 +65,7 @@ class _ShoppingInProgressItemWidgetState
                     if (!result.success()) {
                       widget.onError();
                     }
+                    // todo: check if there is a new event and update the list if yes
                   });
                 },
                 icon: const Icon(Icons.check)),
