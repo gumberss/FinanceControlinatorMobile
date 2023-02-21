@@ -20,7 +20,7 @@ class _DioClient {
 
   static Dio addInterceptors(Dio dio) {
     dio.interceptors.add(LoggingInterceptor());
-    dio.interceptors.add(AuthenticationInterceptor());
+    //dio.interceptors.add(AuthenticationInterceptor());
     return dio;
   }
 }
