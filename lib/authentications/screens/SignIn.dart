@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:finance_controlinator_mobile/components/JwtService.dart';
 import 'package:finance_controlinator_mobile/components/Progress.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -52,6 +53,14 @@ class _SignInFormState extends State<_SignInForm>
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _userNameController = TextEditingController();
 
+  Future firebaseLogin(String userName, String password) async {
+    var result = await FirebaseAuth.instance
+        .signInWithEmailAndPassword(email: userName, password: password);
+    if (result.user != null) await JwtService().store(result.user!.uid);
+  }
+
+  bool _firebaseLogin = true;
+
   @override
   Widget build(BuildContext context) {
     widget.toast.init(context);
@@ -88,18 +97,25 @@ class _SignInFormState extends State<_SignInForm>
                       var password = _passwordController.text;
 
                       try {
-                        var result = await AuthenticationWebClient()
-                            .signIn(SignInUser(userName, password));
-
-                        if (result != null) {
-                          await JwtService().store(result);
+                        if (_firebaseLogin) {
+                          await firebaseLogin(userName, password);
                           Navigator.push(context,
                               MaterialPageRoute(builder: (c) => Dashboard()));
                           _passwordController.clear();
                           _animationController.reverse();
                         } else {
-                          _animationController.reverse();
-                          _ToastError();
+                          var result = await AuthenticationWebClient()
+                              .signIn(SignInUser(userName, password));
+                          if (result != null) {
+                            await JwtService().store(result);
+                            Navigator.push(context,
+                                MaterialPageRoute(builder: (c) => Dashboard()));
+                            _passwordController.clear();
+                            _animationController.reverse();
+                          } else {
+                            _animationController.reverse();
+                            _ToastError();
+                          }
                         }
                       } on HttpException catch (e) {
                         _animationController.reverse();
