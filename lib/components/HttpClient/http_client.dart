@@ -13,14 +13,14 @@ class _DioClient {
     dio.options.validateStatus = (status) {
       return true;
     };
-    dio.options.connectTimeout = 5000;
+    dio.options.connectTimeout = Duration(milliseconds: 5000);
 
     return dio;
   }
 
   static Dio addInterceptors(Dio dio) {
     dio.interceptors.add(LoggingInterceptor());
-    //dio.interceptors.add(AuthenticationInterceptor());
+    dio.interceptors.add(AuthenticationInterceptor());
     return dio;
   }
 }
