@@ -1,7 +1,9 @@
 import 'dart:io';
 
+import 'package:finance_controlinator_mobile/components/BusinessException.dart';
 import 'package:finance_controlinator_mobile/components/JwtService.dart';
 import 'package:finance_controlinator_mobile/components/Progress.dart';
+import 'package:finance_controlinator_mobile/purchases/webclients/UserWebClient.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -56,7 +58,15 @@ class _SignInFormState extends State<_SignInForm>
   Future firebaseLogin(String userName, String password) async {
     var result = await FirebaseAuth.instance
         .signInWithEmailAndPassword(email: userName, password: password);
-    if (result.user != null) await JwtService().store(result.user!.uid);
+    if (result.user != null) {
+      await JwtService().store(result.user!.uid);
+      var response = await UserWebClient().register();
+      if (response.success() && response.data != null) {
+        await JwtService().store(response.data!);
+      }else{
+        throw BusinessException("Couldn't be possible to identify the user");
+      }
+    }
   }
 
   bool _firebaseLogin = true;
