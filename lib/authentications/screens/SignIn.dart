@@ -60,9 +60,12 @@ class _SignInFormState extends State<_SignInForm>
         .signInWithEmailAndPassword(email: userName, password: password);
     if (result.user != null) {
       await JwtService().store(result.user!.uid);
+
       var response = await UserWebClient().register();
       if (response.success() && response.data != null) {
         await JwtService().store(response.data!);
+        await JwtService().storeUserId(response.data!);
+
       }else{
         throw BusinessException("Couldn't be possible to identify the user");
       }

@@ -12,7 +12,8 @@ class AuthenticationInterceptor extends InterceptorsWrapper{
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
     var customHeaders = {
       'content-type': 'application/json',
-      HttpHeaders.authorizationHeader: "Bearer "+ await JwtService().token
+      HttpHeaders.authorizationHeader: "Bearer "+ await JwtService().token,
+      'user-id': await JwtService().userId
     };
     options.headers.addAll(customHeaders);
 

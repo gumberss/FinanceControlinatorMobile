@@ -6,6 +6,16 @@ class JwtService {
     return await storage.read(key: 'jwt');
   }
 
+  get userId async {
+    const storage = FlutterSecureStorage();
+    return await storage.read(key: 'userId');
+  }
+
+  Future storeUserId(String userId) async {
+    const storage = FlutterSecureStorage();
+    await storage.write(key: 'userId', value: userId);
+  }
+
   Future store(String token) async {
     const storage = FlutterSecureStorage();
     await storage.write(key: 'jwt', value: token);
