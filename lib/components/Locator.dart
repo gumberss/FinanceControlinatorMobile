@@ -9,7 +9,7 @@ class Locator {
     LocationPermission permission;
 
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    
+
     if (!serviceEnabled) {
       return Result.fromError(BusinessException("[[SERVICE_NOT_ENABLED]]"));
     }
@@ -25,7 +25,17 @@ class Locator {
     if (permission == LocationPermission.deniedForever) {
       return Result.fromError(BusinessException("[[DENIED_FOREVER]]"));
     }
-
-    return Result(await Geolocator.getCurrentPosition());
+    var position = Position(
+        latitude: 36.481,
+        longitude: -95.0153,
+        accuracy: 1,
+        altitude: 10,
+        heading: 1,
+        speed: 1,
+        speedAccuracy: 1,
+        timestamp: DateTime.now());
+    return Future(() => Result<Position, BusinessException>(position));
+    //todo: ssl
+    //return Result(await Geolocator.getCurrentPosition());
   }
 }
