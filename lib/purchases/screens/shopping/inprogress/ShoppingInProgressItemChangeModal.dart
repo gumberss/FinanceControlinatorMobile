@@ -47,11 +47,7 @@ class _ShoppingInProgressItemChangeModalState
                         Text(widget.itemData.itemName,
                             style: TextStyle(fontSize: 24)),
                         Text(
-                            "${AppLocalizations.of(context)!.expected}: ${widget
-                                .itemData
-                                .expectedQuantity}    ${AppLocalizations.of(
-                                context)!.inTheCart}: ${widget.itemData
-                                .quantityInTheCart}",
+                            "${AppLocalizations.of(context)!.expected}: ${widget.itemData.expectedQuantity}    ${AppLocalizations.of(context)!.inTheCart}: ${widget.itemData.quantityInTheCart}",
                             style: TextStyle(
                                 fontSize: 16,
                                 color: ColorService.colorByRemainingQuantity(
@@ -68,30 +64,31 @@ class _ShoppingInProgressItemChangeModalState
                               });
 
                               var itemPrice = double.tryParse(
-                                  widget._itemPriceController.text) ??
+                                      widget._itemPriceController.text) ??
                                   double.nan;
 
                               try {
                                 if (!itemPrice.isNaN) {
                                   widget._totalPriceController.text =
                                       (itemPrice *
-                                          widget.itemData.quantityInTheCart)
-                                          .toString();
+                                              widget.itemData.quantityInTheCart)
+                                          .toStringAsFixed(2);
                                 } else {
                                   var totalPrice = double.tryParse(
-                                      widget._totalPriceController.text) ??
+                                          widget._totalPriceController.text) ??
                                       double.nan;
 
                                   if (!totalPrice.isNaN &&
                                       widget.itemData.quantityInTheCart != 0) {
                                     widget._itemPriceController
                                         .text = (totalPrice /
-                                        widget.itemData.quantityInTheCart)
-                                        .toString();
+                                            widget.itemData.quantityInTheCart)
+                                        .toStringAsFixed(2);
                                   }
                                 }
                               } on Exception catch (_) {
-                                widget._totalPriceController.text = "0";
+                                widget._totalPriceController.text =
+                                    0.toStringAsFixed(2);
                                 debugPrint(
                                     "It was not possible to set the total price value");
                               }
@@ -119,10 +116,11 @@ class _ShoppingInProgressItemChangeModalState
 
                                   widget._totalPriceController.text =
                                       (itemPrice *
-                                          widget.itemData.quantityInTheCart)
-                                          .toString();
+                                              widget.itemData.quantityInTheCart)
+                                          .toStringAsFixed(2);
                                 } on Exception catch (_) {
-                                  widget._totalPriceController.text = "0";
+                                  widget._totalPriceController.text =
+                                      0.toStringAsFixed(2);
                                 }
                               }
                             },
@@ -139,35 +137,33 @@ class _ShoppingInProgressItemChangeModalState
                   children: [
                     Expanded(
                         child: Row(
-                          children: [
-                            Expanded(
-                                child: DefaultInput(
-                                  AppLocalizations.of(context)!.itemPrice,
-                                  const TextInputType.numberWithOptions(
-                                      decimal: true, signed: false),
-                                  widget._itemPriceController,
-                                  padding: EdgeInsets.zero,
-                                  hintText: NumberFormat().format(1.50),
-                                  fontSize: 14,
-                                  onChanged: (text) {
-                                    if (widget.itemData.quantityInTheCart > 0) {
-                                      try {
-                                        var itemPrice = NumberFormat().parse(
-                                            text);
+                      children: [
+                        Expanded(
+                            child: DefaultInput(
+                          AppLocalizations.of(context)!.itemPrice,
+                          const TextInputType.numberWithOptions(
+                              decimal: true, signed: false),
+                          widget._itemPriceController,
+                          padding: EdgeInsets.zero,
+                          hintText: NumberFormat().format(1.50),
+                          fontSize: 14,
+                          onChanged: (text) {
+                            if (widget.itemData.quantityInTheCart > 0) {
+                              try {
+                                var itemPrice = NumberFormat().parse(text);
 
-                                        widget._totalPriceController.text =
-                                            (itemPrice *
-                                                widget.itemData
-                                                    .quantityInTheCart)
-                                                .toString();
-                                      } on Exception catch (e) {
-                                        widget._totalPriceController.text = "0";
-                                      }
-                                    }
-                                  },
-                                ))
-                          ],
+                                widget._totalPriceController.text = (itemPrice *
+                                        widget.itemData.quantityInTheCart)
+                                    .toStringAsFixed(2);
+                              } on Exception catch (e) {
+                                widget._totalPriceController.text =
+                                    0.toStringAsFixed(2);
+                              }
+                            }
+                          },
                         ))
+                      ],
+                    ))
                   ],
                 ),
               ),
@@ -178,39 +174,36 @@ class _ShoppingInProgressItemChangeModalState
                   children: [
                     Expanded(
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            Expanded(
-                                child: DefaultInput(
-                                  AppLocalizations.of(context)!.totalPrice,
-                                  TextInputType.text,
-                                  widget._totalPriceController,
-                                  padding: EdgeInsets.zero,
-                                  fontSize: 14,
-                                  onChanged: (text) {
-                                    if (widget.itemData.quantityInTheCart > 0) {
-                                      try {
-                                        var totalPrice =
-                                            double.tryParse(text) ?? double.nan;
-
-                                        if (totalPrice != double.infinity &&
-                                            totalPrice != double.nan &&
-                                            widget.itemData.quantityInTheCart !=
-                                                0) {
-                                          widget._itemPriceController.text =
-                                              (totalPrice /
-                                                  widget.itemData
-                                                      .quantityInTheCart)
-                                                  .toString();
-                                        }
-                                      } on Exception catch (_) {}
-                                    }
-                                  },
-                                  hintText: NumberFormat().format(3.00),
-                                ))
-                          ],
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Expanded(
+                            child: DefaultInput(
+                          AppLocalizations.of(context)!.totalPrice,
+                          TextInputType.text,
+                          widget._totalPriceController,
+                          padding: EdgeInsets.zero,
+                          fontSize: 14,
+                          onChanged: (text) {
+                            if (widget.itemData.quantityInTheCart > 0) {
+                              try {
+                                var totalPrice =
+                                    double.tryParse(text) ?? double.nan;
+                                if (totalPrice != double.infinity &&
+                                    !totalPrice.isNaN &&
+                                    widget.itemData.quantityInTheCart != 0) {
+                                  widget._itemPriceController.text =
+                                      (totalPrice /
+                                              widget.itemData.quantityInTheCart)
+                                          .toStringAsFixed(2);
+                                }
+                              } on Exception catch (_) {}
+                            }
+                          },
+                          hintText: NumberFormat().format(3.00),
                         ))
+                      ],
+                    ))
                   ],
                 ),
               ),
@@ -220,9 +213,12 @@ class _ShoppingInProgressItemChangeModalState
                   OutlinedButton(
                     child: Text(AppLocalizations.of(context)!.create),
                     onPressed: () {
-                      double itemPrice = NumberFormat()
-                          .parse(widget._itemPriceController.text) as double;
-                      widget.itemData.itemPrice = itemPrice;
+                      var itemPrice =
+                          double.tryParse(widget._itemPriceController.text) ??
+                              double.nan;
+                      if (!itemPrice.isNaN && !itemPrice.isInfinite) {
+                        widget.itemData.itemPrice = itemPrice;
+                      }
 
                       Navigator.pop(context, widget.itemData);
                     },
