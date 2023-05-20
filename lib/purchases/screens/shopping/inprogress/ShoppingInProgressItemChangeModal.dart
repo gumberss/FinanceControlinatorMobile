@@ -47,7 +47,11 @@ class _ShoppingInProgressItemChangeModalState
                         Text(widget.itemData.itemName,
                             style: TextStyle(fontSize: 24)),
                         Text(
-                            "${AppLocalizations.of(context)!.expected}: ${widget.itemData.expectedQuantity}    ${AppLocalizations.of(context)!.inTheCart}: ${widget.itemData.quantityInTheCart}",
+                            "${AppLocalizations.of(context)!.expected}: ${widget
+                                .itemData
+                                .expectedQuantity}    ${AppLocalizations.of(
+                                context)!.inTheCart}: ${widget.itemData
+                                .quantityInTheCart}",
                             style: TextStyle(
                                 fontSize: 16,
                                 color: ColorService.colorByRemainingQuantity(
@@ -63,15 +67,33 @@ class _ShoppingInProgressItemChangeModalState
                                 widget.itemData.quantityInTheCart++;
                               });
 
-                              try {
-                                var itemPrice = NumberFormat()
-                                    .parse(widget._itemPriceController.text);
+                              var itemPrice = double.tryParse(
+                                  widget._itemPriceController.text) ??
+                                  double.nan;
 
-                                widget._totalPriceController.text = (itemPrice *
+                              try {
+                                if (!itemPrice.isNaN) {
+                                  widget._totalPriceController.text =
+                                      (itemPrice *
+                                          widget.itemData.quantityInTheCart)
+                                          .toString();
+                                } else {
+                                  var totalPrice = double.tryParse(
+                                      widget._totalPriceController.text) ??
+                                      double.nan;
+
+                                  if (!totalPrice.isNaN &&
+                                      widget.itemData.quantityInTheCart != 0) {
+                                    widget._itemPriceController
+                                        .text = (totalPrice /
                                         widget.itemData.quantityInTheCart)
-                                    .toString();
-                              } on Exception catch (e) {
+                                        .toString();
+                                  }
+                                }
+                              } on Exception catch (_) {
                                 widget._totalPriceController.text = "0";
+                                debugPrint(
+                                    "It was not possible to set the total price value");
                               }
                             },
                             icon: const Icon(Icons.arrow_upward)),
@@ -89,16 +111,17 @@ class _ShoppingInProgressItemChangeModalState
                                 setState(() {
                                   widget.itemData.quantityInTheCart--;
                                 });
-
+                              }
+                              if (widget.itemData.quantityInTheCart > 0) {
                                 try {
                                   var itemPrice = NumberFormat()
                                       .parse(widget._itemPriceController.text);
 
                                   widget._totalPriceController.text =
                                       (itemPrice *
-                                              widget.itemData.quantityInTheCart)
+                                          widget.itemData.quantityInTheCart)
                                           .toString();
-                                } on Exception catch (e) {
+                                } on Exception catch (_) {
                                   widget._totalPriceController.text = "0";
                                 }
                               }
@@ -116,30 +139,35 @@ class _ShoppingInProgressItemChangeModalState
                   children: [
                     Expanded(
                         child: Row(
-                      children: [
-                        Expanded(
-                            child: DefaultInput(
-                              AppLocalizations.of(context)!.itemPrice,
-                          const TextInputType.numberWithOptions(
-                              decimal: true, signed: false),
-                          widget._itemPriceController,
-                          padding: EdgeInsets.zero,
-                          hintText: NumberFormat().format(1.50),
-                          fontSize: 14,
-                          onChanged: (text) {
-                            try {
-                              var itemPrice = NumberFormat().parse(text);
+                          children: [
+                            Expanded(
+                                child: DefaultInput(
+                                  AppLocalizations.of(context)!.itemPrice,
+                                  const TextInputType.numberWithOptions(
+                                      decimal: true, signed: false),
+                                  widget._itemPriceController,
+                                  padding: EdgeInsets.zero,
+                                  hintText: NumberFormat().format(1.50),
+                                  fontSize: 14,
+                                  onChanged: (text) {
+                                    if (widget.itemData.quantityInTheCart > 0) {
+                                      try {
+                                        var itemPrice = NumberFormat().parse(
+                                            text);
 
-                              widget._totalPriceController.text = (itemPrice *
-                                      widget.itemData.quantityInTheCart)
-                                  .toString();
-                            } on Exception catch (e) {
-                              widget._totalPriceController.text = "0";
-                            }
-                          },
+                                        widget._totalPriceController.text =
+                                            (itemPrice *
+                                                widget.itemData
+                                                    .quantityInTheCart)
+                                                .toString();
+                                      } on Exception catch (e) {
+                                        widget._totalPriceController.text = "0";
+                                      }
+                                    }
+                                  },
+                                ))
+                          ],
                         ))
-                      ],
-                    ))
                   ],
                 ),
               ),
@@ -150,28 +178,39 @@ class _ShoppingInProgressItemChangeModalState
                   children: [
                     Expanded(
                         child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Expanded(
-                            child: DefaultInput(
-                              AppLocalizations.of(context)!.totalPrice,
-                          TextInputType.text,
-                          widget._totalPriceController,
-                          padding: EdgeInsets.zero,
-                          fontSize: 14,
-                          onChanged: (text) {
-                            try {
-                              var totalPrice = NumberFormat().parse(text);
-                              widget._itemPriceController.text = (totalPrice /
-                                      widget.itemData.quantityInTheCart)
-                                  .toString();
-                            } on Exception catch (_) {}
-                          },
-                          hintText: NumberFormat().format(3.00),
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Expanded(
+                                child: DefaultInput(
+                                  AppLocalizations.of(context)!.totalPrice,
+                                  TextInputType.text,
+                                  widget._totalPriceController,
+                                  padding: EdgeInsets.zero,
+                                  fontSize: 14,
+                                  onChanged: (text) {
+                                    if (widget.itemData.quantityInTheCart > 0) {
+                                      try {
+                                        var totalPrice =
+                                            double.tryParse(text) ?? double.nan;
+
+                                        if (totalPrice != double.infinity &&
+                                            totalPrice != double.nan &&
+                                            widget.itemData.quantityInTheCart !=
+                                                0) {
+                                          widget._itemPriceController.text =
+                                              (totalPrice /
+                                                  widget.itemData
+                                                      .quantityInTheCart)
+                                                  .toString();
+                                        }
+                                      } on Exception catch (_) {}
+                                    }
+                                  },
+                                  hintText: NumberFormat().format(3.00),
+                                ))
+                          ],
                         ))
-                      ],
-                    ))
                   ],
                 ),
               ),
