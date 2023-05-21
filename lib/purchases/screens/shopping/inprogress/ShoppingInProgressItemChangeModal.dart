@@ -1,15 +1,23 @@
+import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../components/DefaultInput.dart';
+import '../../../../l10n/i10n.dart';
 import '../../../domain/services/ColorService.dart';
 
 class ShoppingInProgressItemChangeModal extends StatefulWidget {
   ItemChangedData itemData;
   TextEditingController _itemPriceController = TextEditingController();
   TextEditingController _totalPriceController = TextEditingController();
+
+  final CurrencyTextInputFormatter _itemPriceCurrencyFormater =
+      CurrencyTextInputFormatter(locale: i10n.getCurrentLocale());
+
+  final CurrencyTextInputFormatter _totalPriceCurrencyFormater =
+      CurrencyTextInputFormatter(locale: i10n.getCurrentLocale());
 
   ShoppingInProgressItemChangeModal(this.itemData);
 
@@ -23,10 +31,12 @@ class _ShoppingInProgressItemChangeModalState
   @override
   Widget build(BuildContext context) {
     if (widget.itemData.itemPrice != 0) {
-      widget._itemPriceController.text = widget.itemData.itemPrice.toString();
-      widget._totalPriceController.text =
-          (widget.itemData.itemPrice * widget.itemData.quantityInTheCart)
-              .toString();
+      widget._itemPriceController.text = widget._itemPriceCurrencyFormater
+          .format(widget.itemData.itemPrice.toString());
+      widget._totalPriceController.text = widget._totalPriceCurrencyFormater
+          .format(
+              (widget.itemData.itemPrice * widget.itemData.quantityInTheCart)
+                  .toString());
     }
 
     return Column(
@@ -63,32 +73,35 @@ class _ShoppingInProgressItemChangeModalState
                                 widget.itemData.quantityInTheCart++;
                               });
 
-                              var itemPrice = double.tryParse(
-                                      widget._itemPriceController.text) ??
-                                  double.nan;
+                              var itemPrice = widget._itemPriceCurrencyFormater
+                                  .getUnformattedValue();
 
                               try {
                                 if (!itemPrice.isNaN) {
-                                  widget._totalPriceController.text =
-                                      (itemPrice *
+                                  widget._totalPriceController.text = widget
+                                      ._totalPriceCurrencyFormater
+                                      .format((itemPrice *
                                               widget.itemData.quantityInTheCart)
-                                          .toStringAsFixed(2);
+                                          .toStringAsFixed(2));
                                 } else {
-                                  var totalPrice = double.tryParse(
-                                          widget._totalPriceController.text) ??
-                                      double.nan;
+                                  var totalPrice = widget
+                                      ._totalPriceCurrencyFormater
+                                      .getUnformattedValue();
 
                                   if (!totalPrice.isNaN &&
                                       widget.itemData.quantityInTheCart != 0) {
-                                    widget._itemPriceController
-                                        .text = (totalPrice /
-                                            widget.itemData.quantityInTheCart)
-                                        .toStringAsFixed(2);
+                                    widget._itemPriceController.text = widget
+                                        ._itemPriceCurrencyFormater
+                                        .format((totalPrice /
+                                                widget
+                                                    .itemData.quantityInTheCart)
+                                            .toStringAsFixed(2));
                                   }
                                 }
                               } on Exception catch (_) {
-                                widget._totalPriceController.text =
-                                    0.toStringAsFixed(2);
+                                widget._totalPriceController.text = widget
+                                    ._totalPriceCurrencyFormater
+                                    .format(0.toStringAsFixed(2));
                                 debugPrint(
                                     "It was not possible to set the total price value");
                               }
@@ -111,16 +124,19 @@ class _ShoppingInProgressItemChangeModalState
                               }
                               if (widget.itemData.quantityInTheCart > 0) {
                                 try {
-                                  var itemPrice = NumberFormat()
-                                      .parse(widget._itemPriceController.text);
+                                  var itemPrice = widget
+                                      ._itemPriceCurrencyFormater
+                                      .getUnformattedValue();
 
-                                  widget._totalPriceController.text =
-                                      (itemPrice *
+                                  widget._totalPriceController.text = widget
+                                      ._totalPriceCurrencyFormater
+                                      .format((itemPrice *
                                               widget.itemData.quantityInTheCart)
-                                          .toStringAsFixed(2);
+                                          .toStringAsFixed(2));
                                 } on Exception catch (_) {
-                                  widget._totalPriceController.text =
-                                      0.toStringAsFixed(2);
+                                  widget._totalPriceController.text = widget
+                                      ._totalPriceCurrencyFormater
+                                      .format(0.toStringAsFixed(2));
                                 }
                               }
                             },
@@ -144,20 +160,26 @@ class _ShoppingInProgressItemChangeModalState
                           const TextInputType.numberWithOptions(
                               decimal: true, signed: false),
                           widget._itemPriceController,
+                          inputFormatter: [widget._itemPriceCurrencyFormater],
                           padding: EdgeInsets.zero,
                           hintText: NumberFormat().format(1.50),
                           fontSize: 14,
                           onChanged: (text) {
                             if (widget.itemData.quantityInTheCart > 0) {
                               try {
-                                var itemPrice = NumberFormat().parse(text);
+                                var itemPrice = widget
+                                    ._itemPriceCurrencyFormater
+                                    .getUnformattedValue();
 
-                                widget._totalPriceController.text = (itemPrice *
-                                        widget.itemData.quantityInTheCart)
-                                    .toStringAsFixed(2);
+                                widget._totalPriceController.text = widget
+                                    ._totalPriceCurrencyFormater
+                                    .format((itemPrice *
+                                            widget.itemData.quantityInTheCart)
+                                        .toStringAsFixed(2));
                               } on Exception catch (e) {
-                                widget._totalPriceController.text =
-                                    0.toStringAsFixed(2);
+                                widget._totalPriceController.text = widget
+                                    ._totalPriceCurrencyFormater
+                                    .format(0.toStringAsFixed(2));
                               }
                             }
                           },
@@ -182,20 +204,24 @@ class _ShoppingInProgressItemChangeModalState
                           AppLocalizations.of(context)!.totalPrice,
                           TextInputType.text,
                           widget._totalPriceController,
+                          inputFormatter: [widget._totalPriceCurrencyFormater],
                           padding: EdgeInsets.zero,
                           fontSize: 14,
                           onChanged: (text) {
                             if (widget.itemData.quantityInTheCart > 0) {
                               try {
-                                var totalPrice =
-                                    double.tryParse(text) ?? double.nan;
+                                var totalPrice = widget
+                                    ._totalPriceCurrencyFormater
+                                    .getUnformattedValue();
+
                                 if (totalPrice != double.infinity &&
                                     !totalPrice.isNaN &&
                                     widget.itemData.quantityInTheCart != 0) {
-                                  widget._itemPriceController.text =
-                                      (totalPrice /
+                                  widget._itemPriceController.text = widget
+                                      ._itemPriceCurrencyFormater
+                                      .format((totalPrice /
                                               widget.itemData.quantityInTheCart)
-                                          .toStringAsFixed(2);
+                                          .toStringAsFixed(2));
                                 }
                               } on Exception catch (_) {}
                             }
@@ -213,11 +239,10 @@ class _ShoppingInProgressItemChangeModalState
                   OutlinedButton(
                     child: Text(AppLocalizations.of(context)!.create),
                     onPressed: () {
-                      var itemPrice =
-                          double.tryParse(widget._itemPriceController.text) ??
-                              double.nan;
+                      var itemPrice = widget._itemPriceCurrencyFormater
+                          .getUnformattedValue();
                       if (!itemPrice.isNaN && !itemPrice.isInfinite) {
-                        widget.itemData.itemPrice = itemPrice;
+                        widget.itemData.itemPrice = itemPrice.toDouble();
                       }
 
                       Navigator.pop(context, widget.itemData);
