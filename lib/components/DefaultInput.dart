@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class DefaultInput extends StatelessWidget {
   String title;
@@ -14,6 +15,7 @@ class DefaultInput extends StatelessWidget {
   String? hintText;
   EdgeInsets padding;
   double fontSize;
+  List<TextInputFormatter>? inputFormatter;
 
   DefaultInput(this.title, this.type, this.controller,
       {this.obscureText = false,
@@ -22,6 +24,7 @@ class DefaultInput extends StatelessWidget {
       this.validator,
       this.onChanged,
       this.hintText,
+      this.inputFormatter,
       this.autoValidateMode = AutovalidateMode.onUserInteraction,
       this.padding =
           const EdgeInsets.only(left: 8.0, right: 8.0, top: 2.0, bottom: 2.0),
@@ -32,6 +35,7 @@ class DefaultInput extends StatelessWidget {
     return Padding(
         padding: padding,
         child: TextFormField(
+          inputFormatters: inputFormatter ?? [],
           onEditingComplete: () {
             if (onSubmitted != null) {
               onSubmitted!();
