@@ -5,11 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:finance_controlinator_mobile/components/DefaultInput.dart';
 import '../../../authentications/services/AuthorizationService.dart';
 import '../../../components/DefaultDialog.dart';
+import '../../../components/userService.dart';
 import '../../domain/PurchaseList.dart';
 import 'PurchaseListItem.dart';
 
 List<Widget> TextInputActionDialog(BuildContext context, String text,
-    TextEditingController controller, VoidCallback action, {String? buttonText}) {
+    TextEditingController controller, VoidCallback action,
+    {String? buttonText, String? initialValue}) {
   return [
     DefaultInput(text, TextInputType.text, controller),
     Padding(
@@ -26,6 +28,7 @@ List<Widget> TextInputActionDialog(BuildContext context, String text,
                   }
 
                   try {
+                    //todo: this should be a future
                     action();
                     //todo: toast success
                     controller.clear();
@@ -35,12 +38,33 @@ List<Widget> TextInputActionDialog(BuildContext context, String text,
                     //todo: toast error
                   }
                 },
-                child: Text(buttonText ?? AppLocalizations.of(context)!.create))))
+                child:
+                    Text(buttonText ?? AppLocalizations.of(context)!.create))))
   ];
 }
 
-class PurchasesListsScreen extends StatelessWidget {
+class PurchasesListsScreen extends StatefulWidget {
+  @override
+  State<PurchasesListsScreen> createState() => _PurchasesListsScreenState();
+}
+
+class _PurchasesListsScreenState extends State<PurchasesListsScreen> {
   final listStateKey = GlobalKey<_PurchaseListsState>();
+  String? _nickname;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadNickname();
+  }
+
+  Future<void> _loadNickname() async {
+    final nickname = await UserSharedPreferencies().userNickname;
+    debugPrint(nickname);
+    setState(() {
+      _nickname = nickname ?? "";
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -88,31 +112,41 @@ class PurchasesListsScreen extends StatelessWidget {
       }
     });
   }
-}
 
-TextEditingController nicknameController = TextEditingController();
+  TextEditingController nicknameController = TextEditingController();
 
-List<Widget> NiknameDialog(BuildContext context) {
-  return TextInputActionDialog(
-      context, AppLocalizations.of(context)!.nickname, nicknameController,
+  List<Widget> NiknameDialog(BuildContext context) {
+    nicknameController.text = _nickname!;
+
+    return TextInputActionDialog(
+      context,
+      AppLocalizations.of(context)!.nickname,
+      nicknameController,
       () async {
-    var result = await UserWebClient().setNickname(nicknameController.text);
-    if (result.success()) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text(AppLocalizations.of(context)!.nicknameSetted)));
-    } else {
-      if (result.statusCode == 400 && result.errorMessage == "[[INVALID_NICKNAME]]") {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content:
-                Text(AppLocalizations.of(context)!.nicknameAlreadyInUseError)));
-      }else{
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text(AppLocalizations.of(context)!.nicknameServerError)));
-      }
-      debugPrint(result.errorMessage);
-    }
-  },
-  buttonText: AppLocalizations.of(context)!.send);
+        var result = await UserWebClient().setNickname(nicknameController.text);
+        if (result.success()) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text(AppLocalizations.of(context)!.nicknameSetted)));
+          setState(() => _nickname = result.data!.nickname!);
+          await UserSharedPreferencies()
+              .storeUserNickname(nicknameController.text);
+        } else {
+          if (result.statusCode == 400 &&
+              result.errorMessage == "[[INVALID_NICKNAME]]") {
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text(
+                    AppLocalizations.of(context)!.nicknameAlreadyInUseError)));
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content:
+                    Text(AppLocalizations.of(context)!.nicknameServerError)));
+          }
+          debugPrint(result.errorMessage);
+        }
+      },
+      buttonText: AppLocalizations.of(context)!.send,
+    );
+  }
 }
 
 class PurchaseLists extends StatefulWidget {
