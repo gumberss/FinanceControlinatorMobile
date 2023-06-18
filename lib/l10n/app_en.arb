@@ -31,6 +31,7 @@
     "nickname": "Nickname",
     "nicknameSetted": "Your are nicknamed!",
     "nicknameAlreadyInUseError": "Opps!, This nickname is already in use",
-    "nicknameServerError": "Opps!, The server couldn't nickname you, try again later :(",
+    "nicknameServerError": "Opps!, The server couldn't nickname \nyou, try again later :(",
+    "invalidNickname": "Opps!,the nickname should have the \nmaximum of 50 characters",
     "send": "Send"
 }

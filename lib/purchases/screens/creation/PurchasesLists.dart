@@ -3,8 +3,10 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:finance_controlinator_mobile/purchases/webclients/PurchaseListWebClient.dart';
 import 'package:flutter/material.dart';
 import 'package:finance_controlinator_mobile/components/DefaultInput.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import '../../../authentications/services/AuthorizationService.dart';
 import '../../../components/DefaultDialog.dart';
+import '../../../components/toast.dart';
 import '../../../components/userService.dart';
 import '../../domain/PurchaseList.dart';
 import 'PurchaseListItem.dart';
@@ -44,6 +46,8 @@ List<Widget> TextInputActionDialog(BuildContext context, String text,
 }
 
 class PurchasesListsScreen extends StatefulWidget {
+  FToast toast = FToast();
+
   @override
   State<PurchasesListsScreen> createState() => _PurchasesListsScreenState();
 }
@@ -60,7 +64,6 @@ class _PurchasesListsScreenState extends State<PurchasesListsScreen> {
 
   Future<void> _loadNickname() async {
     final nickname = await UserSharedPreferencies().userNickname;
-    debugPrint(nickname);
     setState(() {
       _nickname = nickname ?? "";
     });
@@ -125,21 +128,25 @@ class _PurchasesListsScreenState extends State<PurchasesListsScreen> {
       () async {
         var result = await UserWebClient().setNickname(nicknameController.text);
         if (result.success()) {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: Text(AppLocalizations.of(context)!.nicknameSetted)));
+          DefaultToaster.toastSuccess(widget.toast,
+              message: AppLocalizations.of(context)!.nicknameSetted);
           setState(() => _nickname = result.data!.nickname!);
           await UserSharedPreferencies()
               .storeUserNickname(nicknameController.text);
         } else {
           if (result.statusCode == 400 &&
+              result.errorMessage == "[[NICKNAME_ALREADY_USED]]") {
+            DefaultToaster.toastError(widget.toast,
+                message:
+                    AppLocalizations.of(context)!.nicknameAlreadyInUseError);
+          } else if (result.statusCode == 400 &&
               result.errorMessage == "[[INVALID_NICKNAME]]") {
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                content: Text(
-                    AppLocalizations.of(context)!.nicknameAlreadyInUseError)));
+            DefaultToaster.toastError(widget.toast,
+                message:
+                AppLocalizations.of(context)!.invalidNickname);
           } else {
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                content:
-                    Text(AppLocalizations.of(context)!.nicknameServerError)));
+            DefaultToaster.toastError(widget.toast,
+                message: AppLocalizations.of(context)!.nicknameServerError);
           }
           debugPrint(result.errorMessage);
         }

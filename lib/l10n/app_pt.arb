@@ -31,6 +31,7 @@
     "nickname": "Apelido",
     "nicknameSetted": "Você está apelidado!",
     "nicknameAlreadyInUseError": "Opa!, Esse apelido já está sendo usado",
-    "nicknameServerError": "Opa!, O servidor Não conseguiu te apelidar, tente de novo mais tarde :(",
+    "nicknameServerError": "Opa!, O servidor Não conseguiu te apelidar, \ntente de novo mais tarde :(",
+    "invalidNickname": "Opa!, O apelido pode ter no máximo 50 caracteres",
     "send": "Enviar"
 }

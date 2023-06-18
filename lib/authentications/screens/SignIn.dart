@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 import '../../components/DefaultInput.dart';
+import '../../components/toast.dart';
 import '../../components/userService.dart';
 import '../../dashboard/Dashboard.dart';
 import '../../expenses/components/DefaultToast.dart';
@@ -128,15 +129,15 @@ class _SignInFormState extends State<_SignInForm>
                             _animationController.reverse();
                           } else {
                             _animationController.reverse();
-                            _ToastError();
+                            DefaultToaster.toastError(widget.toast);
                           }
                         }
                       } on HttpException catch (e) {
                         _animationController.reverse();
-                        _ToastError(message: e.message);
+                        DefaultToaster.toastError(widget.toast,message: e.message);
                       } on Exception catch (e) {
                         _animationController.reverse();
-                        _ToastError();
+                        DefaultToaster.toastError(widget.toast);
                       }
                     },
                     child: Text("Let's go!")),
@@ -171,15 +172,5 @@ class _SignInFormState extends State<_SignInForm>
             )
           ],
         ));
-  }
-
-  void _ToastError(
-      {String message =
-          "Oh no! I think something goes wrong.\nTry again in a few minutes"}) {
-    widget.toast.showToast(
-      child: DefaultToast.Error(message),
-      gravity: ToastGravity.TOP_RIGHT,
-      toastDuration: const Duration(seconds: 2),
-    );
   }
 }
