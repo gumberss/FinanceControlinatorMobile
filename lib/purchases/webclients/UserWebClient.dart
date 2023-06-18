@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:finance_controlinator_mobile/components/HttpClient/HttpResponseData.dart';
 import 'package:finance_controlinator_mobile/components/HttpClient/http_client.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import '../domain/PurchaseCategory.dart';
@@ -35,19 +36,21 @@ class UserWebClient {
     baseUri = Uri.http(baseUrl, basePath);
   }
 
-  Future<HttpResponseData<String?>> register() async {
+  Future<HttpResponseData<User?>> register(String userExternalId) async {
     return await tryRequest(
         client.postUri(Uri.http(baseUrl, "$basePath/register"),
-            options: defaultOptions),
-        (response) => HttpResponseData(
-            response.statusCode!, User.fromJson(response.data).id));
+            data: {"userExternalId": userExternalId}, options: defaultOptions),
+        (response) {
+         return HttpResponseData(
+              response.statusCode!, User.fromJson(response.data));
+        });
   }
 
-  Future<HttpResponseData<String?>> setNickname(String nickname) async {
+  Future<HttpResponseData<User?>> setNickname(String nickname) async {
     return await tryRequest(
         client.postUri(Uri.http(baseUrl, "$basePath/nickname"),
             options: defaultOptions, data: {"nickname": nickname}),
         (response) => HttpResponseData(
-            response.statusCode!, User.fromJson(response.data).id));
+            response.statusCode!, User.fromJson(response.data)));
   }
 }

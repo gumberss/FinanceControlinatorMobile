@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 import '../../components/DefaultInput.dart';
+import '../../components/userService.dart';
 import '../../dashboard/Dashboard.dart';
 import '../../expenses/components/DefaultToast.dart';
 import '../domain/SignInUser.dart';
@@ -60,13 +61,13 @@ class _SignInFormState extends State<_SignInForm>
         .signInWithEmailAndPassword(email: userName, password: password);
     if (result.user != null) {
       await JwtService().store(result.user!.uid);
-
-      var response = await UserWebClient().register();
-      if (response.success() && response.data != null) {
-        await JwtService().store(response.data!);
-        await JwtService().storeUserId(response.data!);
-
-      }else{
+      await JwtService().storeUserId(result.user!.uid);
+      var response = await UserWebClient().register(result.user!.uid);
+      if (response.success() && response.data?.id != null) {
+        await JwtService().storeUserId(response.data!.id!);
+        UserSharedPreferencies()
+            .storeUserNickname(response.data!.nickname ?? "");
+      } else {
         throw BusinessException("Couldn't be possible to identify the user");
       }
     }
