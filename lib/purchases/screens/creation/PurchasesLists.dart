@@ -1,3 +1,4 @@
+import 'package:finance_controlinator_mobile/purchases/webclients/UserWebClient.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:finance_controlinator_mobile/purchases/webclients/PurchaseListWebClient.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +9,7 @@ import '../../domain/PurchaseList.dart';
 import 'PurchaseListItem.dart';
 
 List<Widget> TextInputActionDialog(BuildContext context, String text,
-    TextEditingController controller, VoidCallback action) {
+    TextEditingController controller, VoidCallback action, {String? buttonText}) {
   return [
     DefaultInput(text, TextInputType.text, controller),
     Padding(
@@ -17,8 +18,7 @@ List<Widget> TextInputActionDialog(BuildContext context, String text,
             width: double.maxFinite,
             child: OutlinedButton(
                 style: OutlinedButton.styleFrom(
-                    primary: Colors.green[900],
-                    backgroundColor: Colors.white),
+                    primary: Colors.green[900], backgroundColor: Colors.white),
                 onPressed: () async {
                   if (controller.text.isEmpty) {
                     //todo: toast error
@@ -35,7 +35,7 @@ List<Widget> TextInputActionDialog(BuildContext context, String text,
                     //todo: toast error
                   }
                 },
-                child: Text(AppLocalizations.of(context)!.create))))
+                child: Text(buttonText ?? AppLocalizations.of(context)!.create))))
   ];
 }
 
@@ -51,8 +51,16 @@ class PurchasesListsScreen extends StatelessWidget {
 
     return Scaffold(
         appBar: AppBar(
-          title: Text(
-              AppLocalizations.of(context)!.purchaseListScreenTitle), //from dto
+          title: Text(AppLocalizations.of(context)!.purchaseListScreenTitle),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.person),
+              tooltip: 'Nickname Setter',
+              onPressed: () {
+                DefaultDialog().showDialog(context, NiknameDialog(context));
+              },
+            ),
+          ],
         ),
         body: PurchaseLists(listStateKey),
         floatingActionButton: FloatingActionButton(
@@ -80,6 +88,31 @@ class PurchasesListsScreen extends StatelessWidget {
       }
     });
   }
+}
+
+TextEditingController nicknameController = TextEditingController();
+
+List<Widget> NiknameDialog(BuildContext context) {
+  return TextInputActionDialog(
+      context, AppLocalizations.of(context)!.nickname, nicknameController,
+      () async {
+    var result = await UserWebClient().setNickname(nicknameController.text);
+    if (result.success()) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(AppLocalizations.of(context)!.nicknameSetted)));
+    } else {
+      if (result.statusCode == 400 && result.errorMessage == "[[INVALID_NICKNAME]]") {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content:
+                Text(AppLocalizations.of(context)!.nicknameAlreadyInUseError)));
+      }else{
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(AppLocalizations.of(context)!.nicknameServerError)));
+      }
+      debugPrint(result.errorMessage);
+    }
+  },
+  buttonText: AppLocalizations.of(context)!.send);
 }
 
 class PurchaseLists extends StatefulWidget {
