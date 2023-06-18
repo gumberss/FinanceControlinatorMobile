@@ -27,5 +27,10 @@
     "place": "Lugar",
     "title": "Título",
     "shoppingType": "Tipo da compra",
-    "totalCost": "Custo total"
+    "totalCost": "Custo total",
+    "nickname": "Apelido",
+    "nicknameSetted": "Você está apelidado!",
+    "nicknameAlreadyInUseError": "Opa!, Esse apelido já está sendo usado",
+    "nicknameServerError": "Opa!, O servidor Não conseguiu te apelidar, tente de novo mais tarde :(",
+    "send": "Enviar"
 }

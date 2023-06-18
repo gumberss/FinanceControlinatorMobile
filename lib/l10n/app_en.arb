@@ -27,5 +27,10 @@
     "place": "Place",
     "title": "Title",
     "shoppingType": "Shopping type",
-    "totalCost": "Total cost"
+    "totalCost": "Total cost",
+    "nickname": "Nickname",
+    "nicknameSetted": "Your are nicknamed!",
+    "nicknameAlreadyInUseError": "Opps!, This nickname is already in use",
+    "nicknameServerError": "Opps!, The server couldn't nickname you, try again later :(",
+    "send": "Send"
 }

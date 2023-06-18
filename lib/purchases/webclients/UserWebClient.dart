@@ -9,10 +9,13 @@ import '../domain/PurchaseCategory.dart';
 
 class User {
   String? id;
+  String? nickname;
 
   User(this.id);
 
-  User.fromJson(Map<String, dynamic> json) : id = json['id'];
+  User.fromJson(Map<String, dynamic> json)
+      : id = json['id'],
+        nickname = json['nickname'];
 
   Map<String, dynamic> toJson() => {'id': id};
 }
@@ -20,7 +23,7 @@ class User {
 class UserWebClient {
   String baseUrl =
       dotenv.env['FINANCE_CONTROLINATOR_API_URL_PURCHASE_LIST'].toString();
-  String basePath = "/api/users/register";
+  String basePath = "/api/users";
 
   late Uri baseUri;
 
@@ -34,7 +37,16 @@ class UserWebClient {
 
   Future<HttpResponseData<String?>> register() async {
     return await tryRequest(
-        client.postUri(Uri.http(baseUrl, basePath), options: defaultOptions),
+        client.postUri(Uri.http(baseUrl, "$basePath/register"),
+            options: defaultOptions),
+        (response) => HttpResponseData(
+            response.statusCode!, User.fromJson(response.data).id));
+  }
+
+  Future<HttpResponseData<String?>> setNickname(String nickname) async {
+    return await tryRequest(
+        client.postUri(Uri.http(baseUrl, "$basePath/nickname"),
+            options: defaultOptions, data: {"nickname": nickname}),
         (response) => HttpResponseData(
             response.statusCode!, User.fromJson(response.data).id));
   }
