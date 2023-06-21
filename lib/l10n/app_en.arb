@@ -32,6 +32,10 @@
     "nicknameSetted": "Your are nicknamed!",
     "nicknameAlreadyInUseError": "Opps!, This nickname is already in use",
     "nicknameServerError": "Opps!, The server couldn't nickname \nyou, try again later :(",
-    "invalidNickname": "Opps!,the nickname should have the \nmaximum of 50 characters",
-    "send": "Send"
+    "invalidNickname": "Opps!, The nickname should have the \nmaximum of 50 characters",
+    "send": "Send",
+    "share": "Share",
+    "shareWith": "Share with",
+    "listShared": "List Shared!",
+    "shareListServerError": "Opps!, It wasn't possible to share \nthe list, try again later :("
 }

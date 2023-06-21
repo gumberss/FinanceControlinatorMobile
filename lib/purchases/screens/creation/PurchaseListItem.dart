@@ -3,18 +3,22 @@ import 'package:finance_controlinator_mobile/purchases/webclients/PurchaseListWe
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import '../../../components/DefaultDialog.dart';
+import '../../../components/toast.dart';
 import '../../domain/PurchaseList.dart';
 import 'PurchasesLists.dart';
 
 class PurchaseListItem extends StatelessWidget {
   final PurchaseList _purchaseList;
   final Function _onChangeHappen;
+  final FToast toast;
 
   PurchaseListItem(PurchaseList purchaseList, Function onChangeHappen,
       {Key? key})
       : _purchaseList = purchaseList,
         _onChangeHappen = onChangeHappen,
+        toast = FToast(),
         super(key: key);
 
   @override
@@ -109,7 +113,10 @@ class PurchaseListItem extends StatelessWidget {
           icon: Icons.edit,
         ),
         SlidableAction(
-          onPressed: (ctx) {},
+          onPressed: (ctx) {
+            DefaultDialog().showDialog(
+                context, shareDialog(context, _purchaseList));
+          },
           backgroundColor: Colors.blueAccent,
           foregroundColor: Colors.white,
           icon: Icons.link,
@@ -134,5 +141,28 @@ class PurchaseListItem extends StatelessWidget {
         _onChangeHappen();
       }
     });
+  }
+
+  TextEditingController shareToNicknameController = TextEditingController();
+
+  List<Widget> shareDialog(BuildContext context, PurchaseList purchaseList) {
+    var listSharedText = AppLocalizations.of(context)!.listShared;
+    var errorMessage = AppLocalizations.of(context)!.shareListServerError;
+    return TextInputActionDialog(
+      context,
+      AppLocalizations.of(context)!.shareWith,
+      shareToNicknameController,
+      () async {
+        var result = await PurchaseListWebClient()
+            .shareList(purchaseList.id!, shareToNicknameController.text);
+        if (result.success()) {
+          DefaultToaster.toastSuccess(toast, message: listSharedText);
+        } else {
+          DefaultToaster.toastError(toast, message: errorMessage);
+          debugPrint(result.errorMessage);
+        }
+      },
+      buttonText: AppLocalizations.of(context)!.share,
+    );
   }
 }
