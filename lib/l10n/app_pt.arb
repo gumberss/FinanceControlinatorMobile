@@ -33,5 +33,9 @@
     "nicknameAlreadyInUseError": "Opa!, Esse apelido já está sendo usado",
     "nicknameServerError": "Opa!, O servidor Não conseguiu te apelidar, \ntente de novo mais tarde :(",
     "invalidNickname": "Opa!, O apelido pode ter no máximo 50 caracteres",
-    "send": "Enviar"
+    "send": "Enviar",
+    "shareWith": "Compartilhar com",
+    "share": "Compartilhar",
+    "listShared": "Lista compartilhada!",
+    "shareListServerError": "Opa!, Não foi possível compartilhar \na lista, tente de novo mais tarde :("
 }
