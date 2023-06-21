@@ -23,7 +23,7 @@ class ShoppingListWebClient {
 
   Future<HttpResponseData<ShoppingList?>> getById(String shoppingId) async {
     return await tryRequest(
-        client.getUri(Uri.http(baseUrl, basePath + "/$shoppingId"),
+        client.getUri(Uri.http(baseUrl, "$basePath/$shoppingId"),
             options: defaultOptions),
         (response) => HttpResponseData(
             response.statusCode!, ShoppingList.fromJson(response.data)));

@@ -142,8 +142,7 @@ class _PurchasesListsScreenState extends State<PurchasesListsScreen> {
           } else if (result.statusCode == 400 &&
               result.errorMessage == "[[INVALID_NICKNAME]]") {
             DefaultToaster.toastError(widget.toast,
-                message:
-                AppLocalizations.of(context)!.invalidNickname);
+                message: AppLocalizations.of(context)!.invalidNickname);
           } else {
             DefaultToaster.toastError(widget.toast,
                 message: AppLocalizations.of(context)!.nicknameServerError);
