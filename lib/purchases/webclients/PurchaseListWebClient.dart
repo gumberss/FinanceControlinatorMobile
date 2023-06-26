@@ -106,15 +106,14 @@ class PurchaseListWebClient {
     return HttpResponseData(response.statusCode!, response.data['id']);
   }
 
-  Future<HttpResponseData<PurchaseList?>> shareList(
-      String listId, String shareWithCustomerId) async {
+  Future<HttpResponseData<String?>> shareList(
+      String listId, String shareWithCustomerNickname) async {
     return await tryRequest(
-        client.getUri(
-            Uri.http(
-                baseUrl, "${basePath}share/$listId/with/$shareWithCustomerId"),
+        client.postUri(Uri.http(baseUrl, "api/share/purchase-list"),
+            data: {"listId": listId, "customerNickname": shareWithCustomerNickname},
             options: defaultOptions),
         (response) => HttpResponseData(
-            response.statusCode!, PurchaseList.fromJson(response.data)));
+            response.statusCode!, response.data["listId"].toString()));
   }
 
   Future<HttpResponseData<PurchaseListManagementData?>> getItemsAndCategories(
