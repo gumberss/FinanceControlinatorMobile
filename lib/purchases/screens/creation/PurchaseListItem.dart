@@ -1,3 +1,4 @@
+import 'package:finance_controlinator_mobile/components/JwtService.dart';
 import 'package:finance_controlinator_mobile/purchases/screens/management/PurchaseListManagementScreen.dart';
 import 'package:finance_controlinator_mobile/purchases/webclients/PurchaseListWebClient.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -13,10 +14,12 @@ class PurchaseListItem extends StatelessWidget {
   final PurchaseList _purchaseList;
   final Function _onChangeHappen;
   final FToast toast;
+  final String _userId;
 
-  PurchaseListItem(PurchaseList purchaseList, Function onChangeHappen,
+  PurchaseListItem(PurchaseList purchaseList, userId, Function onChangeHappen,
       {Key? key})
       : _purchaseList = purchaseList,
+        _userId = userId,
         _onChangeHappen = onChangeHappen,
         toast = FToast(),
         super(key: key);
@@ -100,28 +103,33 @@ class PurchaseListItem extends StatelessWidget {
   }
 
   ActionPane slideRightBackground(BuildContext context) {
+    var actions = [
+      SlidableAction(
+        onPressed: (ctx) {
+          DefaultDialog().showDialog(
+              context, EditPurchaseListDialog(context, _purchaseList));
+        },
+        backgroundColor: Colors.greenAccent,
+        foregroundColor: Colors.white,
+        icon: Icons.edit,
+      )
+    ];
+
+    if (_purchaseList.userId == _userId) {
+      actions.add(SlidableAction(
+        onPressed: (ctx) {
+          DefaultDialog()
+              .showDialog(context, shareDialog(context, _purchaseList));
+        },
+        backgroundColor: Colors.blueAccent,
+        foregroundColor: Colors.white,
+        icon: Icons.link,
+      ));
+    }
+
     return ActionPane(
       motion: const ScrollMotion(),
-      children: [
-        SlidableAction(
-          onPressed: (ctx) {
-            DefaultDialog().showDialog(
-                context, EditPurchaseListDialog(context, _purchaseList));
-          },
-          backgroundColor: Colors.greenAccent,
-          foregroundColor: Colors.white,
-          icon: Icons.edit,
-        ),
-        SlidableAction(
-          onPressed: (ctx) {
-            DefaultDialog().showDialog(
-                context, shareDialog(context, _purchaseList));
-          },
-          backgroundColor: Colors.blueAccent,
-          foregroundColor: Colors.white,
-          icon: Icons.link,
-        )
-      ],
+      children: actions,
     );
   }
 
