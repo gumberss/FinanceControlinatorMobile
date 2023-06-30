@@ -6,6 +6,8 @@ import 'package:finance_controlinator_mobile/components/DefaultInput.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import '../../../authentications/services/AuthorizationService.dart';
 import '../../../components/DefaultDialog.dart';
+import '../../../components/HttpClient/HttpResponseData.dart';
+import '../../../components/JwtService.dart';
 import '../../../components/toast.dart';
 import '../../../components/userService.dart';
 import '../../domain/PurchaseList.dart';
@@ -165,11 +167,29 @@ class PurchaseLists extends StatefulWidget {
 class _PurchaseListsState extends State<PurchaseLists> {
   List<PurchaseList>? purchaseLists;
   bool starting = true;
+  String? userId;
 
   @override
   void initState() {
     super.initState();
-    loadLists();
+    initiate();
+  }
+
+  Future initiate() async {
+    await loadLists();
+    await loadUserId();
+
+    setState(() {
+      starting = false;
+    });
+  }
+
+  Future loadUserId() async {
+    var userId = await JwtService().userId;
+
+    setState(() {
+      this.userId = userId;
+    });
   }
 
   Future loadLists() async {
@@ -183,15 +203,12 @@ class _PurchaseListsState extends State<PurchaseLists> {
     if (response.serverError()) {
       setState(() {
         purchaseLists = List<PurchaseList>.empty(growable: false);
-        starting = false;
       });
       //todo: toast error
       return;
     }
-
     setState(() {
       purchaseLists = response.data!;
-      starting = false;
     });
   }
 
@@ -210,7 +227,8 @@ class _PurchaseListsState extends State<PurchaseLists> {
                     itemCount: purchaseLists?.length,
                     itemBuilder: (context, index) {
                       if (purchaseLists == null) return const Text("");
-                      return PurchaseListItem(purchaseLists![index], loadLists);
+                      return PurchaseListItem(
+                          purchaseLists![index], userId, loadLists);
                     })));
   }
 }

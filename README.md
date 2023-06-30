@@ -11,4 +11,4 @@ https://user-images.githubusercontent.com/38296002/192410613-93e6420b-f3a4-433f-
 
 
 Run `flutter gen-l10n` to generate i10n codes when new sentences are added
-Run emulator: `flutter emulators --launch Pixel_5_API_30`  
+Run emulator: `flutter emulators --launch Pixel_5_API_30` and `flutter emulators --launch Pixel_2_XL_API_30`
