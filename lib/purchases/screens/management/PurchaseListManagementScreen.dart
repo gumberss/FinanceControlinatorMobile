@@ -27,7 +27,14 @@ class PurchaseListManagementScreen extends StatelessWidget {
           title: Text(_purchaseList.name),
           actions: [
             addCategoryButton(_purchaseList,
-                () => purchaseListManagementStateKey.currentState?.loadLists())
+                () => purchaseListManagementStateKey.currentState?.loadLists()),
+            IconButton(
+              icon: const Icon(Icons.refresh),
+              tooltip: 'Refresh Lists',
+              onPressed: () {
+                purchaseListManagementStateKey.currentState?.loadLists();
+              },
+            ),
           ],
         ),
         backgroundColor: Colors.grey.shade200,

@@ -88,7 +88,7 @@ class _PurchasesListsScreenState extends State<PurchasesListsScreen> {
               onPressed: () {
                 DefaultDialog().showDialog(context, NiknameDialog(context));
               },
-            ),
+            )
           ],
         ),
         body: PurchaseLists(listStateKey),
