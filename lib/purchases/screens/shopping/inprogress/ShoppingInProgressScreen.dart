@@ -26,6 +26,15 @@ class ShoppingInProgressScreen extends StatelessWidget {
     return Scaffold(
         appBar: AppBar(
           title: Text(_shopping.title),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.refresh),
+              tooltip: 'Refresh Lists',
+              onPressed: () {
+                _shoppingListKey.currentState?.loadShoppingList();
+              },
+            ),
+          ],
         ),
         backgroundColor: Colors.grey.shade200,
         body: ShoppingListView(_shopping.id, _shoppingListKey),
