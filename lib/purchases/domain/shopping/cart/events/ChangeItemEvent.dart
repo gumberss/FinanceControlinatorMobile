@@ -5,7 +5,7 @@ class ChangeItemEvent {
   String shoppingId;
   String id;
   String itemId;
-  double price;
+  num price;
   int quantityChanged;
 
   ChangeItemEvent(
