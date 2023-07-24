@@ -28,16 +28,21 @@ class ShoppingInProgressItemChangeModal extends StatefulWidget {
 
 class _ShoppingInProgressItemChangeModalState
     extends State<ShoppingInProgressItemChangeModal> {
+
   @override
-  Widget build(BuildContext context) {
+  void initState() {
     if (widget.itemData.itemPrice != 0) {
       widget._itemPriceController.text = widget._itemPriceCurrencyFormater
           .format(widget.itemData.itemPrice.toString());
       widget._totalPriceController.text = widget._totalPriceCurrencyFormater
           .format(
-              (widget.itemData.itemPrice * widget.itemData.quantityInTheCart)
-                  .toString());
+          (widget.itemData.itemPrice * widget.itemData.quantityInTheCart)
+              .toString());
     }
+  }
+
+  @override
+  Widget build(BuildContext context) {
 
     return Column(
       children: [
