@@ -259,7 +259,7 @@ class _ShoppingInProgressItemChangeModalState
 }
 
 class ItemChangedData {
-  double itemPrice;
+  num itemPrice;
   int expectedQuantity;
   int quantityInTheCart;
   String itemName;

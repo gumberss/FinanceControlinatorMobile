@@ -5,7 +5,7 @@ class ShoppingItem {
   int quantity;
   int quantityInCart;
   int? orderPosition;
-  double price;
+  num price;
 
   ShoppingItem(this.id, this.name, this.categoryId, this.price)
       : quantity = 0,
@@ -18,7 +18,7 @@ class ShoppingItem {
         quantity = json['quantity'] ?? 0,
         orderPosition = json['orderPosition'] ?? 0,
         quantityInCart = json['quantityInCart'] ?? 0,
-        price = json['price'] ?? 0;
+        price =  json['price'] ?? 0;
 
   Map<String, dynamic> toJson() => {
         'id': id,
