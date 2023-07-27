@@ -10,7 +10,7 @@ import '../../domain/shopping/cart/events/ReorderCategoryEvent.dart';
 class CartEventWebClient {
   String baseUrl =
       dotenv.env['FINANCE_CONTROLINATOR_API_URL_PURCHASE_LIST'].toString();
-  String basePath = "/api/shopping/cart";
+  String basePath = "/api/shopping-cart";
 
   late Uri baseUri;
 
