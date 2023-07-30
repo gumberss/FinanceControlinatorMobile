@@ -32,6 +32,10 @@ class _ShoppingSessionsScreenState extends State<ShoppingSessionsScreen> {
 
 
   Future initiate() async {
+    setState(() {
+      starting = true;
+    });
+
     await loadSessions();
     await loadUserId();
 
@@ -49,6 +53,7 @@ class _ShoppingSessionsScreenState extends State<ShoppingSessionsScreen> {
   }
 
   Future loadSessions() async {
+
     var response = await ShoppingSessionWebClient().active(widget._purchaseList.id!);
 
     if (response.unauthorized()) {
@@ -72,7 +77,16 @@ class _ShoppingSessionsScreenState extends State<ShoppingSessionsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-            title: Text(AppLocalizations.of(context)!.shoppingInProgress)),
+            title: Text(AppLocalizations.of(context)!.shoppingInProgress),
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.refresh),
+                tooltip: 'Refresh Lists',
+                onPressed: () {
+                  initiate();
+                },
+              ),
+            ]),
         backgroundColor: Colors.grey.shade200,
         body: buildList(),
         floatingActionButton: initShoppingButton(context, widget._purchaseList));
