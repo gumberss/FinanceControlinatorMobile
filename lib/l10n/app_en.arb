@@ -26,6 +26,7 @@
     "summary": "Summary",
     "place": "Place",
     "title": "Title",
+    "type": "Type",
     "shoppingType": "Shopping type",
     "totalCost": "Total cost",
     "nickname": "Nickname",

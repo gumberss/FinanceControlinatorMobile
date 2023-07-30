@@ -16,6 +16,7 @@ import '../../../webclients/shopping/CartEventWebClient.dart';
 import '../../../webclients/shopping/ShoppingListWebClient.dart';
 
 class ShoppingInProgressScreen extends StatelessWidget {
+  static String name = "ShoppingInProgressScreen";
   final Shopping _shopping;
   final _shoppingListKey = GlobalKey<_ShoppingListState>();
 

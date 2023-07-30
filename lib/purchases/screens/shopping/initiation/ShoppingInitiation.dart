@@ -196,6 +196,8 @@ class _ShoppingInitiationScreenState extends State<ShoppingInitiationScreen> {
               var shopping = initResult.data!;
               Navigator.of(context)
                   .push(MaterialPageRoute(
+                      settings:
+                          RouteSettings(name: ShoppingInProgressScreen.name),
                       builder: (c) => ShoppingInProgressScreen(shopping)))
                   .then((value) => Navigator.of(context).pop());
             } else {

@@ -74,10 +74,7 @@ class _ShoppingSessionsScreenState extends State<ShoppingSessionsScreen> {
         appBar: AppBar(
             title: Text(AppLocalizations.of(context)!.shoppingInProgress)),
         backgroundColor: Colors.grey.shade200,
-        body: Padding(
-          padding: const EdgeInsets.all(20),
-          child: buildList()
-        ),
+        body: buildList(),
         floatingActionButton: initShoppingButton(context, widget._purchaseList));
   }
 
