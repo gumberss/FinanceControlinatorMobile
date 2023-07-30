@@ -10,10 +10,8 @@ import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
 import 'dart:async';
 
-import '../../../../authentications/services/AuthorizationService.dart';
 import '../../../../components/Locator.dart';
 import '../../../domain/PurchaseList.dart';
-import '../../../webclients/shopping/ExistentShoppingWebClient.dart';
 
 class ShoppingInitiationScreen extends StatefulWidget {
   static const String name = "ShoppingInitiationScreen";
