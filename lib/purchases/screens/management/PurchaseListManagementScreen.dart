@@ -6,6 +6,7 @@ import '../../domain/PurchaseCategory.dart';
 import '../../domain/PurchaseList.dart';
 import '../../webclients/CategoryWebClient.dart';
 import '../shopping/initiation/ShoppingInitiation.dart';
+import '../shopping/sessions/ShoppingSessionsScreen.dart';
 import 'PurchaseCategoryAdderWidget.dart';
 import 'PurchaseListManagement.dart';
 
@@ -74,8 +75,8 @@ class PurchaseListManagementScreen extends StatelessWidget {
       backgroundColor: Colors.blueAccent,
       child: const Icon(Icons.arrow_forward),
       onPressed: () => Navigator.of(context).push(MaterialPageRoute(
-          settings: RouteSettings(name: ShoppingInitiationScreen.name),
-          builder: (c) => ShoppingInitiationScreen(list))),
+          settings: RouteSettings(name: ShoppingSessionsScreen.name),
+          builder: (c) => ShoppingSessionsScreen(list))),
     );
   }
 
