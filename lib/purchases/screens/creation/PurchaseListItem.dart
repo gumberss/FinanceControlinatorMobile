@@ -1,4 +1,3 @@
-import 'package:finance_controlinator_mobile/components/JwtService.dart';
 import 'package:finance_controlinator_mobile/purchases/screens/management/PurchaseListManagementScreen.dart';
 import 'package:finance_controlinator_mobile/purchases/webclients/PurchaseListWebClient.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';

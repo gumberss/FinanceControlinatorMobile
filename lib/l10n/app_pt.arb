@@ -26,6 +26,7 @@
     "summary": "Resumo",
     "place": "Lugar",
     "title": "Título",
+    "type": "Tipo",
     "shoppingType": "Tipo da compra",
     "totalCost": "Custo total",
     "nickname": "Apelido",
