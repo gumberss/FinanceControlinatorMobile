@@ -82,58 +82,30 @@ class _ShoppingInitiationScreenState extends State<ShoppingInitiationScreen> {
       loadingData = true;
     });
 
-    var response =
-        await ExistentShoppingWebClient().existent(widget._purchaseList.id!);
+    await _positionTimerFuture;
+    var shoppingInitRequestData = ShoppingInitiationDataRequest(
+        widget._purchaseList.id, _position?.latitude, _position?.longitude);
 
-    if (response.unauthorized()) {
-      AuthorizationService.redirectToSignIn(context);
-      return;
-    }
+    var initiationDatResult =
+        await ShoppingInitiationWebClient().initData(shoppingInitRequestData);
 
-    if (response.serverError()) {
+    if (initiationDatResult.notFound()) {
       setState(() {
         loadingData = false;
       });
-      //todo: toast error
       return;
     }
 
-    if (response.notFound()) {
-      await _positionTimerFuture;
-      var shoppingInitRequestData = ShoppingInitiationDataRequest(
-          widget._purchaseList.id, _position?.latitude, _position?.longitude);
+    var place = initiationDatResult.data?.place;
+    var type = initiationDatResult.data?.type;
+    var now = DateFormat(AppLocalizations.of(context)!.dateFormat)
+        .format(DateTime.now());
 
-      var initiationDatResult =
-          await ShoppingInitiationWebClient().initData(shoppingInitRequestData);
-
-      if (initiationDatResult.notFound()) {
-        setState(() {
-          loadingData = false;
-        });
-        return;
-      }
-
-      var place = initiationDatResult.data?.place;
-      var type = initiationDatResult.data?.type;
-      var now = DateFormat(AppLocalizations.of(context)!.dateFormat)
-          .format(DateTime.now());
-
-      setState(() {
-        loadingData = false;
-        _placeController.text = place ?? "";
-        _typeController.text = type ?? "";
-        _titleController.text = "$place - $type - $now";
-      });
-      return;
-    }
-
-    var shopping = response.data!;
     setState(() {
       loadingData = false;
-      Navigator.of(context)
-          .push(MaterialPageRoute(
-              builder: (c) => ShoppingInProgressScreen(shopping)))
-          .then((value) => Navigator.of(context).pop());
+      _placeController.text = place ?? "";
+      _typeController.text = type ?? "";
+      _titleController.text = "$place - $type - $now";
     });
   }
 
