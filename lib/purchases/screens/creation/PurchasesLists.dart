@@ -6,7 +6,6 @@ import 'package:finance_controlinator_mobile/components/DefaultInput.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import '../../../authentications/services/AuthorizationService.dart';
 import '../../../components/DefaultDialog.dart';
-import '../../../components/HttpClient/HttpResponseData.dart';
 import '../../../components/JwtService.dart';
 import '../../../components/toast.dart';
 import '../../../components/userService.dart';
