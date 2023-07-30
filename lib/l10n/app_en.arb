@@ -37,5 +37,6 @@
     "share": "Share",
     "shareWith": "Share with",
     "listShared": "List Shared!",
-    "shareListServerError": "Opps!, It wasn't possible to share \nthe list, try again later :("
+    "shareListServerError": "Opps!, It wasn't possible to share \nthe list, try again later :(",
+    "shoppingInProgress": "Shopping in progress"
 }

@@ -37,5 +37,6 @@
     "shareWith": "Compartilhar com",
     "share": "Compartilhar",
     "listShared": "Lista compartilhada!",
-    "shareListServerError": "Opa!, Não foi possível compartilhar \na lista, tente de novo mais tarde :("
+    "shareListServerError": "Opa!, Não foi possível compartilhar \na lista, tente de novo mais tarde :(",
+    "shoppingInProgress": "Compras em progresso"
 }
