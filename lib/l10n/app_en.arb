@@ -3,6 +3,7 @@
     "purchaseListName": "Purchase List Name",
     "create": "Create",
     "edit": "Edit",
+    "add": "Add",
     "purchaseCategoryName": "Purchase Category Name",
     "purchaseCategoryItem": "Purchase Item Name",
     "amountToBuy": "Amount to buy: ",
