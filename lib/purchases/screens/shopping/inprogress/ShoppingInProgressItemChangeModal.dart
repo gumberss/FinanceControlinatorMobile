@@ -242,7 +242,7 @@ class _ShoppingInProgressItemChangeModalState
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   OutlinedButton(
-                    child: Text(AppLocalizations.of(context)!.create),
+                    child: Text(AppLocalizations.of(context)!.add),
                     onPressed: () {
                       var itemPrice = widget._itemPriceCurrencyFormater
                           .getUnformattedValue();
