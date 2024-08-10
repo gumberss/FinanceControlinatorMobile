@@ -7,7 +7,7 @@ class Result<T, E> {
       isSuccess
           ? _value
           : throw Exception(
-          "Result.Value can't be used when an error happened, plese, check IsSuccess or IsFailure property before use Value property");
+          "Result.Value can't be used when an error happened, please, check IsSuccess or IsFailure property before use Value property");
 
   E? get error => _error;
 

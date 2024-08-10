@@ -33,6 +33,8 @@ class Locator {
         heading: 1,
         speed: 1,
         speedAccuracy: 1,
+        altitudeAccuracy: 1,
+        headingAccuracy: 1,
         timestamp: DateTime.now());
     return Future(() => Result<Position, BusinessException>(position));
     //todo: ssl
