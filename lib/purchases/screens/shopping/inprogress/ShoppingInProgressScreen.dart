@@ -35,6 +35,13 @@ class ShoppingInProgressScreen extends StatelessWidget {
                 _shoppingListKey.currentState?.loadShoppingList();
               },
             ),
+            IconButton(
+              icon: const Icon(Icons.checklist),
+              tooltip: 'Check using IA',
+              onPressed: () {
+                _shoppingListKey.currentState?.markItemsWithIA();
+              },
+            )
           ],
         ),
         backgroundColor: Colors.grey.shade200,
@@ -67,6 +74,32 @@ class _ShoppingListState extends State<ShoppingListView> {
   void initState() {
     super.initState();
     loadShoppingList();
+  }
+
+  Future markItemsWithIA() async {
+    setState(() {
+      loadingData = true;
+    });
+
+    var response = await ShoppingListWebClient().markItemsWithIA(widget.shoppingListId);
+
+    if (response.unauthorized()) {
+      AuthorizationService.redirectToSignIn(context);
+      return;
+    }
+
+    if (response.serverError()) {
+      setState(() {
+        loadingData = false;
+      });
+      //todo: toast error
+      return;
+    }
+
+    setState(() {
+      shoppingList = response.data!;
+      loadingData = false;
+    });
   }
 
   Future loadShoppingList() async {
