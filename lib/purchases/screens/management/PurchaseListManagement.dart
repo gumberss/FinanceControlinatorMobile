@@ -193,7 +193,7 @@ class PurchaseListManagementState extends State<PurchaseListManagement> {
                                     child: Text(
                                       AppLocalizations.of(context)!.no,
                                       style:
-                                          Theme.of(context).textTheme.button,
+                                          Theme.of(context).textTheme.bodyMedium,
                                     )),
                                 OutlinedButton(
                                     style: OutlinedButton.styleFrom(
@@ -205,7 +205,7 @@ class PurchaseListManagementState extends State<PurchaseListManagement> {
                                         AppLocalizations.of(context)!.yes,
                                         style: Theme.of(context)
                                             .textTheme
-                                            .button))
+                                            .bodyMedium))
                               ],
                             ));
                   },

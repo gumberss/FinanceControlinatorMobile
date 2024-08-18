@@ -92,7 +92,7 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
                       width: double.maxFinite,
                       child: OutlinedButton(
                           style: OutlinedButton.styleFrom(
-                              primary: Colors.green[900],
+                              foregroundColor: Colors.green[900],
                               backgroundColor: Colors.green[100]),
                           onPressed: () {
                             Navigator.of(context)
