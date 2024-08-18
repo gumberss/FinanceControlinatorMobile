@@ -36,7 +36,7 @@ class CartEventWebClient {
 
   Future<HttpResponseData<bool?>> _sendEvent(Map<String, dynamic> event) async {
     return await tryRequest(
-        client.postUri(Uri.http(baseUrl, basePath + "/events"),
+        client.postUri(Uri.http(baseUrl, "$basePath/events"),
             options: defaultOptions, data: event),
         (response) => HttpResponseData(response.statusCode!, true));
   }

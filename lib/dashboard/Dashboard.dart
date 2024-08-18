@@ -5,13 +5,15 @@ import 'package:flutter/material.dart';
 import '../invoices/screens/InvoicesScreen.dart';
 
 class Dashboard extends StatelessWidget {
+  const Dashboard({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("Finance Controlinator"),
+          title: const Text("Finance Controlinator"),
         ),
-        body: Column(
+        body: const Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [Colls(),
           //  Carousel()
@@ -21,9 +23,11 @@ class Dashboard extends StatelessWidget {
 }
 
 class Carousel extends StatelessWidget {
+  const Carousel({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       height: 120,
       child: ListView(
         scrollDirection: Axis.horizontal,
@@ -40,6 +44,8 @@ class Carousel extends StatelessWidget {
 }
 
 class Colls extends StatelessWidget {
+  const Colls({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -52,7 +58,7 @@ class Colls extends StatelessWidget {
             Card(Icons.account_balance_wallet, "Account", () => {}),
             Card(Icons.money_off, "Expenses", () {
               Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (c) => ExpenseList()));
+                  .push(MaterialPageRoute(builder: (c) => const ExpenseList()));
             }),
             Card(Icons.list_alt, "Invoices", () => Navigator.of(context)
                 .push(MaterialPageRoute(builder: (c) => const InvoicesScreen()))),
@@ -76,12 +82,12 @@ class Card extends StatelessWidget {
   String title;
   Function onTap;
 
-  Card(this.icon, this.title, this.onTap);
+  Card(this.icon, this.title, this.onTap, {super.key});
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.all(8),
+      padding: const EdgeInsets.all(8),
       child: Container(
         width: 150,
         height: 100,
@@ -93,7 +99,7 @@ class Card extends StatelessWidget {
               color: Colors.grey.withOpacity(0.5),
               spreadRadius: 3,
               blurRadius: 7,
-              offset: Offset(1, 0), // changes position of shadow
+              offset: const Offset(1, 0), // changes position of shadow
             )
           ],
         ),
@@ -103,19 +109,19 @@ class Card extends StatelessWidget {
           child: InkWell(
             onTap: () => onTap(),
             child: Padding(
-              padding: EdgeInsets.all(8),
+              padding: const EdgeInsets.all(8),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Icon(
-                    this.icon,
+                    icon,
                     color: Colors.white,
                     size: 24.0,
                   ),
                   Text(
-                    this.title,
-                    style: TextStyle(color: Colors.white, fontSize: 16.0),
+                    title,
+                    style: const TextStyle(color: Colors.white, fontSize: 16.0),
                   )
                 ],
               ),

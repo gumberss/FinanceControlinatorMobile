@@ -4,12 +4,11 @@ import 'package:finance_controlinator_mobile/invoices/services/InvoiceSyncServic
 import 'package:finance_controlinator_mobile/invoices/services/SyncStorageService.dart';
 
 import 'package:flutter/material.dart';
-import '../domain/sync/InvoiceSync.dart';
 import '../webclients/InvoiceSyncWebClient.dart';
 import 'InvoiceMonthDatasScreen.dart';
 
 class InvoicesScreen extends StatelessWidget {
-  const InvoicesScreen({Key? key}) : super(key: key);
+  const InvoicesScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

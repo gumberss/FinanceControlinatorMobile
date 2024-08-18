@@ -13,7 +13,7 @@ class ShoppingSessionsScreen extends StatefulWidget {
   final PurchaseList _purchaseList;
   static const String name = "ShoppingSessionsScreen";
 
-  ShoppingSessionsScreen(this._purchaseList, {Key? key}) : super(key: key);
+  const ShoppingSessionsScreen(this._purchaseList, {super.key});
 
   @override
   State<ShoppingSessionsScreen> createState() => _ShoppingSessionsScreenState();
@@ -93,7 +93,7 @@ class _ShoppingSessionsScreenState extends State<ShoppingSessionsScreen> {
   }
 
   Widget buildList(){
-    return Container(
+    return SizedBox(
         width: double.infinity,
         child: RefreshIndicator(
             onRefresh: loadSessions,
@@ -114,7 +114,7 @@ class _ShoppingSessionsScreenState extends State<ShoppingSessionsScreen> {
       backgroundColor: Colors.blueAccent,
       child: const Icon(Icons.add),
       onPressed: () => Navigator.of(context).push(MaterialPageRoute(
-          settings: RouteSettings(name: ShoppingInitiationScreen.name),
+          settings: const RouteSettings(name: ShoppingInitiationScreen.name),
           builder: (c) => ShoppingInitiationScreen(list))),
     );
   }

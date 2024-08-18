@@ -6,11 +6,11 @@ import '../../components/OverviewCard.dart';
 class ExpenseListHeaderCards extends StatelessWidget {
   List<ExpenseBrief> expenseBriefs;
 
-  ExpenseListHeaderCards(this.expenseBriefs, {Key? key}) : super(key: key);
+  ExpenseListHeaderCards(this.expenseBriefs, {super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       height: 100,
       width: double.infinity,
       child: ListView(

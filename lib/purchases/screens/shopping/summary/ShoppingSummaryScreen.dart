@@ -1,24 +1,20 @@
 import 'package:finance_controlinator_mobile/purchases/domain/shopping/Shopping.dart';
 import 'package:finance_controlinator_mobile/purchases/webclients/shopping/ShoppingFinalizationWebClient.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:finance_controlinator_mobile/purchases/domain/shopping/ShoppingList.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:uuid/uuid.dart';
 
-import '../../management/PurchaseListManagementScreen.dart';
 import '../initiation/ShoppingInitiation.dart';
 
 class ShoppingSummaryScreen extends StatelessWidget {
   final Shopping _shopping;
   final ShoppingList? _shoppingList;
 
-  ShoppingSummaryScreen(Shopping shopping, ShoppingList? shoppingList,
-      {Key? key})
+  const ShoppingSummaryScreen(Shopping shopping, ShoppingList? shoppingList,
+      {super.key})
       : _shopping = shopping,
-        _shoppingList = shoppingList,
-        super(key: key);
+        _shoppingList = shoppingList;
 
   Widget buildTextWidget(BuildContext context, String title, String value) {
     return Padding(
@@ -26,7 +22,7 @@ class ShoppingSummaryScreen extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(title + ": ",
+          Text("$title: ",
               style:
                   const TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
           Text(value)
@@ -64,7 +60,7 @@ class ShoppingSummaryScreen extends StatelessWidget {
                     buildTextWidget(
                         context,
                         AppLocalizations.of(context)!.totalCost,
-                        NumberFormat.currency().format(_shoppingList!.categories
+                        NumberFormat.currency().format(_shoppingList.categories
                             .expand((element) => element.items!)
                             .map((e) => e.price * e.quantityInCart)
                             .reduce((value, e) => value += e))),

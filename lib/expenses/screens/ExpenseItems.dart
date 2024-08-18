@@ -8,7 +8,7 @@ import 'package:uuid/uuid.dart';
 class ExpenseItemsScreen extends StatefulWidget {
   List<ExpenseItem> items;
 
-  ExpenseItemsScreen(this.items);
+  ExpenseItemsScreen(this.items, {super.key});
 
   @override
   State<ExpenseItemsScreen> createState() => _ExpenseItemsScreenState();
@@ -25,12 +25,12 @@ class _ExpenseItemsScreenState extends State<ExpenseItemsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("Items"),
+          title: const Text("Items"),
         ),
         body: Column(
           children: [
             Padding(
-              padding: EdgeInsets.only(bottom: 16),
+              padding: const EdgeInsets.only(bottom: 16),
               child: ExpenseItemsForm(addedItem),
             ),
             ExpenseItemsList(widget.items),
@@ -40,14 +40,14 @@ class _ExpenseItemsScreenState extends State<ExpenseItemsScreen> {
               children: [
                 Padding(
                   padding:
-                      EdgeInsets.only(left: 8, right: 8, top: 4, bottom: 8),
+                      const EdgeInsets.only(left: 8, right: 8, top: 4, bottom: 8),
                   child: SizedBox(
                     width: double.maxFinite,
                     child: ElevatedButton(
                         onPressed: () {
                           Navigator.pop(context, widget.items);
                         },
-                        child: Text("Save and back")),
+                        child: const Text("Save and back")),
                   ),
                 )
               ],
@@ -66,7 +66,7 @@ class ExpenseItemsForm extends StatelessWidget {
   FToast toast;
   Function(ExpenseItem) addedItem;
 
-  ExpenseItemsForm(this.addedItem) : toast = FToast();
+  ExpenseItemsForm(this.addedItem, {super.key}) : toast = FToast();
 
   @override
   Widget build(BuildContext context) {
@@ -93,7 +93,7 @@ class ExpenseItemsForm extends StatelessWidget {
           ],
         ),
         Padding(
-          padding: EdgeInsets.only(left: 8, right: 8, top: 8),
+          padding: const EdgeInsets.only(left: 8, right: 8, top: 8),
           child: SizedBox(
             width: double.maxFinite,
             child: OutlinedButton(
@@ -109,22 +109,22 @@ class ExpenseItemsForm extends StatelessWidget {
                   if (ExpenseItem.isValidProperties(
                       name, description, cost, amount)) {
                     addedItem(ExpenseItem(
-                        Uuid().v4(), name, description, cost!, amount!));
+                        const Uuid().v4(), name, description, cost!, amount!));
                     toast.showToast(
                       child: DefaultToast.Success("Item Added"),
                       gravity: ToastGravity.BOTTOM,
-                      toastDuration: Duration(seconds: 2),
+                      toastDuration: const Duration(seconds: 2),
                     );
                   } else {
                     toast.showToast(
                       child: DefaultToast.Error(
                           "Ops! Are all fields correct filled?"),
                       gravity: ToastGravity.BOTTOM,
-                      toastDuration: Duration(seconds: 2),
+                      toastDuration: const Duration(seconds: 2),
                     );
                   }
                 },
-                child: Text("Add")),
+                child: const Text("Add")),
           ),
         ),
       ],
@@ -136,7 +136,7 @@ class ExpenseItemsForm extends StatelessWidget {
 class ExpenseItemsList extends StatelessWidget {
   List<ExpenseItem> items;
 
-  ExpenseItemsList(this.items);
+  ExpenseItemsList(this.items, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -149,7 +149,7 @@ class ExpenseItemsList extends StatelessWidget {
                 final item = items[index];
                 return Card(
                   child: ListTile(
-                    leading: Icon(Icons.arrow_forward),
+                    leading: const Icon(Icons.arrow_forward),
                     title: Text(item.name),
                     subtitle: Text(
                         "Cost: ${item.cost}     Qnt: ${item.amount}     Total: ${item.totalCost()}"),

@@ -12,7 +12,7 @@ class OverviewSpendBar extends StatelessWidget {
   final List<PartitionData> partitions;
   final Map<int, Color> colors;
 
-  OverviewSpendBar(this.partitions, this.colors, {Key? key}) : super(key: key);
+  const OverviewSpendBar(this.partitions, this.colors, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +42,7 @@ class OverviewSpendBar extends StatelessWidget {
               children: [
                 Padding(
                   padding: const EdgeInsets.only(left: 4, right: 4),
-                  child: Text(e.typeText + ":"),
+                  child: Text("${e.typeText}:"),
                 ),
                 Container(
                     height: 20,

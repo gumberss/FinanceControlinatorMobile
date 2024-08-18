@@ -1,15 +1,12 @@
 import 'package:finance_controlinator_mobile/purchases/domain/shopping/cart/events/ChangeItemEvent.dart';
 import 'package:finance_controlinator_mobile/purchases/domain/services/ColorService.dart';
 import 'package:finance_controlinator_mobile/purchases/webclients/shopping/CartEventWebClient.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../../domain/shopping/ShoppingItem.dart';
 import '../../../../components/DefaultDialog.dart';
-import '../../../../components/DefaultInput.dart';
 import 'ShoppingInProgressItemChangeModal.dart';
 
 class ShoppingInProgressItemWidget extends StatefulWidget {
@@ -18,8 +15,7 @@ class ShoppingInProgressItemWidget extends StatefulWidget {
   Function onError;
 
   ShoppingInProgressItemWidget(this.shoppingId, this.item, this.onError,
-      {Key? key})
-      : super(key: key);
+      {super.key});
 
   @override
   State<ShoppingInProgressItemWidget> createState() =>
@@ -56,7 +52,7 @@ class _ShoppingInProgressItemWidgetState
                       widget.item.price = value.itemPrice;
                     });
                     var amountChanged = newQuantityInCart - oldQuantityInCart;
-                    var changeItemEvent = ChangeItemEvent(Uuid().v4(), widget.shoppingId,
+                    var changeItemEvent = ChangeItemEvent(const Uuid().v4(), widget.shoppingId,
                         widget.item.id!, value.itemPrice, amountChanged);
 
                     var result = await CartEventWebClient()

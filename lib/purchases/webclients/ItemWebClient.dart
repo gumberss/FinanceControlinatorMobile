@@ -1,15 +1,10 @@
-import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:finance_controlinator_mobile/components/HttpClient/HttpResponseData.dart';
 import 'package:finance_controlinator_mobile/components/HttpClient/http_client.dart';
-import 'package:finance_controlinator_mobile/purchases/domain/PurchaseList.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-import '../domain/PurchaseCategory.dart';
 import '../domain/PurchaseItem.dart';
-import '../domain/PurchaseListManagementData.dart';
 
 class ItemWebClient {
   String baseUrl =
@@ -39,7 +34,7 @@ class ItemWebClient {
     return await tryRequest(
         client.putUri(
             Uri.http(baseUrl,
-                basePath + "/$itemId/changeOrder/$newCategoryId/$newPosition"),
+                "$basePath/$itemId/changeOrder/$newCategoryId/$newPosition"),
             options: defaultOptions),
         (response) => HttpResponseData(response.statusCode!, null));
   }
@@ -49,7 +44,7 @@ class ItemWebClient {
     return await tryRequest(
         client.putUri(
             Uri.http(
-                baseUrl, basePath + "/$itemId/changeQuantity/$newQuantity"),
+                baseUrl, "$basePath/$itemId/changeQuantity/$newQuantity"),
             options: defaultOptions),
         (response) => HttpResponseData(response.statusCode!, null));
   }
@@ -57,7 +52,7 @@ class ItemWebClient {
   Future<HttpResponseData<PurchaseItem?>> removeItem(
       String itemId) async {
     return await tryRequest(
-        client.deleteUri(Uri.http(baseUrl, basePath + "/$itemId"),
+        client.deleteUri(Uri.http(baseUrl, "$basePath/$itemId"),
             options: defaultOptions),
         (response) => HttpResponseData(response.statusCode!, null));
   }
@@ -65,7 +60,7 @@ class ItemWebClient {
   Future<HttpResponseData<PurchaseItem?>> editItemName(
       String itemId, String newName) async {
     return await tryRequest(
-        client.putUri(Uri.http(baseUrl, basePath + "/$itemId/changeName/$newName"),
+        client.putUri(Uri.http(baseUrl, "$basePath/$itemId/changeName/$newName"),
             options: defaultOptions),
             (response) => HttpResponseData(response.statusCode!, null));
   }

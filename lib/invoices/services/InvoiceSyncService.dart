@@ -1,6 +1,5 @@
 import 'package:finance_controlinator_mobile/invoices/domain/sync/InvoiceSync.dart';
 import 'package:collection/collection.dart';
-import 'package:flutter/cupertino.dart';
 
 class InvoiceSyncService {
   InvoiceSync updateSync(InvoiceSync? current, InvoiceSync newer) {

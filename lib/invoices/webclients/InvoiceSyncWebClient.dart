@@ -1,7 +1,7 @@
 import 'dart:io';
 
+import 'package:dio/src/response.dart';
 import 'package:finance_controlinator_mobile/invoices/domain/sync/InvoiceSync.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import '../../components/HttpClient/HttpResponseData.dart';
@@ -13,7 +13,7 @@ class InvoiceSyncWebClient {
       "/api/invoices/sync");
 
   Future<HttpResponseData<InvoiceSync?>> getSyncData(num lastSync) async {
-    final response;
+    final Response response;
 
     try {
       response = await client.get(baseUri.toString(),

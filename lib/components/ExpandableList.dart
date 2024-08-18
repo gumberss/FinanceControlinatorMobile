@@ -7,11 +7,10 @@ class ExpandableList<T> extends StatelessWidget {
   final String? Function(T) groupProperty;
 
   const ExpandableList(
-      {Key? key,
+      {super.key,
       required this.items,
       required this.buildItem,
-      required this.groupProperty})
-      : super(key: key);
+      required this.groupProperty});
 
   @override
   Widget build(BuildContext context) {

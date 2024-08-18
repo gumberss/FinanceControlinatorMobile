@@ -6,8 +6,7 @@ class PurchaseCategoryAdderWidget extends StatelessWidget {
   Color? pickerColor;
 
   PurchaseCategoryAdderWidget(
-      {Key? key, required this.onActionDispatched})
-      : super(key: key);
+      {super.key, required this.onActionDispatched});
 
 
   Widget addCategoryButton() => SizedBox(

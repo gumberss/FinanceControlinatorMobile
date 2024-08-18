@@ -13,13 +13,15 @@ import '../../authentications/services/AuthorizationService.dart';
 import 'overview/ExpenseBriefCards.dart';
 
 class ExpenseList extends StatelessWidget {
+  const ExpenseList({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Expenses List"),
       ),
-      body: Column(
+      body: const Column(
         children: [
           Expanded(flex: 35, child: ExpenseListHeader()),
           Expanded(flex: 60, child: ExpenseListBody())
@@ -27,10 +29,10 @@ class ExpenseList extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.blueAccent,
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
         onPressed: () => {
           Navigator.of(context)
-              .push(MaterialPageRoute(builder: (c) => ExpensesScreen()))
+              .push(MaterialPageRoute(builder: (c) => const ExpensesScreen()))
         },
       ),
     );
@@ -38,26 +40,28 @@ class ExpenseList extends StatelessWidget {
 }
 
 class ExpenseListHeader extends StatelessWidget {
+  const ExpenseListHeader({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Container(
       color: Colors.lightBlue.shade100,
       alignment: Alignment.topCenter,
       child: Padding(
-        padding: EdgeInsets.all(8),
+        padding: const EdgeInsets.all(8),
         child: FutureBuilder(
         future: ExpenseOverviewWebClient().GetOverview(),
         builder: (context,
             AsyncSnapshot<HttpResponseData<ExpenseOverview>> snapshot) {
           if (!snapshot.hasData) {
             return const Center(
-              child: const CircularProgressIndicator(),
+              child: CircularProgressIndicator(),
             );
           }
           var response = snapshot.data!;
           if (response.unauthorized()) {
             AuthorizationService.redirectToSignIn(context);
-            return Text("Unauthorized :(");
+            return const Text("Unauthorized :(");
           } else {
             return Column(
               children: [
@@ -80,9 +84,11 @@ class ExpenseListHeader extends StatelessWidget {
 }
 
 class ExpenseListBody extends StatelessWidget {
+  const ExpenseListBody({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: double.infinity,
       child: RefreshIndicator(
         onRefresh: () => requestItems(1, 10),
@@ -116,7 +122,7 @@ class ExpenseListBody extends StatelessWidget {
                     children: [
                       Text(
                         item.title,
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 20),
                       ),
                       Text("Parcelas: ${item.installmentsCount}")

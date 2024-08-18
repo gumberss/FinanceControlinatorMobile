@@ -16,12 +16,11 @@ class PurchaseListItem extends StatelessWidget {
   final String _userId;
 
   PurchaseListItem(PurchaseList purchaseList, userId, Function onChangeHappen,
-      {Key? key})
+      {super.key})
       : _purchaseList = purchaseList,
         _userId = userId,
         _onChangeHappen = onChangeHappen,
-        toast = FToast(),
-        super(key: key);
+        toast = FToast();
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +29,7 @@ class PurchaseListItem extends StatelessWidget {
       width: double.infinity,
       decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.all(Radius.circular(8)),
+          borderRadius: const BorderRadius.all(Radius.circular(8)),
           border: Border.all(color: Colors.grey.withOpacity(.7), width: 2),
           boxShadow: [
             BoxShadow(
@@ -55,7 +54,7 @@ class PurchaseListItem extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Padding(
-                        padding: EdgeInsets.only(left: 10),
+                        padding: const EdgeInsets.only(left: 10),
                         child: Text(
                           _purchaseList.name,
                           overflow: TextOverflow.ellipsis,

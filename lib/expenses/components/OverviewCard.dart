@@ -1,12 +1,11 @@
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class OverviewCard extends StatelessWidget {
   String text;
   Color? color;
 
-  OverviewCard(this.text, {Key? key, this.color}) : super(key: key);
+  OverviewCard(this.text, {super.key, this.color});
 
   @override
   Widget build(BuildContext context) {

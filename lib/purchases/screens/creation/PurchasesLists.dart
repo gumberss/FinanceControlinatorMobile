@@ -49,6 +49,8 @@ List<Widget> TextInputActionDialog(BuildContext context, String text,
 class PurchasesListsScreen extends StatefulWidget {
   FToast toast = FToast();
 
+  PurchasesListsScreen({super.key});
+
   @override
   State<PurchasesListsScreen> createState() => _PurchasesListsScreenState();
 }
@@ -93,7 +95,7 @@ class _PurchasesListsScreenState extends State<PurchasesListsScreen> {
         body: PurchaseLists(listStateKey),
         floatingActionButton: FloatingActionButton(
           backgroundColor: Colors.blueAccent,
-          child: Icon(Icons.add),
+          child: const Icon(Icons.add),
           onPressed: () => {
             DefaultDialog().showDialog(context, NewPurchaseListDialog(context))
           },
@@ -157,7 +159,7 @@ class _PurchasesListsScreenState extends State<PurchasesListsScreen> {
 }
 
 class PurchaseLists extends StatefulWidget {
-  PurchaseLists(Key? key) : super(key: key);
+  const PurchaseLists(Key? key) : super(key: key);
 
   @override
   State<PurchaseLists> createState() => _PurchaseListsState();
@@ -216,7 +218,7 @@ class _PurchaseListsState extends State<PurchaseLists> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
         width: double.infinity,
         child: RefreshIndicator(
             onRefresh: loadLists,

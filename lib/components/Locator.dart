@@ -1,5 +1,4 @@
 import 'package:finance_controlinator_mobile/components/BusinessException.dart';
-import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'Result.dart';
 

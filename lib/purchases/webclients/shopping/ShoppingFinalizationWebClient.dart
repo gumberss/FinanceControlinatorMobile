@@ -1,4 +1,3 @@
-import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:finance_controlinator_mobile/components/HttpClient/HttpResponseData.dart';
@@ -23,7 +22,7 @@ class ShoppingFinalizationWebClient {
 
   Future<HttpResponseData<ShoppingList?>> finish(String shoppingId) async {
     return await tryRequest(
-        client.postUri(Uri.http(baseUrl, basePath + "/$shoppingId"),
+        client.postUri(Uri.http(baseUrl, "$basePath/$shoppingId"),
             options: defaultOptions),
         (response) => HttpResponseData(response.statusCode!,
             ShoppingList.fromShoppingJson(response.data)));

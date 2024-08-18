@@ -2,12 +2,11 @@ import 'dart:async';
 import 'package:finance_controlinator_mobile/invoices/domain/sync/InvoiceSync.dart';
 import 'package:flutter/material.dart';
 import '../../expenses/components/InfiniteList.dart';
-import '../domain/sync/InvoiceSync.dart';
 
 class InvoiceItemsComponent extends StatelessWidget {
   List<InvoiceItem> items;
 
-  InvoiceItemsComponent(this.items, {Key? key}) : super(key: key);
+  InvoiceItemsComponent(this.items, {super.key});
 
   Future<List<InvoiceItem>> requestItems(int page, int itemsCount) async {
     return items.skip(page * itemsCount).take(itemsCount).toList();
@@ -44,7 +43,7 @@ class InvoiceItemsComponent extends StatelessWidget {
                     Text(
                       item.title,
                       style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                          const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                     ),
                     Text(item.installmentNumber)
                   ],

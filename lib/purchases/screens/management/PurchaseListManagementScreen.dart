@@ -1,11 +1,9 @@
-import 'package:finance_controlinator_mobile/purchases/webclients/PurchaseListWebClient.dart';
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../domain/PurchaseCategory.dart';
 import '../../domain/PurchaseList.dart';
 import '../../webclients/CategoryWebClient.dart';
-import '../shopping/initiation/ShoppingInitiation.dart';
 import '../shopping/sessions/ShoppingSessionsScreen.dart';
 import 'PurchaseCategoryAdderWidget.dart';
 import 'PurchaseListManagement.dart';
@@ -13,13 +11,12 @@ import 'PurchaseListManagement.dart';
 class PurchaseListManagementScreen extends StatelessWidget {
   static String name = "PurchaseListManagementScreen";
 
-  PurchaseList _purchaseList;
+  final PurchaseList _purchaseList;
   final purchaseListManagementStateKey =
       GlobalKey<PurchaseListManagementState>();
 
-  PurchaseListManagementScreen(PurchaseList purchaseList, {Key? key})
-      : _purchaseList = purchaseList,
-        super(key: key);
+  PurchaseListManagementScreen(PurchaseList purchaseList, {super.key})
+      : _purchaseList = purchaseList;
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +43,7 @@ class PurchaseListManagementScreen extends StatelessWidget {
   Widget addCategoryButton(PurchaseList list, Function? loadLists) {
     return PurchaseCategoryAdderWidget(onActionDispatched: (name, color) async {
       var result = await CategoryWebClient().addCategory(
-          PurchaseCategory(Uuid().v4(), name, list.id!, color.value));
+          PurchaseCategory(const Uuid().v4(), name, list.id!, color.value));
       if (result.success()) {
         loadLists!();
       }
@@ -75,7 +72,7 @@ class PurchaseListManagementScreen extends StatelessWidget {
       backgroundColor: Colors.blueAccent,
       child: const Icon(Icons.arrow_forward),
       onPressed: () => Navigator.of(context).push(MaterialPageRoute(
-          settings: RouteSettings(name: ShoppingSessionsScreen.name),
+          settings: const RouteSettings(name: ShoppingSessionsScreen.name),
           builder: (c) => ShoppingSessionsScreen(list))),
     );
   }
