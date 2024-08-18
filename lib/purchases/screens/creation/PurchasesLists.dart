@@ -23,7 +23,7 @@ List<Widget> TextInputActionDialog(BuildContext context, String text,
             width: double.maxFinite,
             child: OutlinedButton(
                 style: OutlinedButton.styleFrom(
-                    primary: Colors.green[900], backgroundColor: Colors.white),
+                    foregroundColor: Colors.green[900], backgroundColor: Colors.white),
                 onPressed: () async {
                   if (controller.text.isEmpty) {
                     //todo: toast error

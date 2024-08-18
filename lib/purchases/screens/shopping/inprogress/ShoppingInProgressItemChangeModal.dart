@@ -3,7 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
-
 import '../../../../components/DefaultInput.dart';
 import '../../../../l10n/i10n.dart';
 import '../../../domain/services/ColorService.dart';
@@ -14,10 +13,10 @@ class ShoppingInProgressItemChangeModal extends StatefulWidget {
   TextEditingController _totalPriceController = TextEditingController();
 
   final CurrencyTextInputFormatter _itemPriceCurrencyFormater =
-      CurrencyTextInputFormatter(locale: i10n.getCurrentLocale());
+      CurrencyTextInputFormatter.currency(locale: i10n.getCurrentLocale());
 
   final CurrencyTextInputFormatter _totalPriceCurrencyFormater =
-      CurrencyTextInputFormatter(locale: i10n.getCurrentLocale());
+      CurrencyTextInputFormatter.currency(locale: i10n.getCurrentLocale());
 
   ShoppingInProgressItemChangeModal(this.itemData);
 
@@ -31,11 +30,12 @@ class _ShoppingInProgressItemChangeModalState
 
   @override
   void initState() {
+
     if (widget.itemData.itemPrice != 0) {
-      widget._itemPriceController.text = widget._itemPriceCurrencyFormater
+      widget._itemPriceController.text = widget._itemPriceCurrencyFormater.numberFormat
           .format(widget.itemData.itemPrice.toString());
       widget._totalPriceController.text = widget._totalPriceCurrencyFormater
-          .format(
+          .numberFormat.format(
           (widget.itemData.itemPrice * widget.itemData.quantityInTheCart)
               .toString());
     }
@@ -85,7 +85,7 @@ class _ShoppingInProgressItemChangeModalState
                                 if (!itemPrice.isNaN) {
                                   widget._totalPriceController.text = widget
                                       ._totalPriceCurrencyFormater
-                                      .format((itemPrice *
+                                      .numberFormat.format((itemPrice *
                                               widget.itemData.quantityInTheCart)
                                           .toStringAsFixed(2));
                                 } else {
@@ -97,7 +97,7 @@ class _ShoppingInProgressItemChangeModalState
                                       widget.itemData.quantityInTheCart != 0) {
                                     widget._itemPriceController.text = widget
                                         ._itemPriceCurrencyFormater
-                                        .format((totalPrice /
+                                        .numberFormat.format((totalPrice /
                                                 widget
                                                     .itemData.quantityInTheCart)
                                             .toStringAsFixed(2));
@@ -106,7 +106,7 @@ class _ShoppingInProgressItemChangeModalState
                               } on Exception catch (_) {
                                 widget._totalPriceController.text = widget
                                     ._totalPriceCurrencyFormater
-                                    .format(0.toStringAsFixed(2));
+                                    .numberFormat.format(0.toStringAsFixed(2));
                                 debugPrint(
                                     "It was not possible to set the total price value");
                               }
@@ -135,13 +135,13 @@ class _ShoppingInProgressItemChangeModalState
 
                                   widget._totalPriceController.text = widget
                                       ._totalPriceCurrencyFormater
-                                      .format((itemPrice *
+                                      .numberFormat.format((itemPrice *
                                               widget.itemData.quantityInTheCart)
                                           .toStringAsFixed(2));
                                 } on Exception catch (_) {
                                   widget._totalPriceController.text = widget
                                       ._totalPriceCurrencyFormater
-                                      .format(0.toStringAsFixed(2));
+                                      .numberFormat.format(0.toStringAsFixed(2));
                                 }
                               }
                             },
@@ -178,13 +178,13 @@ class _ShoppingInProgressItemChangeModalState
 
                                 widget._totalPriceController.text = widget
                                     ._totalPriceCurrencyFormater
-                                    .format((itemPrice *
+                                    .numberFormat.format((itemPrice *
                                             widget.itemData.quantityInTheCart)
                                         .toStringAsFixed(2));
                               } on Exception catch (e) {
                                 widget._totalPriceController.text = widget
                                     ._totalPriceCurrencyFormater
-                                    .format(0.toStringAsFixed(2));
+                                    .numberFormat.format(0.toStringAsFixed(2));
                               }
                             }
                           },
@@ -224,7 +224,7 @@ class _ShoppingInProgressItemChangeModalState
                                     widget.itemData.quantityInTheCart != 0) {
                                   widget._itemPriceController.text = widget
                                       ._itemPriceCurrencyFormater
-                                      .format((totalPrice /
+                                      .numberFormat.format((totalPrice /
                                               widget.itemData.quantityInTheCart)
                                           .toStringAsFixed(2));
                                 }

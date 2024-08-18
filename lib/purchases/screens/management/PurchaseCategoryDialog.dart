@@ -67,7 +67,7 @@ class PurchaseCategoryDialog {
               width: double.maxFinite,
               child: OutlinedButton(
                   style: OutlinedButton.styleFrom(
-                      primary: Colors.green[900],
+                      foregroundColor: Colors.green[900],
                       backgroundColor: Colors.white),
                   onPressed: () async {
                     if (controller.text.isEmpty) {

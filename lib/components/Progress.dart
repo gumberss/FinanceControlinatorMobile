@@ -17,7 +17,7 @@ class Progress extends StatelessWidget {
             padding: const EdgeInsets.only(top: 8),
             child: Container(
               padding: const EdgeInsets.all(8),
-              decoration: new BoxDecoration(color: Theme.of(context).backgroundColor,
+              decoration: new BoxDecoration(color: Theme.of(context).dialogBackgroundColor,
               borderRadius: BorderRadius.all(Radius.circular(16))),
               child: Text(
                 message != null ? message! : 'Hang in there :D',
