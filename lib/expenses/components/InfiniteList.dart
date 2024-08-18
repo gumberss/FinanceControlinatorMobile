@@ -1,8 +1,7 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-typedef Future<List<T>> RequestFn<T>(int page, int count);
-typedef Widget ItemBuilder<T>(BuildContext context, T item, int index);
+typedef RequestFn<T> = Future<List<T>> Function(int page, int count);
+typedef ItemBuilder<T> = Widget Function(BuildContext context, T item, int index);
 
 class InifiniteList<T> extends StatefulWidget {
   final RequestFn<T> onRequest;
@@ -10,11 +9,10 @@ class InifiniteList<T> extends StatefulWidget {
   final int itensPerPage;
 
   const InifiniteList(
-      {Key? key,
+      {super.key,
       required this.onRequest,
       required this.itemBuilder,
-      required this.itensPerPage})
-      : super(key: key);
+      required this.itensPerPage});
 
   @override
   _InifiniteListState<T> createState() => _InifiniteListState<T>();

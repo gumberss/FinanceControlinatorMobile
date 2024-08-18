@@ -1,5 +1,4 @@
 import 'package:drag_and_drop_lists/drag_and_drop_lists.dart';
-import 'package:finance_controlinator_mobile/components/Immutable.dart';
 import 'package:finance_controlinator_mobile/purchases/domain/shopping/cart/events/ReorderItemEvent.dart';
 import 'package:finance_controlinator_mobile/purchases/screens/shopping/inprogress/ShoppingInProgressItemWidget.dart';
 import 'package:finance_controlinator_mobile/purchases/screens/shopping/summary/ShoppingSummaryScreen.dart';
@@ -20,7 +19,7 @@ class ShoppingInProgressScreen extends StatelessWidget {
   final Shopping _shopping;
   final _shoppingListKey = GlobalKey<_ShoppingListState>();
 
-  ShoppingInProgressScreen(this._shopping, {Key? key}) : super(key: key);
+  ShoppingInProgressScreen(this._shopping, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -171,7 +170,7 @@ class _ShoppingListState extends State<ShoppingListView> {
     });
 
     var result = await CartEventWebClient().sendReorderItemEvent(
-        ReorderItemEvent(Uuid().v4(), shoppingList!.shoppingId, item.id!,
+        ReorderItemEvent(const Uuid().v4(), shoppingList!.shoppingId, item.id!,
             newCategory.id!, newItemIndex));
 
     if (!result.success()) {
@@ -189,7 +188,7 @@ class _ShoppingListState extends State<ShoppingListView> {
 
     var result = await CartEventWebClient().sendReorderCategoryEvent(
         ReorderCategoryEvent(
-            Uuid().v4(), shoppingList!.shoppingId, category.id!, newListIndex));
+            const Uuid().v4(), shoppingList!.shoppingId, category.id!, newListIndex));
 
     if (!result.success()) {
       await loadShoppingList();

@@ -1,5 +1,4 @@
 import 'package:finance_controlinator_mobile/purchases/domain/shopping/Shopping.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -9,7 +8,7 @@ class ShoppingSessionItem extends StatelessWidget {
   final Shopping _shopping;
   final String _userId;
 
-  ShoppingSessionItem(this._shopping, this._userId, {Key? key});
+  const ShoppingSessionItem(this._shopping, this._userId, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +38,7 @@ class ShoppingSessionItem extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Padding(
-                      padding: EdgeInsets.only(left: 10),
+                      padding: const EdgeInsets.only(left: 10),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,

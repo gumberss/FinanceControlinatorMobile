@@ -17,7 +17,7 @@ class LoggingInterceptor extends InterceptorsWrapper {
       super.onResponse(response, handler);
     } catch (e) {
       debugPrint('I $e');
-      throw e;
+      rethrow;
     }
   }
 }

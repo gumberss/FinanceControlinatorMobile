@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:finance_controlinator_mobile/authentications/domain/SignUpUser.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -11,15 +10,17 @@ import '../services/EstimatePasswordStrength.dart';
 import '../webclients/AuthenticationWebClient.dart';
 
 class SignUp extends StatelessWidget {
+  const SignUp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("Register"),
+          title: const Text("Register"),
         ),
         body: SingleChildScrollView(
             child: Padding(
-          padding: EdgeInsets.all(8),
+          padding: const EdgeInsets.all(8),
           child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
             Text("Come with us!",
                 style: TextStyle(
@@ -77,7 +78,7 @@ class _SignUpForm extends StatelessWidget {
               },
             ),
             Padding(
-              padding: EdgeInsets.only(left: 8, right: 8, top: 16),
+              padding: const EdgeInsets.only(left: 8, right: 8, top: 16),
               child: SizedBox(
                 width: double.maxFinite,
                 child: OutlinedButton(
@@ -101,18 +102,18 @@ class _SignUpForm extends StatelessWidget {
                             child: DefaultToast.Error(
                                 "Oh no! I think something goes wrong.\nTry again in a few minutes"),
                             gravity: ToastGravity.TOP_RIGHT,
-                            toastDuration: Duration(seconds: 2),
+                            toastDuration: const Duration(seconds: 2),
                           );
                         }
                       } on HttpException catch (e) {
                         toast.showToast(
                           child: DefaultToast.Error(e.message),
                           gravity: ToastGravity.TOP,
-                          toastDuration: Duration(seconds: 2),
+                          toastDuration: const Duration(seconds: 2),
                         );
                       }
                     },
-                    child: Text("I want to be part")),
+                    child: const Text("I want to be part")),
               ),
             ),
           ],

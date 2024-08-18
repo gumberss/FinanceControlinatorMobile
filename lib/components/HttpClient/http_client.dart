@@ -13,7 +13,7 @@ class _DioClient {
     dio.options.validateStatus = (status) {
       return true;
     };
-    dio.options.connectTimeout = Duration(milliseconds: 5000);
+    dio.options.connectTimeout = const Duration(milliseconds: 5000);
 
     return dio;
   }

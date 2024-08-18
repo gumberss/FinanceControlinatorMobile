@@ -18,10 +18,9 @@ class ShoppingInitiationScreen extends StatefulWidget {
   final PurchaseList _purchaseList;
   final _formKey;
 
-  ShoppingInitiationScreen(PurchaseList purchaseList, {Key? key})
+  ShoppingInitiationScreen(PurchaseList purchaseList, {super.key})
       : _purchaseList = purchaseList,
-        _formKey = GlobalKey<FormState>(),
-        super(key: key);
+        _formKey = GlobalKey<FormState>();
 
   @override
   State<ShoppingInitiationScreen> createState() =>
@@ -111,9 +110,7 @@ class _ShoppingInitiationScreenState extends State<ShoppingInitiationScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text(AppLocalizations.of(context)!.startBuying +
-              ": " +
-              widget._purchaseList.name),
+          title: Text("${AppLocalizations.of(context)!.startBuying}: ${widget._purchaseList.name}"),
         ),
         backgroundColor: Colors.grey.shade200,
         body: RefreshIndicator(
@@ -193,8 +190,7 @@ class ShoppingInitiationForm extends StatelessWidget {
       this._titleController,
       this.latitude,
       this.longitude,
-      {Key? key})
-      : super(key: key);
+      {super.key});
 
   @override
   Widget build(BuildContext context) {

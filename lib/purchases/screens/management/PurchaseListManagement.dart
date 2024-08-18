@@ -15,11 +15,10 @@ import '../../webclients/CategoryWebClient.dart';
 import '../../webclients/PurchaseListWebClient.dart';
 
 class PurchaseListManagement extends StatefulWidget {
-  PurchaseList _purchaseList;
+  final PurchaseList _purchaseList;
 
-  PurchaseListManagement(PurchaseList purchaseList, {Key? key})
-      : _purchaseList = purchaseList,
-        super(key: key);
+  const PurchaseListManagement(PurchaseList purchaseList, {super.key})
+      : _purchaseList = purchaseList;
 
   @override
   State<PurchaseListManagement> createState() => PurchaseListManagementState();

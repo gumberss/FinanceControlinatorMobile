@@ -6,7 +6,6 @@ import 'package:finance_controlinator_mobile/components/HttpClient/http_client.d
 import 'package:finance_controlinator_mobile/purchases/domain/PurchaseList.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-import '../domain/PurchaseCategory.dart';
 import '../domain/PurchaseListManagementData.dart';
 
 class PurchaseListWebClient {
@@ -88,7 +87,7 @@ class PurchaseListWebClient {
   Future<HttpResponseData<String>> disable(String id) async {
     final Response response;
     try {
-      response = await client.deleteUri(Uri.http(baseUrl, basePath + "/$id"),
+      response = await client.deleteUri(Uri.http(baseUrl, "$basePath/$id"),
           options: Options(headers: {
             'Content-Type': 'application/json; charset=UTF-8',
           }));
@@ -120,7 +119,7 @@ class PurchaseListWebClient {
       String purchaseListId) async {
     return await tryRequest(
         client.getUri(
-            Uri.http(baseUrl, basePath + "/$purchaseListId/managementData"),
+            Uri.http(baseUrl, "$basePath/$purchaseListId/managementData"),
             options: defaultOptions),
         (response) => HttpResponseData(response.statusCode!,
             PurchaseListManagementData.fromJson(response.data)));

@@ -1,4 +1,3 @@
-import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:finance_controlinator_mobile/components/HttpClient/HttpResponseData.dart';
@@ -36,7 +35,7 @@ class CategoryWebClient {
     return await tryRequest(
         client.putUri(
             Uri.http(
-                baseUrl, basePath + "/$categoryId/changeOrder/$newPosition"),
+                baseUrl, "$basePath/$categoryId/changeOrder/$newPosition"),
             options: defaultOptions),
         (response) => HttpResponseData(response.statusCode!, null));
   }
@@ -44,7 +43,7 @@ class CategoryWebClient {
   Future<HttpResponseData<PurchaseCategory?>> removeCategory(
       String categoryId) async {
     return await tryRequest(
-        client.deleteUri(Uri.http(baseUrl, basePath + "/$categoryId"),
+        client.deleteUri(Uri.http(baseUrl, "$basePath/$categoryId"),
             options: defaultOptions),
         (response) => HttpResponseData(response.statusCode!, null));
   }

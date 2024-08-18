@@ -2,9 +2,9 @@ import 'package:finance_controlinator_mobile/expenses/domain/overviews/ExpensePa
 import 'package:flutter/material.dart';
 
 class ExpenseSpendBar extends StatelessWidget {
-  List<ExpensePartition> _partitions;
+  final List<ExpensePartition> _partitions;
 
-  ExpenseSpendBar(this._partitions, {Key? key}) : super(key: key);
+  const ExpenseSpendBar(this._partitions, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -79,7 +79,7 @@ class ExpenseSpendBar extends StatelessWidget {
               children: [
                 Padding(
                   padding: const EdgeInsets.only(left: 4, right: 4),
-                  child: Text(value.type + ":"),
+                  child: Text("${value.type}:"),
                 ),
                 Container(
                     height: 20,

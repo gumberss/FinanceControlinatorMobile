@@ -1,7 +1,6 @@
 import 'package:finance_controlinator_mobile/invoices/domain/sync/InvoiceSync.dart';
 
 import 'package:flutter/material.dart';
-import '../domain/sync/InvoiceSync.dart';
 import 'InvoiceItemsComponent.dart';
 import 'InvoiceOverview.dart';
 
@@ -10,7 +9,7 @@ import 'package:flutter/cupertino.dart';
 class InvoiceDataScreen extends StatelessWidget {
   InvoiceMonthData invoiceMonthData;
 
-  InvoiceDataScreen(this.invoiceMonthData, {Key? key}) : super(key: key);
+  InvoiceDataScreen(this.invoiceMonthData, {super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -1,5 +1,4 @@
 import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
@@ -9,8 +8,8 @@ import '../../../domain/services/ColorService.dart';
 
 class ShoppingInProgressItemChangeModal extends StatefulWidget {
   ItemChangedData itemData;
-  TextEditingController _itemPriceController = TextEditingController();
-  TextEditingController _totalPriceController = TextEditingController();
+  final TextEditingController _itemPriceController = TextEditingController();
+  final TextEditingController _totalPriceController = TextEditingController();
 
   final CurrencyTextInputFormatter _itemPriceCurrencyFormater =
       CurrencyTextInputFormatter.currency(locale: i10n.getCurrentLocale());
@@ -18,7 +17,7 @@ class ShoppingInProgressItemChangeModal extends StatefulWidget {
   final CurrencyTextInputFormatter _totalPriceCurrencyFormater =
       CurrencyTextInputFormatter.currency(locale: i10n.getCurrentLocale());
 
-  ShoppingInProgressItemChangeModal(this.itemData);
+  ShoppingInProgressItemChangeModal(this.itemData, {super.key});
 
   @override
   State<ShoppingInProgressItemChangeModal> createState() =>
@@ -60,7 +59,7 @@ class _ShoppingInProgressItemChangeModalState
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(widget.itemData.itemName,
-                            style: TextStyle(fontSize: 24)),
+                            style: const TextStyle(fontSize: 24)),
                         Text(
                             "${AppLocalizations.of(context)!.expected}: ${widget.itemData.expectedQuantity}    ${AppLocalizations.of(context)!.inTheCart}: ${widget.itemData.quantityInTheCart}",
                             style: TextStyle(
@@ -181,7 +180,7 @@ class _ShoppingInProgressItemChangeModalState
                                     .numberFormat.format((itemPrice *
                                             widget.itemData.quantityInTheCart)
                                         .toStringAsFixed(2));
-                              } on Exception catch (e) {
+                              } on Exception {
                                 widget._totalPriceController.text = widget
                                     ._totalPriceCurrencyFormater
                                     .numberFormat.format(0.toStringAsFixed(2));

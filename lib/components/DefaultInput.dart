@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -18,7 +17,7 @@ class DefaultInput extends StatelessWidget {
   List<TextInputFormatter>? inputFormatter;
 
   DefaultInput(this.title, this.type, this.controller,
-      {this.obscureText = false,
+      {super.key, this.obscureText = false,
       this.autoFocus = false,
       this.onSubmitted,
       this.validator,

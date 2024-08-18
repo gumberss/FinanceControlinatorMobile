@@ -8,31 +8,31 @@ import 'package:finance_controlinator_mobile/expenses/domain/ExpenseItem.dart';
 import 'package:finance_controlinator_mobile/expenses/domain/ExpenseType.dart';
 import 'package:finance_controlinator_mobile/expenses/screens/ExpenseItems.dart';
 import 'package:finance_controlinator_mobile/expenses/webclients/ExpenseWebClient.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:uuid/uuid.dart';
 
 class ExpensesScreen extends StatefulWidget {
+  const ExpensesScreen({super.key});
+
   @override
   State<ExpensesScreen> createState() => _ExpensesScreenState();
 }
 
 class _ExpensesScreenState extends State<ExpensesScreen> {
-  TextEditingController _titleController = TextEditingController();
+  final TextEditingController _titleController = TextEditingController();
 
-  TextEditingController _descriptionController = TextEditingController();
+  final TextEditingController _descriptionController = TextEditingController();
 
-  TextEditingController _locationController = TextEditingController();
+  final TextEditingController _locationController = TextEditingController();
 
-  TextEditingController _totalCostController = TextEditingController();
+  final TextEditingController _totalCostController = TextEditingController();
 
-  TextEditingController _installmentCountController = TextEditingController();
+  final TextEditingController _installmentCountController = TextEditingController();
 
-  TextEditingController _purchaseDayController = TextEditingController();
+  final TextEditingController _purchaseDayController = TextEditingController();
 
-  TextEditingController _observationController = TextEditingController();
+  final TextEditingController _observationController = TextEditingController();
 
   List<ExpenseItem> items = List.empty(growable: true);
 
@@ -42,7 +42,7 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
 
   var typeDropDown = ExpenseTypeDropDown();
 
-  var expenseId = Uuid().v4();
+  var expenseId = const Uuid().v4();
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +50,7 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
 
     return Scaffold(
         appBar: AppBar(
-          title: Text("Expenses"),
+          title: const Text("Expenses"),
         ),
         body: SingleChildScrollView(
           child: Column(
@@ -87,7 +87,7 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
                   ),
                   //DefaultInput("Observation", TextInputType.text, _observationController),
                   Padding(
-                    padding: EdgeInsets.only(left: 8, right: 8, top: 4),
+                    padding: const EdgeInsets.only(left: 8, right: 8, top: 4),
                     child: SizedBox(
                       width: double.maxFinite,
                       child: OutlinedButton(
@@ -107,12 +107,12 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
                                         }
                                     });
                           },
-                          child: Text("Items")),
+                          child: const Text("Items")),
                     ),
                   ),
                   Card(
                     child: ListTile(
-                      title: Text("Items Details:"),
+                      title: const Text("Items Details:"),
                       subtitle: Text(
                           "Item Quantity: ${items.length}     Total Cost: ${items.map((e) => e.amount * e.cost).fold<double>(0, (previousValue, element) => previousValue + element)}"),
                     ),
@@ -120,7 +120,7 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
                 ],
               ),
               Padding(
-                padding: EdgeInsets.only(left: 8, right: 8, top: 4, bottom: 8),
+                padding: const EdgeInsets.only(left: 8, right: 8, top: 4, bottom: 8),
                 child: SizedBox(
                   width: double.maxFinite,
                   child: ElevatedButton(
@@ -164,14 +164,14 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
                             toast.showToast(
                               child: DefaultToast.Success("Expense Created :)"),
                               gravity: ToastGravity.BOTTOM,
-                              toastDuration: Duration(seconds: 2),
+                              toastDuration: const Duration(seconds: 2),
                             );
                             Navigator.pop(context);
                           } on HttpException catch (e) {
                             toast.showToast(
                               child: DefaultToast.Error(e.message),
                               gravity: ToastGravity.BOTTOM,
-                              toastDuration: Duration(seconds: 2),
+                              toastDuration: const Duration(seconds: 2),
                             );
                           }
                         } else {
@@ -179,11 +179,11 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
                             child: DefaultToast.Error(
                                 "Ops! Are all fields correct filled?"),
                             gravity: ToastGravity.BOTTOM,
-                            toastDuration: Duration(seconds: 2),
+                            toastDuration: const Duration(seconds: 2),
                           );
                         }
                       },
-                      child: Text("Save")),
+                      child: const Text("Save")),
                 ),
               )
             ],

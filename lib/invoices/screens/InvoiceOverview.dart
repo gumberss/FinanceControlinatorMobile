@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../expenses/components/OverviewCard.dart';
@@ -8,7 +7,7 @@ import '../domain/sync/InvoiceSync.dart';
 class InvoiceOverviewScreen extends StatelessWidget {
   InvoiceOverview overview;
 
-  InvoiceOverviewScreen(this.overview, {Key? key}) : super(key: key);
+  InvoiceOverviewScreen(this.overview, {super.key});
 
   final List<Color> colors = [
     Colors.redAccent,
@@ -52,8 +51,7 @@ class OverviewHeader extends StatelessWidget {
   String statusText;
   String totalCost;
 
-  OverviewHeader(this.date, this.statusText, this.totalCost, {Key? key})
-      : super(key: key);
+  OverviewHeader(this.date, this.statusText, this.totalCost, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -71,7 +69,7 @@ class OverviewHeader extends StatelessWidget {
 class OverviewBriefs extends StatelessWidget {
   final List<InvoiceBrief> briefs;
 
-  OverviewBriefs(this.briefs, {Key? key}) : super(key: key);
+  OverviewBriefs(this.briefs, {super.key});
 
   final List<Color> colors = [
     Colors.lightBlueAccent.shade200,
@@ -81,7 +79,7 @@ class OverviewBriefs extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       height: 100,
       width: double.infinity,
       child: ListView(

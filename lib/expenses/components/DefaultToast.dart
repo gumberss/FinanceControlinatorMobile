@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class DefaultToast {
@@ -12,8 +11,8 @@ class DefaultToast {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.check),
-            SizedBox(
+            const Icon(Icons.check),
+            const SizedBox(
               width: 12.0,
             ),
             Text(text),
@@ -32,8 +31,8 @@ class DefaultToast {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.error),
-            SizedBox(
+            const Icon(Icons.error),
+            const SizedBox(
               width: 12.0,
             ),
             Text(text),

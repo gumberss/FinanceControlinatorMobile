@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class DefaultDialog {
@@ -17,7 +16,7 @@ class DefaultDialog {
               Padding(
                 padding: EdgeInsets.only(
                     bottom: MediaQuery.of(context).viewInsets.bottom),
-                child: Container(
+                child: SizedBox(
                     height: height,
                     child: Container(
                         decoration: BoxDecoration(
@@ -47,7 +46,7 @@ class DefaultDialog {
               Padding(
                 padding: EdgeInsets.only(
                     bottom: MediaQuery.of(context).viewInsets.bottom),
-                child: Container(
+                child: SizedBox(
                     height: height,
                     child: Container(
                         decoration: BoxDecoration(

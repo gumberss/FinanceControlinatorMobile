@@ -17,11 +17,13 @@ import '../webclients/AuthenticationWebClient.dart';
 import 'SignUp.dart';
 
 class SignIn extends StatelessWidget {
+  const SignIn({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("Sign In"),
+          title: const Text("Sign In"),
         ),
         body: _SignInForm());
   }
@@ -73,7 +75,7 @@ class _SignInFormState extends State<_SignInForm>
     }
   }
 
-  bool _firebaseLogin = true;
+  final bool _firebaseLogin = true;
 
   @override
   Widget build(BuildContext context) {
@@ -114,7 +116,7 @@ class _SignInFormState extends State<_SignInForm>
                         if (_firebaseLogin) {
                           await firebaseLogin(userName, password);
                           Navigator.push(context,
-                              MaterialPageRoute(builder: (c) => Dashboard()));
+                              MaterialPageRoute(builder: (c) => const Dashboard()));
                           _passwordController.clear();
                           _animationController.reverse();
                         } else {
@@ -123,7 +125,7 @@ class _SignInFormState extends State<_SignInForm>
                           if (result != null) {
                             await JwtService().store(result);
                             Navigator.push(context,
-                                MaterialPageRoute(builder: (c) => Dashboard()));
+                                MaterialPageRoute(builder: (c) => const Dashboard()));
                             _passwordController.clear();
                             _animationController.reverse();
                           } else {
@@ -134,12 +136,12 @@ class _SignInFormState extends State<_SignInForm>
                       } on HttpException catch (e) {
                         _animationController.reverse();
                         DefaultToaster.toastError(widget.toast,message: e.message);
-                      } on Exception catch (e) {
+                      } on Exception {
                         _animationController.reverse();
                         DefaultToaster.toastError(widget.toast);
                       }
                     },
-                    child: Text("Let's go!")),
+                    child: const Text("Let's go!")),
               ),
             ),
             Padding(
@@ -154,7 +156,7 @@ class _SignInFormState extends State<_SignInForm>
                       onTap: () => {
                             Navigator.of(context)
                                 .push<String>(
-                                    MaterialPageRoute(builder: (c) => SignUp()))
+                                    MaterialPageRoute(builder: (c) => const SignUp()))
                                 .then((value) {
                               if (value != null) {
                                 _userNameController.text = value;
@@ -164,7 +166,7 @@ class _SignInFormState extends State<_SignInForm>
                 )),
             SlideTransition(
               position: _offsetAnimation,
-              child: Padding(
+              child: const Padding(
                 padding: EdgeInsets.all(8.0),
                 child: Progress(),
               ),
