@@ -2,6 +2,8 @@
     package="controlinator.finance.finance_controlinator_mobile">
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
    <application
         android:label="finance_controlinator_mobile"
         android:name="${applicationName}"
@@ -33,4 +35,6 @@
             android:name="flutterEmbedding"
             android:value="2" />
     </application>
+    <uses-feature android:name="android.hardware.camera" android:required="false"/>
+    <uses-feature android:name="android.hardware.camera.front" android:required="false"/>
 </manifest>

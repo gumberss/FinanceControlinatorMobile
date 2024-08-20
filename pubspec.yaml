@@ -53,6 +53,7 @@ dependencies:
   collection: any
   flutter_secure_storage_web: any
   geolocator_web: any
+  camera: ^0.11.0+2
 dev_dependencies:
   flutter_test:
     sdk: flutter

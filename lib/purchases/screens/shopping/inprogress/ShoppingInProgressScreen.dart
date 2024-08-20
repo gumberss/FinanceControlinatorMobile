@@ -4,6 +4,8 @@ import 'package:finance_controlinator_mobile/purchases/screens/shopping/inprogre
 import 'package:finance_controlinator_mobile/purchases/screens/shopping/summary/ShoppingSummaryScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
+import 'dart:io';
+import 'dart:convert';
 
 import '../../../../authentications/services/AuthorizationService.dart';
 import '../../../domain/shopping/Shopping.dart';
@@ -13,6 +15,7 @@ import '../../../domain/shopping/ShoppingList.dart';
 import '../../../domain/shopping/cart/events/ReorderCategoryEvent.dart';
 import '../../../webclients/shopping/CartEventWebClient.dart';
 import '../../../webclients/shopping/ShoppingListWebClient.dart';
+import '../../../../components/screens/TakePictureScreen.dart';
 
 class ShoppingInProgressScreen extends StatelessWidget {
   static String name = "ShoppingInProgressScreen";
@@ -37,8 +40,20 @@ class ShoppingInProgressScreen extends StatelessWidget {
             IconButton(
               icon: const Icon(Icons.checklist),
               tooltip: 'Check using IA',
-              onPressed: () {
-                _shoppingListKey.currentState?.markItemsWithIA();
+              onPressed: () async {
+                final takePictureScreen = await createTakePictureScreen();
+                   var imagePath =  await Navigator.of(context).push(MaterialPageRoute(
+                    builder: (c) =>  takePictureScreen));
+                final File imageFile = File(imagePath);
+                final bytes = await imageFile.readAsBytes();
+                String base64Image = base64Encode(bytes);
+
+
+                await _shoppingListKey!.currentState!.markItemsWithIA(base64Image);
+
+
+                // Convert the bytes to a Base64 string
+                //_shoppingListKey.currentState?.markItemsWithIA();
               },
             )
           ],
@@ -75,12 +90,12 @@ class _ShoppingListState extends State<ShoppingListView> {
     loadShoppingList();
   }
 
-  Future markItemsWithIA() async {
+  Future markItemsWithIA(String image64) async {
     setState(() {
       loadingData = true;
     });
 
-    var response = await ShoppingListWebClient().markItemsWithIA(widget.shoppingListId);
+    var response = await ShoppingListWebClient().markItemsWithIA(widget.shoppingListId, image64);
 
     if (response.unauthorized()) {
       AuthorizationService.redirectToSignIn(context);
